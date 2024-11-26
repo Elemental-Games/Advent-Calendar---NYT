@@ -67,16 +67,7 @@ export function formatCountdown(targetDate: Date): string {
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-  // For dialog display, always show full format
-  if (targetDate.getTime() === targetDate.getTime()) {
-    if (days > 0) {
-      return `${days}d ${hours.toString().padStart(2, '0')}h`;
-    }
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  }
-
-  // For card display
-  if (days > 0) return `${days}d ${hours}h`;
+  if (days > 0) return `${days}d ${hours.toString().padStart(2, '0')}h`;
   return `${hours}h ${minutes}m`;
 }
 
@@ -102,6 +93,10 @@ const puzzleData: { [key: number]: PuzzleContent } = {
       "d1": "TOY",
       "d2": "ELF",
       "d4": "RED"
+    },
+    size: {
+      rows: 5,
+      cols: 5
     }
   },
   3: {
