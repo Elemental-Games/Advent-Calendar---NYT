@@ -90,10 +90,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   return (
     <div className="w-full max-w-lg mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center text-green-700">
-        Kringle #1 - Day 1
+        Kringle #1 🎄
       </h2>
-      <h3 className="text-xl font-bold mb-4 text-center text-green-600">
-        Kringle #1 ❄️
+      <h3 className="text-xl font-bold mb-4 text-center text-red-600">
+        Kringle #1 - Day 1
       </h3>
 
       <div className="text-center mb-4 text-lg font-mono">
