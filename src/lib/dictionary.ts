@@ -1,3 +1,4 @@
+// This is a simplified example. In production, you'd want to use a proper dictionary API or word list
 const commonEnglishWords = new Set([
   "ABOUT", "ABOVE", "AFTER", "AGAIN", "ALERT", "ALLOW", "ALONE", "ALONG",
   "AMBER", "AMONG", "ANGEL", "ANGER", "ANGLE", "APPLE", "BEACH", "BEARD",
@@ -49,13 +50,7 @@ const commonEnglishWords = new Set([
   "WHITE", "WHOLE", "WHOSE", "WOMAN", "WOMEN", "WORLD", "WORRY", "WORSE",
   "WORST", "WORTH", "WOULD", "WOUND", "WRITE", "WRONG", "WROTE", "YIELD",
   "YOUNG", "YOUTH", "SANTA", "CANDY", "HOLLY", "MERRY", "HAPPY", "BELLS",
-  "GIFTS", "SNOW", "TREE", "STAR", "SLED", "TOYS", "ELVES", "CANDY", "CANES", "NORTH", "POLAR", "MAGIC", "MERRY", "JOLLY", "CAROL", "FROST", "LIGHT", "SHINE", "ANGEL", "PEACE",
-  "CHEER", "HAPPY", "DREAM", "HEART", "SMILE", "SWEET", "DANCE", "LAUGH",
-  "SHARE", "BLESS", "FAITH", "GRACE", "GLORY", "GRAND", "GREAT", "GREEN",
-  "HOUSE", "HUMAN", "IMAGE", "LEARN", "LIGHT", "MAGIC", "MUSIC", "NIGHT",
-  "PEACE", "POWER", "PRIDE", "QUIET", "SMILE", "SOUND", "SPACE", "SPEAK",
-  "SPIRIT", "SWEET", "THANK", "THINK", "TOUCH", "TRUST", "VOICE", "WATCH",
-  "WORLD", "WRITE", "YOUNG"
+  "GIFTS", "SNOW", "TREE", "STAR", "SLED", "TOYS", "ELVES", "WRAP"
 ]);
 
 export const isValidEnglishWord = (word: string): boolean => {

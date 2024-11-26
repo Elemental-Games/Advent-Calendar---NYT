@@ -77,22 +77,22 @@ const puzzleData: { [key: number]: PuzzleContent } = {
   },
   2: {
     across: {
-      "1": "Christmas carol: The First ___",
-      "3": "Holiday greeting (4)",
-      "4": "Santa's little helpers"
+      "1": "Santa's ride through the night sky",
+      "3": "Shines bright atop the tree",
+      "5": "Wrapped surprise under the tree"
     },
     down: {
-      "1": "Christmas decoration that rings",
-      "2": "Children's present",
-      "3": "Santa's favorite cookie type"
+      "1": "Children's plaything",
+      "2": "Santa's little helper",
+      "4": "Color of Rudolph's nose"
     },
     answers: {
-      "a1": "NOEL",
-      "a3": "NOEL",
-      "a4": "ELF",
-      "d1": "BELL",
-      "d2": "TOY",
-      "d3": "OATMEAL"
+      "a1": "SLEIGH",
+      "a3": "STAR",
+      "a5": "GIFT",
+      "d1": "TOY",
+      "d2": "ELF",
+      "d4": "RED"
     },
     size: {
       rows: 5,
