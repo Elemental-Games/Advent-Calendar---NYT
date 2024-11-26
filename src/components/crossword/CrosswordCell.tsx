@@ -52,7 +52,7 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
             className={cn(
               "w-full h-full text-center bg-transparent",
               "focus:outline-none uppercase text-2xl md:text-3xl font-bold",
-              "text-blue-800" // Ensuring consistent dark blue color
+              isValidCell ? "text-blue-700" : "text-slate-600"
             )}
             disabled={!isValidCell}
           />

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { isValidEnglishWord } from "@/lib/dictionary";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { isValidEnglishWord } from "@/lib/dictionary";
 
 interface WordleGameProps {
   solution: string;
@@ -13,174 +13,161 @@ interface WordleGameProps {
 export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState("");
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [showStartDialog, setShowStartDialog] = useState(true);
-  const [isStarted, setIsStarted] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [completionTime, setCompletionTime] = useState<number | null>(null);
-  const [showCompletionAnimation, setShowCompletionAnimation] = useState(false);
-  const [selectedCell, setSelectedCell] = useState<number | null>(null);
+  const [gameOver, setGameOver] = useState(false);
+  const [isWinner, setIsWinner] = useState(false);
+  const [showCongrats, setShowCongrats] = useState(false);
+  const [activeCell, setActiveCell] = useState<number>(-1);
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isStarted && !isGameOver) {
-      timer = setInterval(() => {
-        setElapsedTime((prev) => prev + 1);
-      }, 1000);
+  const WORD_LENGTH = 5;
+  const MAX_GUESSES = 6;
+  
+  const isValidWord = (word: string) => {
+    if (word.length !== WORD_LENGTH) return false;
+    return isValidEnglishWord(word);
+  };
+
+  const getLetterStyle = (letter: string, index: number, guess: string) => {
+    if (!letter) return "bg-transparent border-red-200";
+    
+    if (guess[index] === solution[index]) {
+      return "bg-green-700 text-white border-red-500"; // Bright red border for correct letters
     }
-    return () => clearInterval(timer);
-  }, [isStarted, isGameOver]);
+    
+    const solutionLetterCount = [...solution].filter(l => l === letter).length;
+    const correctPositionsCount = [...guess].filter((l, i) => l === letter && solution[i] === letter).length;
+    const previousOccurrences = [...guess].slice(0, index).filter(l => l === letter).length;
+    
+    if (solution.includes(letter) && 
+        previousOccurrences + correctPositionsCount < solutionLetterCount) {
+      return "bg-green-300 text-white border-red-300"; // Lighter red border for misplaced letters
+    }
+    
+    return "bg-gray-600 text-white border-gray-700";
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isStarted || isGameOver) return;
+      if (gameOver) return;
 
       if (e.key === "Enter") {
-        if (currentGuess.length !== 5) {
+        if (currentGuess.length !== WORD_LENGTH) {
           toast.error("Word must be 5 letters");
           return;
         }
 
-        // Convert to lowercase for dictionary check
-        const lowerGuess = currentGuess.toLowerCase();
-        console.log("Checking word:", lowerGuess);
-        
-        if (!isValidEnglishWord(lowerGuess)) {
-          toast.error("Not a valid English word");
+        if (!isValidWord(currentGuess)) {
+          toast.error("Not a valid word");
           return;
         }
-
-        const newGuesses = [...guesses, currentGuess];
+        
+        const newGuesses = [...guesses, currentGuess.toUpperCase()];
         setGuesses(newGuesses);
         setCurrentGuess("");
-        setSelectedCell(null);
+        setActiveCell(-1);
 
-        if (currentGuess === solution) {
-          setIsGameOver(true);
-          setCompletionTime(elapsedTime);
-          setShowCompletionAnimation(true);
-          toast.success("Congratulations!");
+        if (currentGuess.toUpperCase() === solution) {
+          setIsWinner(true);
+          setGameOver(true);
+          setTimeout(() => setShowCongrats(true), 1500);
           onComplete?.();
-        } else if (newGuesses.length === 6) {
-          setIsGameOver(true);
+        } else if (newGuesses.length >= MAX_GUESSES) {
           toast.error(`Game Over! The word was ${solution}`);
+          setGameOver(true);
         }
       } else if (e.key === "Backspace") {
-        setCurrentGuess(prev => prev.slice(0, -1));
-        setSelectedCell(prev => prev !== null ? Math.max(0, prev - 1) : 4);
-      } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < 5) {
-        setCurrentGuess(prev => prev + e.key.toUpperCase());
-        setSelectedCell(currentGuess.length);
+        setCurrentGuess(prev => {
+          const newGuess = prev.slice(0, -1);
+          setActiveCell(newGuess.length);
+          return newGuess;
+        });
+      } else if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
+        setCurrentGuess(prev => {
+          const newGuess = prev + e.key.toUpperCase();
+          setActiveCell(newGuess.length - 1);
+          return newGuess;
+        });
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentGuess, guesses, isGameOver, isStarted, solution, elapsedTime, onComplete]);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const getLetterStyle = (letter: string, index: number, guess: string) => {
-    if (solution[index] === letter) {
-      return "bg-green-600 text-white border-green-700";
-    }
-    if (solution.includes(letter)) {
-      return "bg-green-400 text-white border-green-500";
-    }
-    return "bg-gray-500 text-white border-gray-600";
-  };
-
-  const handleStartGame = () => {
-    setIsStarted(true);
-    setShowStartDialog(false);
-    setElapsedTime(0);
-  };
-
-  const handleCellClick = (index: number) => {
-    if (currentGuess.length <= index) {
-      setSelectedCell(index);
-    }
-  };
+  }, [currentGuess, guesses, gameOver, solution, onComplete]);
 
   return (
-    <div className="w-full max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center text-green-700">
-        Kringle #1 🎄
-      </h2>
-      <h3 className="text-xl font-bold mb-4 text-center text-green-600">
-        Day 1
-      </h3>
+    <>
+      <div className="max-w-sm mx-auto p-4 w-full">
+        <h3 className="text-2xl font-bold mb-8 text-center text-green-700">
+          🎄
+        </h3>
+        <div className="grid gap-4 w-full max-w-[95vw] sm:max-w-sm mx-auto">
+          {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
+            <div key={rowIndex} className="grid grid-cols-5 gap-2">
+              {[...Array(WORD_LENGTH)].map((_, colIndex) => {
+                const letter = rowIndex === guesses.length 
+                  ? currentGuess[colIndex] 
+                  : guesses[rowIndex]?.[colIndex];
+                
+                const style = guesses[rowIndex] 
+                  ? getLetterStyle(letter, colIndex, guesses[rowIndex])
+                  : "bg-transparent border-red-200";
 
-      <div className="text-center mb-4 text-lg font-mono">
-        {formatTime(elapsedTime)}
-      </div>
+                const isActive = rowIndex === guesses.length && colIndex === activeCell;
 
-      <div className="grid grid-rows-6 gap-2 mb-4">
-        {Array.from({ length: 6 }).map((_, rowIndex) => (
-          <div key={rowIndex} className="grid grid-cols-5 gap-2">
-            {Array.from({ length: 5 }).map((_, colIndex) => {
-              const letter = rowIndex === guesses.length
-                ? currentGuess[colIndex]
-                : guesses[rowIndex]?.[colIndex];
-
-              const isSelected = rowIndex === guesses.length && colIndex === selectedCell;
-
-              return (
-                <div
-                  key={colIndex}
-                  onClick={() => handleCellClick(colIndex)}
-                  className={`
-                    w-full aspect-square flex items-center justify-center
-                    text-2xl font-bold border-2 transition-all duration-200
-                    ${isSelected ? "border-red-500 scale-105" : ""}
-                    ${letter
-                      ? rowIndex < guesses.length
-                        ? getLetterStyle(letter, colIndex, guesses[rowIndex])
-                        : "border-green-300 hover:border-green-400"
-                      : "border-green-200 hover:border-green-300"
+                return (
+                  <motion.div
+                    key={colIndex}
+                    initial={{ scale: 0.8 }}
+                    animate={{ 
+                      scale: 1,
+                      backgroundColor: isWinner && rowIndex === guesses.length - 1 
+                        ? "rgb(21 128 61)" 
+                        : undefined
+                    }}
+                    transition={isWinner && rowIndex === guesses.length - 1 
+                      ? { 
+                          delay: colIndex * 0.2,
+                          duration: 0.3
+                        }
+                      : undefined
                     }
-                  `}
-                >
-                  {letter}
-                </div>
-              );
-            })}
-          </div>
-        ))}
+                    className={cn(
+                      "w-full relative",
+                      "before:content-[''] before:float-left before:pt-[100%]",
+                      "border-2 rounded",
+                      "text-2xl font-bold uppercase transition-all duration-300",
+                      style,
+                      isActive && "border-red-500 shadow-lg scale-105",
+                      rowIndex === guesses.length && !letter && "hover:border-red-400"
+                    )}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {letter}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {showCompletionAnimation && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="fixed inset-0 pointer-events-none flex items-center justify-center"
-        >
-          <div className="text-6xl">🎉</div>
-        </motion.div>
-      )}
-
-      <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
+      <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl font-bold text-green-700">
-              Ready to Begin? ❄️
+              Congratulations! 🎄🎅
             </DialogTitle>
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              Click start to begin the Kringle puzzle!
+              You've completed Kringle #1!
             </p>
-            <Button onClick={handleStartGame} className="bg-green-600 hover:bg-green-700">
-              Start Timer
-            </Button>
+            <p className="text-gray-600">
+              Come back tomorrow for a new Christmas-themed challenge.
+            </p>
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
