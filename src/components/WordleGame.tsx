@@ -19,6 +19,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completionTime, setCompletionTime] = useState<number | null>(null);
   const [showCompletionAnimation, setShowCompletionAnimation] = useState(false);
+  const [selectedCell, setSelectedCell] = useState<number | null>(null);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -39,13 +40,20 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           toast.error("Word must be 5 letters");
           return;
         }
-        if (!isValidEnglishWord(currentGuess)) {
-          toast.error("Not a valid word");
+
+        // Convert to lowercase for dictionary check
+        const lowerGuess = currentGuess.toLowerCase();
+        console.log("Checking word:", lowerGuess);
+        
+        if (!isValidEnglishWord(lowerGuess)) {
+          toast.error("Not a valid English word");
           return;
         }
+
         const newGuesses = [...guesses, currentGuess];
         setGuesses(newGuesses);
         setCurrentGuess("");
+        setSelectedCell(null);
 
         if (currentGuess === solution) {
           setIsGameOver(true);
@@ -59,8 +67,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         }
       } else if (e.key === "Backspace") {
         setCurrentGuess(prev => prev.slice(0, -1));
+        setSelectedCell(prev => prev !== null ? Math.max(0, prev - 1) : 4);
       } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < 5) {
         setCurrentGuess(prev => prev + e.key.toUpperCase());
+        setSelectedCell(currentGuess.length);
       }
     };
 
@@ -76,18 +86,24 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
 
   const getLetterStyle = (letter: string, index: number, guess: string) => {
     if (solution[index] === letter) {
-      return "bg-green-500 text-white border-green-600";
+      return "bg-green-600 text-white border-green-700";
     }
     if (solution.includes(letter)) {
-      return "bg-green-300 text-white border-green-400";
+      return "bg-green-400 text-white border-green-500";
     }
-    return "bg-gray-500 text-white border-gray-500";
+    return "bg-gray-500 text-white border-gray-600";
   };
 
   const handleStartGame = () => {
     setIsStarted(true);
     setShowStartDialog(false);
     setElapsedTime(0);
+  };
+
+  const handleCellClick = (index: number) => {
+    if (currentGuess.length <= index) {
+      setSelectedCell(index);
+    }
   };
 
   return (
@@ -111,17 +127,21 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                 ? currentGuess[colIndex]
                 : guesses[rowIndex]?.[colIndex];
 
+              const isSelected = rowIndex === guesses.length && colIndex === selectedCell;
+
               return (
                 <div
                   key={colIndex}
+                  onClick={() => handleCellClick(colIndex)}
                   className={`
                     w-full aspect-square flex items-center justify-center
-                    text-2xl font-bold border-2
+                    text-2xl font-bold border-2 transition-all duration-200
+                    ${isSelected ? "border-red-500 scale-105" : ""}
                     ${letter
                       ? rowIndex < guesses.length
                         ? getLetterStyle(letter, colIndex, guesses[rowIndex])
-                        : "border-green-200"
-                      : "border-green-100"
+                        : "border-green-300 hover:border-green-400"
+                      : "border-green-200 hover:border-green-300"
                     }
                   `}
                 >
