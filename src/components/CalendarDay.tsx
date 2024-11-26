@@ -2,22 +2,22 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { DayInfo, formatCountdown } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface CalendarDayProps {
   dayInfo: DayInfo;
-  onClick: () => void;
   isCompleted?: boolean;
 }
 
 const getDayAbbreviation = (day: number): string => {
-  // December 2024: 1st is Sunday
   const dayIndex = (day - 1) % 7;
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   return days[dayIndex];
 };
 
-export function CalendarDay({ dayInfo, onClick, isCompleted = false }: CalendarDayProps) {
+export function CalendarDay({ dayInfo, isCompleted = false }: CalendarDayProps) {
   const [countdown, setCountdown] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkStatus = () => {
@@ -31,6 +31,12 @@ export function CalendarDay({ dayInfo, onClick, isCompleted = false }: CalendarD
 
   const isAvailable = dayInfo.day <= 4;
 
+  const handleClick = () => {
+    if (isAvailable || isCompleted) {
+      navigate(`/day/${dayInfo.day}`);
+    }
+  };
+
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
@@ -40,21 +46,28 @@ export function CalendarDay({ dayInfo, onClick, isCompleted = false }: CalendarD
         "flex flex-col items-center justify-center text-center",
         "border-2",
         isCompleted ? 
-          "bg-gradient-to-br from-emerald-600 to-emerald-700 text-white border-emerald-800" : 
+          "bg-emerald-600 text-white border-emerald-800" : 
         isAvailable ? 
-          "bg-gradient-to-br from-red-500 via-amber-500 to-green-500 text-white border-red-400" :
-          "bg-gradient-to-br from-white to-red-50 border-red-200"
+          "bg-red-600 text-amber-300 border-green-500" :
+          "bg-white text-red-600 border-red-200"
       )}
-      onClick={onClick}
+      onClick={handleClick}
     >
-      <div className="absolute top-2 right-2">
-        <span className="text-xs font-medium opacity-75">
+      <div className="absolute top-2 w-full text-center">
+        <span className={cn(
+          "text-xs font-medium",
+          isCompleted ? "text-white/90" : 
+          isAvailable ? "text-green-300" : 
+          "text-red-400"
+        )}>
           {getDayAbbreviation(dayInfo.day)}
         </span>
       </div>
       <span className={cn(
         "text-2xl font-bold mb-2",
-        isCompleted || isAvailable ? "text-white" : "text-red-700"
+        isCompleted ? "text-white" : 
+        isAvailable ? "text-amber-300" : 
+        "text-red-600"
       )}>
         {dayInfo.day}
       </span>
@@ -65,7 +78,9 @@ export function CalendarDay({ dayInfo, onClick, isCompleted = false }: CalendarD
       ) : (
         <span className={cn(
           "text-xs font-medium",
-          isCompleted || isAvailable ? "text-white/75" : "text-green-700"
+          isCompleted ? "text-white/90" : 
+          isAvailable ? "text-green-300" : 
+          "text-red-600"
         )}>
           {countdown}
         </span>
