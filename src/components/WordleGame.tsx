@@ -25,10 +25,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   };
 
   const getLetterStyle = (letter: string, index: number, guess: string) => {
-    if (!letter) return "bg-transparent border-blue-200";
+    if (!letter) return "bg-transparent border-red-200";
     
     if (guess[index] === solution[index]) {
-      return "bg-blue-700 text-white border-blue-800";
+      return "bg-green-700 text-white border-green-800";
     }
     
     const solutionLetterCount = [...solution].filter(l => l === letter).length;
@@ -37,7 +37,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     
     if (solution.includes(letter) && 
         previousOccurrences + correctPositionsCount < solutionLetterCount) {
-      return "bg-blue-300 text-white border-blue-400";
+      return "bg-green-300 text-white border-green-400";
     }
     
     return "bg-gray-600 text-white border-gray-700";
@@ -94,8 +94,8 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   return (
     <>
       <div className="max-w-sm mx-auto p-4">
-        <h3 className="text-2xl font-bold mb-6 text-center text-blue-700">
-          Frostle ❄️
+        <h3 className="text-2xl font-bold mb-6 text-center text-green-700">
+          Kringle #1 🎄
         </h3>
         <div className="grid gap-2">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
@@ -107,7 +107,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                 
                 const style = guesses[rowIndex] 
                   ? getLetterStyle(letter, colIndex, guesses[rowIndex])
-                  : "bg-transparent border-blue-200";
+                  : "bg-transparent border-red-200";
 
                 const isActive = rowIndex === guesses.length && colIndex === activeCell;
 
@@ -118,7 +118,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                     animate={{ 
                       scale: 1,
                       backgroundColor: isWinner && rowIndex === guesses.length - 1 
-                        ? "rgb(29 78 216)" 
+                        ? "rgb(21 128 61)" 
                         : undefined
                     }}
                     transition={isWinner && rowIndex === guesses.length - 1 
@@ -132,8 +132,8 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                       "w-full aspect-square border-2 rounded flex items-center justify-center",
                       "text-2xl font-bold uppercase transition-all duration-300",
                       style,
-                      isActive && "border-blue-500 shadow-lg scale-105",
-                      rowIndex === guesses.length && !letter && "hover:border-blue-400"
+                      isActive && "border-red-500 shadow-lg scale-105",
+                      rowIndex === guesses.length && !letter && "hover:border-red-400"
                     )}
                   >
                     {letter}
@@ -148,13 +148,13 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
       <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-bold text-blue-700">
-              Congratulations! 🎉❄️
+            <DialogTitle className="text-center text-2xl font-bold text-green-700">
+              Congratulations! 🎄🎅
             </DialogTitle>
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              You've completed Day 1's Frostle puzzle!
+              You've completed Kringle #1!
             </p>
             <p className="text-gray-600">
               Come back tomorrow for a new Christmas-themed challenge.
