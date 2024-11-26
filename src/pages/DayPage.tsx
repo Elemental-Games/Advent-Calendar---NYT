@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { generateCalendarData } from "@/lib/date-utils";
 import { PuzzleDisplay } from "@/components/PuzzleDisplay";
@@ -20,6 +19,11 @@ const DayPage = () => {
     );
   }
 
+  const getTitle = () => {
+    if (dayInfo.day === 1) return "Kringle #1";
+    return dayInfo.puzzleType.charAt(0).toUpperCase() + dayInfo.puzzleType.slice(1);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4">
       <div className="max-w-4xl mx-auto">
@@ -28,7 +32,7 @@ const DayPage = () => {
             Back to Calendar
           </Button>
           <h1 className="text-2xl font-bold text-red-700">
-            Day {day} - {dayInfo.puzzleType.charAt(0).toUpperCase() + dayInfo.puzzleType.slice(1)}
+            {getTitle()}
           </h1>
         </div>
         

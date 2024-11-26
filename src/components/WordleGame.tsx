@@ -94,12 +94,9 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   return (
     <>
       <div className="max-w-sm mx-auto p-4 w-full">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold text-green-700">
-            Kringle #1 🎄
-          </h3>
-          <span className="text-red-600 font-semibold">Day 1</span>
-        </div>
+        <h3 className="text-2xl font-bold mb-6 text-center text-green-700">
+          Kringle #1 🎄
+        </h3>
         <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-5 gap-2">
@@ -132,15 +129,18 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                       : undefined
                     }
                     className={cn(
-                      "w-full aspect-square border-2 rounded flex items-center justify-center",
+                      "w-full relative",
+                      "before:content-[''] before:float-left before:pt-[100%]",
+                      "border-2 rounded",
                       "text-2xl font-bold uppercase transition-all duration-300",
                       style,
                       isActive && "border-red-500 shadow-lg scale-105",
-                      rowIndex === guesses.length && !letter && "hover:border-red-400",
-                      "min-h-[60px] sm:min-h-[72px]"
+                      rowIndex === guesses.length && !letter && "hover:border-red-400"
                     )}
                   >
-                    {letter}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {letter}
+                    </div>
                   </motion.div>
                 );
               })}
