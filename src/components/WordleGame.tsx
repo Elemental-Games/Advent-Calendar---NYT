@@ -28,7 +28,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     if (!letter) return "bg-transparent border-red-200";
     
     if (guess[index] === solution[index]) {
-      return "bg-green-700 text-white border-green-800";
+      return "bg-green-700 text-white border-red-800"; // Dark red border for correct letters
     }
     
     const solutionLetterCount = [...solution].filter(l => l === letter).length;
@@ -37,7 +37,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     
     if (solution.includes(letter) && 
         previousOccurrences + correctPositionsCount < solutionLetterCount) {
-      return "bg-green-300 text-white border-green-400";
+      return "bg-green-300 text-white border-red-300"; // Light red border for partially correct letters
     }
     
     return "bg-gray-600 text-white border-gray-700";
@@ -95,7 +95,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     <>
       <div className="max-w-sm mx-auto p-4 w-full">
         <h3 className="text-2xl font-bold mb-6 text-center text-green-700">
-          Kringle #1 🎄
+          Day 1 🎄
         </h3>
         <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
@@ -158,7 +158,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              You've completed Kringle #1!
+              You've completed Day 1!
             </p>
             <p className="text-gray-600">
               Come back tomorrow for a new Christmas-themed challenge.
