@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
-import { Input } from "./ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+import { CrosswordCell } from "./crossword/CrosswordCell";
+import { CrosswordClue } from "./crossword/CrosswordClue";
 
 interface CrosswordGameProps {
   across: Record<string, string>;
@@ -14,17 +14,15 @@ interface CrosswordGameProps {
 
 export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGameProps) {
   const [guesses, setGuesses] = useState<Record<string, string>>({});
-  const [showCongrats, setShowCongrats] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
-  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
-  const [showDown, setShowDown] = useState(false);
-  const [isStarted, setIsStarted] = useState(false);
   const [showStartDialog, setShowStartDialog] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completionTime, setCompletionTime] = useState<number | null>(null);
+  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
+  const [showDown, setShowDown] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 5x5 grid representation with empty cells
+  // 5x5 grid representation
   const grid = [
     ['', '1', '', '2', ''],
     ['3', '', '', '', ''],
@@ -40,7 +38,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   useEffect(() => {
-    if (isStarted && !isComplete) {
+    if (isStarted) {
       timerRef.current = setInterval(() => {
         setElapsedTime(prev => prev + 1);
       }, 1000);
@@ -50,7 +48,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
         clearInterval(timerRef.current);
       }
     };
-  }, [isStarted, isComplete]);
+  }, [isStarted]);
 
   const handleStartGame = () => {
     setIsStarted(true);
@@ -73,22 +71,30 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   const handleInputChange = (clueNumber: string, value: string) => {
-    const newGuesses = { ...guesses, [clueNumber]: value.toUpperCase() };
+    const newGuesses = { ...guesses, [clueNumber]: value };
     setGuesses(newGuesses);
 
-    // Check if all answers are correct
-    const allCorrect = Object.entries(answers).every(
-      ([num, answer]) => newGuesses[num]?.toUpperCase() === answer.toUpperCase()
+    // Check if all cells are filled
+    const allFilled = Object.keys(answers).every(
+      key => newGuesses[key]?.length === answers[key].length
     );
 
-    if (allCorrect && !isComplete) {
-      setIsComplete(true);
-      setCompletionTime(elapsedTime);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
+    if (allFilled) {
+      // Check if all answers are correct
+      const allCorrect = Object.entries(answers).every(
+        ([num, answer]) => newGuesses[num]?.toUpperCase() === answer.toUpperCase()
+      );
+
+      if (allCorrect) {
+        setCompletionTime(elapsedTime);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        toast.success("Congratulations! You've completed the Mini FrostWord!");
+        onComplete?.();
+      } else {
+        toast.error("Some letters are incorrect. Keep trying!");
       }
-      setShowCongrats(true);
-      onComplete?.();
     }
   };
 
@@ -118,58 +124,34 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
         {formatTime(elapsedTime)}
       </div>
       
-      {/* Grid Display */}
       <div className="mb-8">
-        <div className="grid grid-cols-5 gap-1 max-w-[90vw] md:max-w-md mx-auto">
+        <div className="grid grid-cols-5 gap-1 max-w-[95vw] md:max-w-md mx-auto">
           {grid.map((row, rowIndex) => (
             <div key={rowIndex} className="contents">
-              {row.map((cell, colIndex) => (
-                <div
+              {row.map((_, colIndex) => (
+                <CrosswordCell
                   key={`${rowIndex}-${colIndex}`}
+                  value={guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`] || ""}
+                  clueNumber={getClueNumber(rowIndex, colIndex)}
+                  isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
                   onClick={() => handleCellClick(rowIndex, colIndex)}
-                  className={cn(
-                    "aspect-square border-2 flex items-center justify-center cursor-pointer",
-                    "text-lg md:text-2xl font-bold relative transition-all",
-                    cell === '' ? 'bg-gray-200' : 'bg-white/90 border-blue-200',
-                    selectedCell?.row === rowIndex && selectedCell?.col === colIndex && 
-                      'border-blue-500 shadow-lg scale-105'
+                  onChange={(value) => handleInputChange(
+                    `${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`,
+                    value
                   )}
-                >
-                  {getClueNumber(rowIndex, colIndex) && (
-                    <span className="absolute top-0.5 left-0.5 text-[10px] text-blue-600">
-                      {getClueNumber(rowIndex, colIndex)}
-                    </span>
-                  )}
-                  {guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`]?.[0] && (
-                    <span className="text-blue-700">
-                      {guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`][0]}
-                    </span>
-                  )}
-                </div>
+                />
               ))}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Current Clue Display */}
       {currentClue && (
-        <div className="text-center mb-8 animate-fade-in">
-          <p className="text-lg font-semibold text-blue-700">
-            {currentClue.number}. {currentClue.direction}
-          </p>
-          <p className="text-gray-600">{currentClue.clue}</p>
-          <Input
-            maxLength={5}
-            value={guesses[`${currentClue.direction.toLowerCase() === 'down' ? 'd' : 'a'}${currentClue.number}`] || ""}
-            onChange={(e) => handleInputChange(
-              `${currentClue.direction.toLowerCase() === 'down' ? 'd' : 'a'}${currentClue.number}`,
-              e.target.value
-            )}
-            className="uppercase mt-2 max-w-[200px] mx-auto text-center"
-            disabled={isComplete}
-          />
-        </div>
+        <CrosswordClue
+          number={currentClue.number}
+          direction={currentClue.direction}
+          clue={currentClue.clue}
+        />
       )}
 
       <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
@@ -186,27 +168,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
             <Button onClick={handleStartGame} className="bg-blue-600 hover:bg-blue-700">
               Start Timer
             </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-bold text-blue-700">
-              Congratulations! 🎉❄️
-            </DialogTitle>
-          </DialogHeader>
-          <div className="text-center space-y-4">
-            <p className="text-lg">
-              You've completed Day 2's Mini FrostWord puzzle!
-            </p>
-            <p className="text-blue-600 font-mono text-xl">
-              Time: {formatTime(completionTime || 0)}
-            </p>
-            <p className="text-gray-600">
-              Come back tomorrow for a new Christmas-themed challenge.
-            </p>
           </div>
         </DialogContent>
       </Dialog>
