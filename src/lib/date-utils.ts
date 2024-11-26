@@ -7,6 +7,7 @@ export interface DayInfo {
   day: number;
   puzzleType: PuzzleType;
   unlockTime: Date;
+  puzzleContent?: any; // We'll type this properly when implementing puzzles
 }
 
 const UNLOCK_HOUR = 7;
@@ -34,10 +35,15 @@ export function formatCountdown(targetDate: Date): string {
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
+  // For dialog display, always show full format
+  if (targetDate.getTime() === targetDate.getTime()) { // Check if we're formatting for dialog
+    return `${days > 0 ? `${days}d ` : ''}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  // For card display
   if (days > 0) return `${days}d ${hours}h`;
   if (hours > 0) return `${hours}h ${minutes}m`;
-  if (minutes > 0) return `${minutes}m ${seconds}s`;
-  return `${seconds}s`;
+  return `${minutes}m ${seconds}s`;
 }
 
 export function generateCalendarData(): DayInfo[] {

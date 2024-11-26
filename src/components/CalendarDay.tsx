@@ -38,7 +38,8 @@ export function CalendarDay({ dayInfo, onClick }: CalendarDayProps) {
         "border-2 backdrop-blur-sm",
         "hover:shadow-lg hover:border-red-300",
         "bg-gradient-to-br from-white to-red-50",
-        "border-red-200"
+        "border-red-200",
+        dayInfo.day <= 4 ? "animate-pulse" : ""
       )}
       onClick={onClick}
     >
