@@ -4,6 +4,7 @@ import { CalendarDay } from "@/components/CalendarDay";
 import { generateCalendarData } from "@/lib/date-utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatCountdown } from "@/lib/date-utils";
+import { PuzzleDisplay } from "@/components/PuzzleDisplay";
 
 const Index = () => {
   const [days] = useState(generateCalendarData());
@@ -14,6 +15,8 @@ const Index = () => {
   };
 
   const selectedDayInfo = days.find(d => d.day === selectedDay);
+  const now = new Date();
+  const isUnlocked = selectedDayInfo && selectedDayInfo.unlockTime <= now;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 relative overflow-hidden">
@@ -50,16 +53,25 @@ const Index = () => {
         <DialogContent className="bg-white/95 backdrop-blur-sm border-red-200">
           <DialogHeader>
             <DialogTitle className="text-red-700">
-              Day {selectedDay} - Countdown
+              Day {selectedDay} - {isUnlocked ? "Puzzle" : "Countdown"}
             </DialogTitle>
           </DialogHeader>
-          <div className="p-6 text-center">
-            <p className="text-2xl font-bold text-green-700">
-              {selectedDayInfo && formatCountdown(selectedDayInfo.unlockTime)}
-            </p>
-            <p className="mt-4 text-gray-600">
-              Come back when the timer reaches zero to solve the puzzle!
-            </p>
+          <div className="p-6">
+            {isUnlocked && selectedDayInfo?.puzzleContent ? (
+              <PuzzleDisplay 
+                type={selectedDayInfo.puzzleType}
+                content={selectedDayInfo.puzzleContent}
+              />
+            ) : (
+              <div className="text-center">
+                <p className="text-2xl font-bold text-green-700">
+                  {selectedDayInfo && formatCountdown(selectedDayInfo.unlockTime)}
+                </p>
+                <p className="mt-4 text-gray-600">
+                  Come back when the timer reaches zero to solve the puzzle!
+                </p>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
