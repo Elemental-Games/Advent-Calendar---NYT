@@ -11,6 +11,7 @@ interface CrosswordPuzzle {
   across: { [key: string]: string };
   down: { [key: string]: string };
   size: { rows: number; cols: number };
+  answers?: Record<string, string>;
 }
 
 interface ConnectionsGroup {
@@ -85,16 +86,23 @@ const puzzleData: { [key: number]: PuzzleContent } = {
   },
   2: {
     across: {
-      "1": "TREE",
-      "3": "STAR",
-      "5": "GIFT"
+      "1": "Santa's ride through the night sky",
+      "3": "Shines bright atop the tree",
+      "5": "Wrapped surprise under the tree"
     },
     down: {
-      "1": "TOY",
-      "2": "ELF",
-      "4": "RED"
+      "1": "Children's plaything",
+      "2": "Santa's little helper",
+      "4": "Color of Rudolph's nose"
     },
-    size: { rows: 5, cols: 5 }
+    answers: {
+      "a1": "SLEIGH",
+      "a3": "STAR",
+      "a5": "GIFT",
+      "d1": "TOY",
+      "d2": "ELF",
+      "d4": "RED"
+    }
   },
   3: {
     groups: [

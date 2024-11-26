@@ -94,6 +94,9 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   return (
     <>
       <div className="max-w-sm mx-auto p-4">
+        <h3 className="text-2xl font-bold mb-6 text-center text-blue-700">
+          Frostle ❄️
+        </h3>
         <div className="grid gap-2">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-5 gap-2">

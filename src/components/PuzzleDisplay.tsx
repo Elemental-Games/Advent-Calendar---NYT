@@ -1,6 +1,7 @@
 import React from 'react';
 import { PuzzleContent } from '@/lib/date-utils';
 import { WordleGame } from './WordleGame';
+import { CrosswordGame } from './CrosswordGame';
 
 interface PuzzleDisplayProps {
   type: "wordle" | "crossword" | "connections" | "strands";
@@ -19,28 +20,18 @@ export function PuzzleDisplay({ type, content }: PuzzleDisplayProps) {
         );
       
       case "crossword":
-        const crosswordContent = content as { across: Record<string, string>, down: Record<string, string> };
+        const crosswordContent = content as { 
+          across: Record<string, string>;
+          down: Record<string, string>;
+          answers: Record<string, string>;
+        };
         return (
           <div className="p-4">
-            <h3 className="text-xl font-bold mb-4">Mini Crossword</h3>
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h4 className="font-semibold mb-2">Across</h4>
-                {Object.entries(crosswordContent.across).map(([num, clue]) => (
-                  <p key={`across-${num}`} className="text-sm mb-1">
-                    {num}. {clue}
-                  </p>
-                ))}
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Down</h4>
-                {Object.entries(crosswordContent.down).map(([num, clue]) => (
-                  <p key={`down-${num}`} className="text-sm mb-1">
-                    {num}. {clue}
-                  </p>
-                ))}
-              </div>
-            </div>
+            <CrosswordGame 
+              across={crosswordContent.across}
+              down={crosswordContent.down}
+              answers={crosswordContent.answers}
+            />
           </div>
         );
       
