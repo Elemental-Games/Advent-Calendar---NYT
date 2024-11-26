@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface CrosswordGameProps {
   across: Record<string, string>;
@@ -15,6 +15,15 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   const [guesses, setGuesses] = useState<Record<string, string>>({});
   const [showCongrats, setShowCongrats] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+
+  // 5x5 grid representation
+  const grid = [
+    ['', '1', '', '2', ''],
+    ['3', 'S', 'T', 'A', 'R'],
+    ['', 'L', '', 'L', ''],
+    ['', 'E', '', 'F', ''],
+    ['5', 'G', 'I', 'F', 'T'],
+  ];
 
   const handleInputChange = (clueNumber: string, value: string) => {
     const newGuesses = { ...guesses, [clueNumber]: value.toUpperCase() };
@@ -35,9 +44,38 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   return (
     <div className="max-w-2xl mx-auto p-4">
       <h3 className="text-2xl font-bold mb-6 text-center text-blue-700">
-        Mini Crossword ❄️
+        Mini FrostWord ❄️
       </h3>
       
+      {/* Grid Display */}
+      <div className="mb-8">
+        <div className="grid grid-cols-5 gap-1 max-w-md mx-auto">
+          {grid.map((row, rowIndex) => (
+            <div key={rowIndex} className="contents">
+              {row.map((cell, colIndex) => (
+                <div
+                  key={`${rowIndex}-${colIndex}`}
+                  className={cn(
+                    "aspect-square border-2 flex items-center justify-center",
+                    "text-sm font-bold relative",
+                    cell === '' ? 'bg-gray-200' : 'bg-white/90 border-blue-200'
+                  )}
+                >
+                  {/[1-9]/.test(cell) && (
+                    <span className="absolute top-0.5 left-0.5 text-[10px] text-blue-600">
+                      {cell}
+                    </span>
+                  )}
+                  {/[A-Z]/.test(cell) && (
+                    <span className="text-blue-700">{cell}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <h4 className="font-semibold text-lg text-blue-600">Across</h4>
@@ -85,7 +123,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              You've completed Day 2's Mini Crossword puzzle!
+              You've completed Day 2's Mini FrostWord puzzle!
             </p>
             <p className="text-gray-600">
               Come back tomorrow for a new Christmas-themed challenge.
