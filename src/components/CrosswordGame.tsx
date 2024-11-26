@@ -23,23 +23,20 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const cellRefs = useRef<(HTMLInputElement | null)[][]>(Array(5).fill(null).map(() => Array(5).fill(null)));
 
-  // Updated 5x5 grid representation with valid input cells marked for SLED
+  // Updated 5x5 grid representation with valid input cells
   const grid = [
-    ['', '1', '', '2', ''],
-    ['3', 'S', 'L', 'E', 'D'],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['5', '', '', '', ''],
+    ['', '1', '2', '', ''],
+    ['3', 'N', 'O', 'E', 'L'],
+    ['', 'O', 'Y', '', ''],
+    ['4', 'E', 'S', '', ''],
+    ['', 'L', '', '', ''],
   ];
 
-  // Helper to determine if a cell is part of a word
   const isValidCell = (row: number, col: number) => {
-    const clueNumber = getClueNumber(row, col);
-    return clueNumber !== '' || 
-           (row === 1 && col >= 0 && col <= 4) || // STAR word
-           (row === 4 && col >= 0 && col <= 3) || // GIFT word
-           (col === 1 && row >= 0 && row <= 2) || // TOY word
-           (col === 3 && row >= 0 && row <= 2);   // ELF word
+    return grid[row][col] !== '' || 
+           (row === 1 && col >= 0 && col <= 4) || // NOEL word
+           (col === 1 && row >= 0 && row <= 4) || // NOEL down
+           (col === 2 && row >= 0 && row <= 2);   // TOY word
   };
 
   const formatTime = (seconds: number) => {
@@ -157,8 +154,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       down[clueNumber] ? { number: clueNumber, clue: down[clueNumber], direction: 'Down' } :
       null;
   };
-
-  const currentClue = getCurrentClue();
 
   return (
     <div className="max-w-2xl mx-auto p-4">
