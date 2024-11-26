@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface WordleGameProps {
   solution: string;
