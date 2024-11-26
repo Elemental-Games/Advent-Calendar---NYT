@@ -23,7 +23,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const cellRefs = useRef<(HTMLInputElement | null)[][]>(Array(5).fill(null).map(() => Array(5).fill(null)));
 
-  // Updated 5x5 grid representation with valid input cells
   const grid = [
     ['', '1', '2', '', ''],
     ['3', 'N', 'O', 'E', 'L'],
@@ -154,6 +153,8 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       down[clueNumber] ? { number: clueNumber, clue: down[clueNumber], direction: 'Down' } :
       null;
   };
+
+  const currentClue = getCurrentClue();
 
   return (
     <div className="max-w-2xl mx-auto p-4">
