@@ -15,24 +15,22 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [gameOver, setGameOver] = useState(false);
   const [isWinner, setIsWinner] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
+  const [activeCell, setActiveCell] = useState<number>(-1);
 
   const WORD_LENGTH = 5;
   const MAX_GUESSES = 6;
   
   const isValidWord = (word: string) => {
-    // For now we'll accept any 5-letter word, but this should be replaced with a proper dictionary check
     return word.length === WORD_LENGTH;
   };
 
   const getLetterStyle = (letter: string, index: number, guess: string) => {
     if (!letter) return "bg-transparent border-blue-200";
     
-    // Check if this letter is in the correct position
     if (guess[index] === solution[index]) {
       return "bg-blue-700 text-white border-blue-800";
     }
     
-    // Check if this letter exists in the solution (but not in this position)
     const solutionLetterCount = [...solution].filter(l => l === letter).length;
     const correctPositionsCount = [...guess].filter((l, i) => l === letter && solution[i] === letter).length;
     const previousOccurrences = [...guess].slice(0, index).filter(l => l === letter).length;
@@ -63,6 +61,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         const newGuesses = [...guesses, currentGuess.toUpperCase()];
         setGuesses(newGuesses);
         setCurrentGuess("");
+        setActiveCell(-1);
 
         if (currentGuess.toUpperCase() === solution) {
           setIsWinner(true);
@@ -74,9 +73,17 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           setGameOver(true);
         }
       } else if (e.key === "Backspace") {
-        setCurrentGuess(prev => prev.slice(0, -1));
+        setCurrentGuess(prev => {
+          const newGuess = prev.slice(0, -1);
+          setActiveCell(newGuess.length);
+          return newGuess;
+        });
       } else if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
-        setCurrentGuess(prev => prev + e.key.toUpperCase());
+        setCurrentGuess(prev => {
+          const newGuess = prev + e.key.toUpperCase();
+          setActiveCell(newGuess.length - 1);
+          return newGuess;
+        });
       }
     };
 
@@ -87,7 +94,6 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   return (
     <>
       <div className="max-w-sm mx-auto p-4">
-        <h3 className="text-xl font-bold mb-6 text-center">FrostWords</h3>
         <div className="grid gap-2">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-5 gap-2">
@@ -100,6 +106,8 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                   ? getLetterStyle(letter, colIndex, guesses[rowIndex])
                   : "bg-transparent border-blue-200";
 
+                const isActive = rowIndex === guesses.length && colIndex === activeCell;
+
                 return (
                   <motion.div
                     key={colIndex}
@@ -107,7 +115,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                     animate={{ 
                       scale: 1,
                       backgroundColor: isWinner && rowIndex === guesses.length - 1 
-                        ? "rgb(29 78 216)" // dark blue
+                        ? "rgb(29 78 216)" 
                         : undefined
                     }}
                     transition={isWinner && rowIndex === guesses.length - 1 
@@ -119,8 +127,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                     }
                     className={cn(
                       "w-full aspect-square border-2 rounded flex items-center justify-center",
-                      "text-2xl font-bold uppercase transition-colors duration-300",
-                      style
+                      "text-2xl font-bold uppercase transition-all duration-300",
+                      style,
+                      isActive && "border-blue-500 shadow-lg scale-105",
+                      rowIndex === guesses.length && !letter && "hover:border-blue-400"
                     )}
                   >
                     {letter}
@@ -141,10 +151,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              You've completed Day 1's FrostWords puzzle!
+              You've completed Day 1's Frostle puzzle!
             </p>
             <p className="text-gray-600">
-              Come back tomorrow for a new winter-themed challenge.
+              Come back tomorrow for a new Christmas-themed challenge.
             </p>
           </div>
         </DialogContent>

@@ -14,7 +14,6 @@ export function PuzzleDisplay({ type, content }: PuzzleDisplayProps) {
         const wordleContent = content as { word: string };
         return (
           <div className="p-4">
-            <h3 className="text-xl font-bold mb-6 text-center">Wordle</h3>
             <WordleGame solution={wordleContent.word} />
           </div>
         );
