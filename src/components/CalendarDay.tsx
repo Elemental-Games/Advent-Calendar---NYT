@@ -29,13 +29,6 @@ export function CalendarDay({ dayInfo, onClick, isCompleted = false }: CalendarD
     return () => clearInterval(timer);
   }, [dayInfo.unlockTime]);
 
-  const puzzleIcons = {
-    wordle: "W",
-    crossword: "C",
-    connections: "O",
-    strands: "S",
-  };
-
   const isAvailable = dayInfo.day <= 4;
 
   return (
@@ -45,25 +38,18 @@ export function CalendarDay({ dayInfo, onClick, isCompleted = false }: CalendarD
       className={cn(
         "relative aspect-square rounded-xl p-4 cursor-pointer transition-all duration-300",
         "flex flex-col items-center justify-center text-center",
-        "border-2 backdrop-blur-sm",
-        "hover:shadow-lg",
-        isCompleted ? "bg-red-700 text-white border-red-800" : 
-        isAvailable ? "bg-gradient-to-br from-red-500 to-red-600 text-white border-red-400" :
-        "bg-gradient-to-br from-white to-red-50 border-red-200",
+        "border-2",
+        isCompleted ? 
+          "bg-gradient-to-br from-emerald-600 to-emerald-700 text-white border-emerald-800" : 
+        isAvailable ? 
+          "bg-gradient-to-br from-red-500 via-amber-500 to-green-500 text-white border-red-400" :
+          "bg-gradient-to-br from-white to-red-50 border-red-200"
       )}
       onClick={onClick}
     >
-      <div className="absolute top-2 left-2">
+      <div className="absolute top-2 right-2">
         <span className="text-xs font-medium opacity-75">
           {getDayAbbreviation(dayInfo.day)}
-        </span>
-      </div>
-      <div className="absolute top-2 right-2">
-        <span className={cn(
-          "text-xs font-medium",
-          isCompleted || isAvailable ? "text-white/75" : "text-green-600"
-        )}>
-          {puzzleIcons[dayInfo.puzzleType]}
         </span>
       </div>
       <span className={cn(
@@ -72,12 +58,18 @@ export function CalendarDay({ dayInfo, onClick, isCompleted = false }: CalendarD
       )}>
         {dayInfo.day}
       </span>
-      <span className={cn(
-        "text-xs font-medium",
-        isCompleted || isAvailable ? "text-white/75" : "text-green-700"
-      )}>
-        {countdown}
-      </span>
+      {isCompleted ? (
+        <span className="text-xs font-medium text-white/90">
+          Completed
+        </span>
+      ) : (
+        <span className={cn(
+          "text-xs font-medium",
+          isCompleted || isAvailable ? "text-white/75" : "text-green-700"
+        )}>
+          {countdown}
+        </span>
+      )}
     </motion.div>
   );
 }
