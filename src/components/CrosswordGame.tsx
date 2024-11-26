@@ -21,8 +21,9 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [showDown, setShowDown] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const cellRefs = useRef<(HTMLInputElement | null)[][]>(Array(5).fill(null).map(() => Array(5).fill(null)));
 
-  // 5x5 grid representation
+  // 5x5 grid representation with valid input cells marked
   const grid = [
     ['', '1', '', '2', ''],
     ['3', '', '', '', ''],
@@ -30,6 +31,16 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     ['', '', '', '', ''],
     ['5', '', '', '', ''],
   ];
+
+  // Helper to determine if a cell is part of a word
+  const isValidCell = (row: number, col: number) => {
+    const clueNumber = getClueNumber(row, col);
+    return clueNumber !== '' || 
+           (row === 1 && col >= 0 && col <= 4) || // STAR word
+           (row === 4 && col >= 0 && col <= 3) || // GIFT word
+           (col === 1 && row >= 0 && row <= 2) || // TOY word
+           (col === 3 && row >= 0 && row <= 2);   // ELF word
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -56,31 +67,38 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     setElapsedTime(0);
   };
 
-  const handleCellClick = (rowIndex: number, colIndex: number) => {
-    if (selectedCell?.row === rowIndex && selectedCell?.col === colIndex) {
-      setShowDown(!showDown);
-    } else {
-      setSelectedCell({ row: rowIndex, col: colIndex });
-      setShowDown(false);
-    }
-  };
-
   const getClueNumber = (rowIndex: number, colIndex: number) => {
     const cell = grid[rowIndex][colIndex];
     return /[1-9]/.test(cell) ? cell : '';
   };
 
-  const handleInputChange = (clueNumber: string, value: string) => {
-    const newGuesses = { ...guesses, [clueNumber]: value };
+  const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
+    if (!isValidCell(rowIndex, colIndex)) return;
+
+    const clueNumber = getClueNumber(rowIndex, colIndex);
+    const direction = showDown ? 'd' : 'a';
+    const key = `${direction}${clueNumber}`;
+    
+    const newGuesses = { ...guesses };
+    if (clueNumber) {
+      newGuesses[key] = (newGuesses[key] || '').slice(0, colIndex) + value + (newGuesses[key] || '').slice(colIndex + 1);
+    }
     setGuesses(newGuesses);
 
-    // Check if all cells are filled
+    // Move to next cell
+    if (value) {
+      const nextCell = findNextCell(rowIndex, colIndex, showDown);
+      if (nextCell) {
+        cellRefs.current[nextCell.row][nextCell.col]?.focus();
+      }
+    }
+
+    // Check completion
     const allFilled = Object.keys(answers).every(
       key => newGuesses[key]?.length === answers[key].length
     );
 
     if (allFilled) {
-      // Check if all answers are correct
       const allCorrect = Object.entries(answers).every(
         ([num, answer]) => newGuesses[num]?.toUpperCase() === answer.toUpperCase()
       );
@@ -95,6 +113,34 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       } else {
         toast.error("Some letters are incorrect. Keep trying!");
       }
+    }
+  };
+
+  const findNextCell = (currentRow: number, currentCol: number, isDown: boolean): { row: number; col: number } | null => {
+    if (isDown) {
+      for (let row = currentRow + 1; row < 5; row++) {
+        if (isValidCell(row, currentCol)) {
+          return { row, col: currentCol };
+        }
+      }
+    } else {
+      for (let col = currentCol + 1; col < 5; col++) {
+        if (isValidCell(currentRow, col)) {
+          return { row: currentRow, col };
+        }
+      }
+    }
+    return null;
+  };
+
+  const handleCellClick = (rowIndex: number, colIndex: number) => {
+    if (!isValidCell(rowIndex, colIndex)) return;
+    
+    if (selectedCell?.row === rowIndex && selectedCell?.col === colIndex) {
+      setShowDown(!showDown);
+    } else {
+      setSelectedCell({ row: rowIndex, col: colIndex });
+      setShowDown(false);
     }
   };
 
@@ -125,22 +171,29 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       </div>
       
       <div className="mb-8">
-        <div className="grid grid-cols-5 gap-1 max-w-[95vw] md:max-w-md mx-auto">
+        <div className="grid grid-cols-5 gap-1 w-full max-w-[350px] md:max-w-[450px] mx-auto">
           {grid.map((row, rowIndex) => (
             <div key={rowIndex} className="contents">
-              {row.map((_, colIndex) => (
-                <CrosswordCell
-                  key={`${rowIndex}-${colIndex}`}
-                  value={guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`] || ""}
-                  clueNumber={getClueNumber(rowIndex, colIndex)}
-                  isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
-                  onClick={() => handleCellClick(rowIndex, colIndex)}
-                  onChange={(value) => handleInputChange(
-                    `${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`,
-                    value
-                  )}
-                />
-              ))}
+              {row.map((_, colIndex) => {
+                const isPartOfSelectedWord = selectedCell && (
+                  (showDown && selectedCell.col === colIndex) ||
+                  (!showDown && selectedCell.row === rowIndex)
+                );
+                
+                return (
+                  <CrosswordCell
+                    key={`${rowIndex}-${colIndex}`}
+                    value={guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`] || ""}
+                    clueNumber={getClueNumber(rowIndex, colIndex)}
+                    isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
+                    isPartOfWord={isPartOfSelectedWord && isValidCell(rowIndex, colIndex)}
+                    isValidCell={isValidCell(rowIndex, colIndex)}
+                    onClick={() => handleCellClick(rowIndex, colIndex)}
+                    onChange={(value) => handleInputChange(rowIndex, colIndex, value)}
+                    ref={el => cellRefs.current[rowIndex][colIndex] = el}
+                  />
+                );
+              })}
             </div>
           ))}
         </div>
