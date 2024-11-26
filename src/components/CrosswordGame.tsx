@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { CrosswordCell } from "./crossword/CrosswordCell";
 import { CrosswordClue } from "./crossword/CrosswordClue";
+import { crosswordGrid, crosswordClues } from "./crossword/CrosswordConstants";
 
 interface CrosswordGameProps {
   across: Record<string, string>;
@@ -23,13 +24,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const cellRefs = useRef<(HTMLInputElement | null)[][]>(Array(5).fill(null).map(() => Array(5).fill(null)));
 
-  const grid = [
-    ['', '1', '2', '', ''],
-    ['3', 'N', 'O', 'E', 'L'],
-    ['', 'O', 'Y', '', ''],
-    ['4', 'E', 'S', '', ''],
-    ['', 'L', '', '', ''],
-  ];
+  const grid = crosswordGrid;
 
   const isValidCell = (row: number, col: number) => {
     return grid[row][col] !== '' || 

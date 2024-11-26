@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { isValidEnglishWord } from "@/lib/dictionary";
 
 interface WordleGameProps {
@@ -13,161 +12,141 @@ interface WordleGameProps {
 export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState("");
-  const [gameOver, setGameOver] = useState(false);
-  const [isWinner, setIsWinner] = useState(false);
-  const [showCongrats, setShowCongrats] = useState(false);
-  const [activeCell, setActiveCell] = useState<number>(-1);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [showStartDialog, setShowStartDialog] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [completionTime, setCompletionTime] = useState<number | null>(null);
 
-  const WORD_LENGTH = 5;
-  const MAX_GUESSES = 6;
-  
-  const isValidWord = (word: string) => {
-    if (word.length !== WORD_LENGTH) return false;
-    return isValidEnglishWord(word);
-  };
-
-  const getLetterStyle = (letter: string, index: number, guess: string) => {
-    if (!letter) return "bg-transparent border-red-200";
-    
-    if (guess[index] === solution[index]) {
-      return "bg-green-700 text-white border-red-500"; // Bright red border for correct letters
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isStarted && !isGameOver) {
+      timer = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+      }, 1000);
     }
-    
-    const solutionLetterCount = [...solution].filter(l => l === letter).length;
-    const correctPositionsCount = [...guess].filter((l, i) => l === letter && solution[i] === letter).length;
-    const previousOccurrences = [...guess].slice(0, index).filter(l => l === letter).length;
-    
-    if (solution.includes(letter) && 
-        previousOccurrences + correctPositionsCount < solutionLetterCount) {
-      return "bg-green-300 text-white border-red-300"; // Lighter red border for misplaced letters
-    }
-    
-    return "bg-gray-600 text-white border-gray-700";
-  };
+    return () => clearInterval(timer);
+  }, [isStarted, isGameOver]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameOver) return;
+      if (!isStarted || isGameOver) return;
 
       if (e.key === "Enter") {
-        if (currentGuess.length !== WORD_LENGTH) {
+        if (currentGuess.length !== 5) {
           toast.error("Word must be 5 letters");
           return;
         }
-
-        if (!isValidWord(currentGuess)) {
+        if (!isValidEnglishWord(currentGuess)) {
           toast.error("Not a valid word");
           return;
         }
-        
-        const newGuesses = [...guesses, currentGuess.toUpperCase()];
+        const newGuesses = [...guesses, currentGuess];
         setGuesses(newGuesses);
         setCurrentGuess("");
-        setActiveCell(-1);
 
-        if (currentGuess.toUpperCase() === solution) {
-          setIsWinner(true);
-          setGameOver(true);
-          setTimeout(() => setShowCongrats(true), 1500);
+        if (currentGuess === solution) {
+          setIsGameOver(true);
+          setCompletionTime(elapsedTime);
+          toast.success("Congratulations!");
           onComplete?.();
-        } else if (newGuesses.length >= MAX_GUESSES) {
+        } else if (newGuesses.length === 6) {
+          setIsGameOver(true);
           toast.error(`Game Over! The word was ${solution}`);
-          setGameOver(true);
         }
       } else if (e.key === "Backspace") {
-        setCurrentGuess(prev => {
-          const newGuess = prev.slice(0, -1);
-          setActiveCell(newGuess.length);
-          return newGuess;
-        });
-      } else if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
-        setCurrentGuess(prev => {
-          const newGuess = prev + e.key.toUpperCase();
-          setActiveCell(newGuess.length - 1);
-          return newGuess;
-        });
+        setCurrentGuess(prev => prev.slice(0, -1));
+      } else if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < 5) {
+        setCurrentGuess(prev => prev + e.key.toUpperCase());
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentGuess, guesses, gameOver, solution, onComplete]);
+  }, [currentGuess, guesses, isGameOver, isStarted, solution, elapsedTime, onComplete]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const getLetterStyle = (letter: string, index: number, guess: string) => {
+    if (solution[index] === letter) {
+      return "bg-green-500 text-white border-green-500";
+    }
+    if (solution.includes(letter)) {
+      return "bg-yellow-500 text-white border-yellow-500";
+    }
+    return "bg-gray-500 text-white border-gray-500";
+  };
+
+  const handleStartGame = () => {
+    setIsStarted(true);
+    setShowStartDialog(false);
+    setElapsedTime(0);
+  };
 
   return (
-    <>
-      <div className="max-w-sm mx-auto p-4 w-full">
-        <h3 className="text-2xl font-bold mb-8 text-center text-green-700">
-          🎄
-        </h3>
-        <div className="grid gap-4 w-full max-w-[95vw] sm:max-w-sm mx-auto">
-          {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
-            <div key={rowIndex} className="grid grid-cols-5 gap-2">
-              {[...Array(WORD_LENGTH)].map((_, colIndex) => {
-                const letter = rowIndex === guesses.length 
-                  ? currentGuess[colIndex] 
-                  : guesses[rowIndex]?.[colIndex];
-                
-                const style = guesses[rowIndex] 
-                  ? getLetterStyle(letter, colIndex, guesses[rowIndex])
-                  : "bg-transparent border-red-200";
+    <div className="w-full max-w-lg mx-auto">
+      <h2 className="text-2xl font-bold mb-6 text-center text-green-700">
+        Kringle #1 - Day 1
+      </h2>
+      <h3 className="text-xl font-bold mb-4 text-center text-green-600">
+        Kringle #1 ❄️
+      </h3>
 
-                const isActive = rowIndex === guesses.length && colIndex === activeCell;
-
-                return (
-                  <motion.div
-                    key={colIndex}
-                    initial={{ scale: 0.8 }}
-                    animate={{ 
-                      scale: 1,
-                      backgroundColor: isWinner && rowIndex === guesses.length - 1 
-                        ? "rgb(21 128 61)" 
-                        : undefined
-                    }}
-                    transition={isWinner && rowIndex === guesses.length - 1 
-                      ? { 
-                          delay: colIndex * 0.2,
-                          duration: 0.3
-                        }
-                      : undefined
-                    }
-                    className={cn(
-                      "w-full relative",
-                      "before:content-[''] before:float-left before:pt-[100%]",
-                      "border-2 rounded",
-                      "text-2xl font-bold uppercase transition-all duration-300",
-                      style,
-                      isActive && "border-red-500 shadow-lg scale-105",
-                      rowIndex === guesses.length && !letter && "hover:border-red-400"
-                    )}
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {letter}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
+      <div className="text-center mb-4 text-lg font-mono">
+        {formatTime(elapsedTime)}
       </div>
 
-      <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
+      <div className="grid grid-rows-6 gap-2 mb-4">
+        {Array.from({ length: 6 }).map((_, rowIndex) => (
+          <div key={rowIndex} className="grid grid-cols-5 gap-2">
+            {Array.from({ length: 5 }).map((_, colIndex) => {
+              const letter = rowIndex === guesses.length
+                ? currentGuess[colIndex]
+                : guesses[rowIndex]?.[colIndex];
+
+              return (
+                <div
+                  key={colIndex}
+                  className={`
+                    w-full aspect-square flex items-center justify-center
+                    text-2xl font-bold border-2
+                    ${letter
+                      ? rowIndex < guesses.length
+                        ? getLetterStyle(letter, colIndex, guesses[rowIndex])
+                        : "border-gray-300"
+                      : "border-gray-200"
+                    }
+                  `}
+                >
+                  {letter}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl font-bold text-green-700">
-              Congratulations! 🎄🎅
+              Ready to Begin? ❄️
             </DialogTitle>
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              You've completed Kringle #1!
+              Click start to begin the Kringle puzzle!
             </p>
-            <p className="text-gray-600">
-              Come back tomorrow for a new Christmas-themed challenge.
-            </p>
+            <Button onClick={handleStartGame} className="bg-green-600 hover:bg-green-700">
+              Start Timer
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }
