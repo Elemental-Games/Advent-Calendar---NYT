@@ -1,5 +1,5 @@
 import { format, differenceInMilliseconds } from "date-fns";
-import { zonedTimeToUtc } from "date-fns-tz";
+import { fromZonedTime } from "date-fns-tz";
 
 export type PuzzleType = "wordle" | "crossword" | "connections" | "strands";
 
@@ -15,7 +15,7 @@ const UNLOCK_TIMEZONE = "America/New_York";
 
 export function createUnlockDate(day: number): Date {
   const date = new Date(2024, 11, day, UNLOCK_HOUR, UNLOCK_MINUTE);
-  return zonedTimeToUtc(date, UNLOCK_TIMEZONE);
+  return fromZonedTime(date, UNLOCK_TIMEZONE);
 }
 
 export function getPuzzleType(day: number): PuzzleType {
