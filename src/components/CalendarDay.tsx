@@ -39,48 +39,48 @@ export function CalendarDay({ dayInfo, isCompleted = false }: CalendarDayProps) 
 
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       className={cn(
-        "relative aspect-square rounded-xl p-4 cursor-pointer transition-all duration-300",
+        "relative aspect-square rounded-lg shadow-md transition-all duration-300",
         "flex flex-col items-center justify-center text-center",
         "border-2",
         isCompleted ? 
-          "bg-emerald-600 text-white border-emerald-800" : 
+          "bg-emerald-600/90 border-emerald-700 backdrop-blur-sm" : 
         isAvailable ? 
-          "bg-red-600 text-amber-300 border-green-500" :
-          "bg-white text-red-600 border-red-200"
+          "bg-red-600/90 border-green-600 backdrop-blur-sm" :
+          "bg-white/5 border-red-200/30 backdrop-blur-xl"
       )}
       onClick={handleClick}
     >
-      <div className="absolute top-2 w-full text-center">
+      <div className="absolute top-2 left-0 right-0 mx-auto">
         <span className={cn(
           "text-xs font-medium",
-          isCompleted ? "text-white/90" : 
-          isAvailable ? "text-green-300" : 
-          "text-red-400"
+          isCompleted ? "text-emerald-100" : 
+          isAvailable ? "text-amber-200" : 
+          "text-red-300"
         )}>
           {getDayAbbreviation(dayInfo.day)}
         </span>
       </div>
       <span className={cn(
-        "text-2xl font-bold mb-2",
+        "text-2xl font-bold mt-2",
         isCompleted ? "text-white" : 
-        isAvailable ? "text-amber-300" : 
-        "text-red-600"
+        isAvailable ? "text-amber-200" : 
+        "text-red-400"
       )}>
         {dayInfo.day}
       </span>
       {isCompleted ? (
-        <span className="text-xs font-medium text-white/90">
+        <span className="text-xs font-medium text-emerald-100 mt-1">
           Completed
         </span>
       ) : (
         <span className={cn(
-          "text-xs font-medium",
-          isCompleted ? "text-white/90" : 
+          "text-xs font-medium mt-1",
+          isCompleted ? "text-emerald-100" : 
           isAvailable ? "text-green-300" : 
-          "text-red-600"
+          "text-red-300"
         )}>
           {countdown}
         </span>

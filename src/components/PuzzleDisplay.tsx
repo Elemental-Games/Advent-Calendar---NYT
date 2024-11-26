@@ -1,5 +1,6 @@
 import React from 'react';
 import { PuzzleContent } from '@/lib/date-utils';
+import { WordleGame } from './WordleGame';
 
 interface PuzzleDisplayProps {
   type: "wordle" | "crossword" | "connections" | "strands";
@@ -12,9 +13,9 @@ export function PuzzleDisplay({ type, content }: PuzzleDisplayProps) {
       case "wordle":
         const wordleContent = content as { word: string };
         return (
-          <div className="p-4 text-center">
-            <h3 className="text-xl font-bold mb-4">Wordle Puzzle</h3>
-            <p className="text-gray-600">Try to guess: {wordleContent.word}</p>
+          <div className="p-4">
+            <h3 className="text-xl font-bold mb-6 text-center">Wordle</h3>
+            <WordleGame solution={wordleContent.word} />
           </div>
         );
       
@@ -91,7 +92,7 @@ export function PuzzleDisplay({ type, content }: PuzzleDisplayProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg">
+    <div className="bg-white/5 backdrop-blur-xl rounded-lg shadow-lg">
       {renderPuzzle()}
     </div>
   );
