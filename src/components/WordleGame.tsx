@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { isValidEnglishWord } from "@/lib/dictionary";
+import { motion } from "framer-motion";
 
 interface WordleGameProps {
   solution: string;
@@ -17,6 +18,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [isStarted, setIsStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completionTime, setCompletionTime] = useState<number | null>(null);
+  const [showCompletionAnimation, setShowCompletionAnimation] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -48,6 +50,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         if (currentGuess === solution) {
           setIsGameOver(true);
           setCompletionTime(elapsedTime);
+          setShowCompletionAnimation(true);
           toast.success("Congratulations!");
           onComplete?.();
         } else if (newGuesses.length === 6) {
@@ -73,10 +76,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
 
   const getLetterStyle = (letter: string, index: number, guess: string) => {
     if (solution[index] === letter) {
-      return "bg-green-500 text-white border-green-500";
+      return "bg-green-500 text-white border-green-600";
     }
     if (solution.includes(letter)) {
-      return "bg-yellow-500 text-white border-yellow-500";
+      return "bg-green-300 text-white border-green-400";
     }
     return "bg-gray-500 text-white border-gray-500";
   };
@@ -92,8 +95,8 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
       <h2 className="text-2xl font-bold mb-6 text-center text-green-700">
         Kringle #1 🎄
       </h2>
-      <h3 className="text-xl font-bold mb-4 text-center text-red-600">
-        Kringle #1 - Day 1
+      <h3 className="text-xl font-bold mb-4 text-center text-green-600">
+        Day 1
       </h3>
 
       <div className="text-center mb-4 text-lg font-mono">
@@ -117,8 +120,8 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
                     ${letter
                       ? rowIndex < guesses.length
                         ? getLetterStyle(letter, colIndex, guesses[rowIndex])
-                        : "border-gray-300"
-                      : "border-gray-200"
+                        : "border-green-200"
+                      : "border-green-100"
                     }
                   `}
                 >
@@ -129,6 +132,17 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           </div>
         ))}
       </div>
+
+      {showCompletionAnimation && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="fixed inset-0 pointer-events-none flex items-center justify-center"
+        >
+          <div className="text-6xl">🎉</div>
+        </motion.div>
+      )}
 
       <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
         <DialogContent className="sm:max-w-md">
