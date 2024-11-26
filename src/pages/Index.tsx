@@ -2,22 +2,24 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { CalendarDay } from "@/components/CalendarDay";
 import { generateCalendarData } from "@/lib/date-utils";
-import { useToast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatCountdown } from "@/lib/date-utils";
 
 const Index = () => {
   const [days] = useState(generateCalendarData());
-  const { toast } = useToast();
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   const handleDayClick = (day: number) => {
-    toast({
-      title: `Day ${day}`,
-      description: "This puzzle will be available in the full version!",
-      duration: 2000,
-    });
+    setSelectedDay(day);
   };
 
+  const selectedDayInfo = days.find(d => d.day === selectedDay);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 relative overflow-hidden">
+      {/* Christmas lights effect */}
+      <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-r from-red-500 via-green-500 to-yellow-200 animate-pulse" />
+      
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -25,10 +27,10 @@ const Index = () => {
         className="max-w-4xl mx-auto"
       >
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Puzzle Advent Calendar
+          <h1 className="text-4xl font-bold text-red-700 mb-4 font-serif">
+            KB's Advent Calendar
           </h1>
-          <p className="text-gray-600">
+          <p className="text-green-700">
             A new puzzle unlocks each day at 7:30 AM EST
           </p>
         </div>
@@ -43,6 +45,24 @@ const Index = () => {
           ))}
         </div>
       </motion.div>
+
+      <Dialog open={selectedDay !== null} onOpenChange={() => setSelectedDay(null)}>
+        <DialogContent className="bg-white/95 backdrop-blur-sm border-red-200">
+          <DialogHeader>
+            <DialogTitle className="text-red-700">
+              Day {selectedDay} - Countdown
+            </DialogTitle>
+          </DialogHeader>
+          <div className="p-6 text-center">
+            <p className="text-2xl font-bold text-green-700">
+              {selectedDayInfo && formatCountdown(selectedDayInfo.unlockTime)}
+            </p>
+            <p className="mt-4 text-gray-600">
+              Come back when the timer reaches zero to solve the puzzle!
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

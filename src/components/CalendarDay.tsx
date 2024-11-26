@@ -10,16 +10,10 @@ interface CalendarDayProps {
 
 export function CalendarDay({ dayInfo, onClick }: CalendarDayProps) {
   const [countdown, setCountdown] = useState("");
-  const [isUnlocked, setIsUnlocked] = useState(false);
 
   useEffect(() => {
     const checkStatus = () => {
-      const now = new Date();
-      const isAvailable = now >= dayInfo.unlockTime;
-      setIsUnlocked(isAvailable);
-      if (!isAvailable) {
-        setCountdown(formatCountdown(dayInfo.unlockTime));
-      }
+      setCountdown(formatCountdown(dayInfo.unlockTime));
     };
 
     checkStatus();
@@ -36,27 +30,27 @@ export function CalendarDay({ dayInfo, onClick }: CalendarDayProps) {
 
   return (
     <motion.div
-      whileHover={isUnlocked ? { scale: 1.05 } : {}}
-      whileTap={isUnlocked ? { scale: 0.95 } : {}}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       className={cn(
         "relative aspect-square rounded-xl p-4 cursor-pointer transition-all duration-300",
         "flex flex-col items-center justify-center text-center",
-        "border border-gray-200 bg-white/50 backdrop-blur-sm",
-        isUnlocked
-          ? "hover:shadow-lg hover:border-gray-300"
-          : "opacity-75 cursor-not-allowed"
+        "border-2 backdrop-blur-sm",
+        "hover:shadow-lg hover:border-red-300",
+        "bg-gradient-to-br from-white to-red-50",
+        "border-red-200"
       )}
-      onClick={isUnlocked ? onClick : undefined}
+      onClick={onClick}
     >
-      <span className="text-xs font-medium text-gray-500 mb-1">
-        {puzzleIcons[dayInfo.puzzleType]}
-      </span>
-      <span className="text-2xl font-bold text-gray-800 mb-2">
+      <div className="absolute top-2 right-2">
+        <span className="text-xs font-medium text-green-600">
+          {puzzleIcons[dayInfo.puzzleType]}
+        </span>
+      </div>
+      <span className="text-2xl font-bold text-red-700 mb-2">
         {dayInfo.day}
       </span>
-      {!isUnlocked && (
-        <span className="text-xs font-medium text-gray-500">{countdown}</span>
-      )}
+      <span className="text-xs font-medium text-green-700">{countdown}</span>
     </motion.div>
   );
 }
