@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { isValidEnglishWord } from "@/lib/dictionary";
 
 interface WordleGameProps {
   solution: string;
@@ -22,15 +21,14 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const MAX_GUESSES = 6;
   
   const isValidWord = (word: string) => {
-    if (word.length !== WORD_LENGTH) return false;
-    return isValidEnglishWord(word);
+    return word.length === WORD_LENGTH;
   };
 
   const getLetterStyle = (letter: string, index: number, guess: string) => {
     if (!letter) return "bg-transparent border-red-200";
     
     if (guess[index] === solution[index]) {
-      return "bg-green-700 text-white border-red-500"; // Bright red border for correct letters
+      return "bg-green-700 text-white border-green-800";
     }
     
     const solutionLetterCount = [...solution].filter(l => l === letter).length;
@@ -39,7 +37,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     
     if (solution.includes(letter) && 
         previousOccurrences + correctPositionsCount < solutionLetterCount) {
-      return "bg-green-300 text-white border-red-300"; // Lighter red border for misplaced letters
+      return "bg-green-300 text-white border-green-400";
     }
     
     return "bg-gray-600 text-white border-gray-700";
@@ -96,10 +94,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   return (
     <>
       <div className="max-w-sm mx-auto p-4 w-full">
-        <h3 className="text-2xl font-bold mb-8 text-center text-green-700">
-          🎄
+        <h3 className="text-2xl font-bold mb-6 text-center text-green-700">
+          Kringle #1 🎄
         </h3>
-        <div className="grid gap-4 w-full max-w-[95vw] sm:max-w-sm mx-auto">
+        <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-5 gap-2">
               {[...Array(WORD_LENGTH)].map((_, colIndex) => {

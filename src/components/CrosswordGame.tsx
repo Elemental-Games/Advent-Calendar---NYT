@@ -23,10 +23,10 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const cellRefs = useRef<(HTMLInputElement | null)[][]>(Array(5).fill(null).map(() => Array(5).fill(null)));
 
-  // Updated 5x5 grid representation with valid input cells marked for SLED
+  // 5x5 grid representation with valid input cells marked
   const grid = [
     ['', '1', '', '2', ''],
-    ['3', 'S', 'L', 'E', 'D'],
+    ['3', '', '', '', ''],
     ['', '', '', '', ''],
     ['', '', '', '', ''],
     ['5', '', '', '', ''],
