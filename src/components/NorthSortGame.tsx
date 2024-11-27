@@ -48,8 +48,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     });
   }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
 
-  const allWords = groups.flatMap(group => group.words);
-  const remainingWords = allWords.filter(word => 
+  const remainingWords = groups.flatMap(group => group.words).filter(word => 
     !completedGroups.some(cat => 
       groups.find(g => g.category === cat)?.words.includes(word)
     )
@@ -129,6 +128,8 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
         revealGroups();
       }
     }
+    // Clear selected words after each attempt, whether correct or not
+    setSelectedWords([]);
   };
 
   return (
@@ -136,7 +137,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       <NorthSortHeader remainingAttempts={remainingAttempts} />
 
       <div className="space-y-6 mt-4">
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {completedGroups.map((category) => {
             const group = groups.find(g => g.category === category)!;
             return (
