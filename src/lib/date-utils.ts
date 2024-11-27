@@ -1,7 +1,7 @@
 import { format, differenceInMilliseconds } from "date-fns";
 import { fromZonedTime } from "date-fns-tz";
 
-export type PuzzleType = "wordle" | "crossword" | "connections" | "strands";
+export type PuzzleType = "kringle" | "frostword" | "northsort" | "garland";
 
 interface WordlePuzzle {
   word: string;
@@ -52,23 +52,26 @@ export function createUnlockDate(day: number): Date {
 }
 
 export function getPuzzleType(day: number): PuzzleType {
-  const types: PuzzleType[] = ["wordle", "crossword", "connections", "strands"];
+  const types: PuzzleType[] = ["kringle", "frostword", "northsort", "garland"];
   return types[(day - 1) % 4] as PuzzleType;
 }
 
-export function formatCountdown(targetDate: Date): string {
-  const now = new Date();
-  const diff = differenceInMilliseconds(targetDate, now);
+export function getGameNumber(day: number): number {
+  return Math.floor((day - 1) / 4) + 1;
+}
 
-  if (diff <= 0) return "Available now";
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-  if (days > 0) return `${days}d ${hours.toString().padStart(2, '0')}h`;
-  return `${hours}h ${minutes}m`;
+export function formatPuzzleTitle(day: number): string {
+  const type = getPuzzleType(day);
+  const gameNumber = getGameNumber(day);
+  
+  const typeNames = {
+    kringle: "Kringle",
+    frostword: "FrostWord",
+    northsort: "NorthSort",
+    garland: "Garland"
+  };
+  
+  return `Day ${day} - ${typeNames[type]} #${gameNumber}`;
 }
 
 const puzzleData: { [key: number]: PuzzleContent } = {

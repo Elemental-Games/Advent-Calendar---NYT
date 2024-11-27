@@ -1,17 +1,19 @@
 import React from 'react';
-import { PuzzleContent } from '@/lib/date-utils';
+import { PuzzleContent, formatPuzzleTitle } from '@/lib/date-utils';
 import { WordleGame } from './WordleGame';
 import { CrosswordGame } from './CrosswordGame';
+import { NorthSortGame } from './NorthSortGame';
 
 interface PuzzleDisplayProps {
-  type: "wordle" | "crossword" | "connections" | "strands";
+  type: "kringle" | "frostword" | "northsort" | "garland";
   content: PuzzleContent;
+  day: number;
 }
 
-export function PuzzleDisplay({ type, content }: PuzzleDisplayProps) {
+export function PuzzleDisplay({ type, content, day }: PuzzleDisplayProps) {
   const renderPuzzle = () => {
     switch (type) {
-      case "wordle":
+      case "kringle":
         const wordleContent = content as { word: string };
         return (
           <div className="p-4">
@@ -19,7 +21,7 @@ export function PuzzleDisplay({ type, content }: PuzzleDisplayProps) {
           </div>
         );
       
-      case "crossword":
+      case "frostword":
         const crosswordContent = content as { 
           across: Record<string, string>;
           down: Record<string, string>;
@@ -35,39 +37,23 @@ export function PuzzleDisplay({ type, content }: PuzzleDisplayProps) {
           </div>
         );
       
-      case "connections":
-        const connectionsContent = content as { groups: Array<{ category: string; color: string; words: string[] }> };
+      case "northsort":
+        const northsortContent = content as { 
+          groups: Array<{ category: string; color: string; words: string[] }> 
+        };
         return (
           <div className="p-4">
-            <h3 className="text-xl font-bold mb-4">Connections</h3>
-            <div className="space-y-4">
-              {connectionsContent.groups.map((group, index) => (
-                <div key={index} className="p-2 rounded" style={{ backgroundColor: group.color === 'yellow' ? '#fef08a' : 
-                                                                                   group.color === 'green' ? '#bbf7d0' :
-                                                                                   group.color === 'blue' ? '#bfdbfe' : 
-                                                                                   '#fecaca' }}>
-                  <h4 className="font-semibold mb-2">{group.category}</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {group.words.map((word, i) => (
-                      <span key={i} className="px-2 py-1 bg-white rounded shadow-sm">
-                        {word}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <NorthSortGame groups={northsortContent.groups} />
           </div>
         );
       
-      case "strands":
-        const strandsContent = content as { words: string[]; themeWord: string };
+      case "garland":
+        const garlandContent = content as { words: string[]; themeWord: string };
         return (
           <div className="p-4">
-            <h3 className="text-xl font-bold mb-4">Strands</h3>
-            <p className="mb-4">Theme word: {strandsContent.themeWord}</p>
+            <h3 className="text-xl font-bold mb-4">{formatPuzzleTitle(day)}</h3>
             <div className="flex flex-wrap gap-2">
-              {strandsContent.words.map((word, index) => (
+              {garlandContent.words.map((word, index) => (
                 <span key={index} className="px-3 py-1 bg-red-100 rounded-full">
                   {word}
                 </span>
