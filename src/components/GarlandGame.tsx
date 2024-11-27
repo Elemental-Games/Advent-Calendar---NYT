@@ -123,7 +123,7 @@ export function GarlandGame({
                   onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                   onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
                   selectionIndex={selectedCells.indexOf(rowIndex * 6 + colIndex)}
-                  uniqueColor={uniqueColors[position]}
+                  position={position}
                 />
               );
             })}

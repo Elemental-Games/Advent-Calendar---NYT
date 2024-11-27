@@ -11,7 +11,7 @@ interface GridCellProps {
   onMouseDown: () => void;
   onMouseEnter: () => void;
   selectionIndex: number;
-  uniqueColor: string;
+  position: number;
 }
 
 export const GridCell = memo(function GridCell({
@@ -23,10 +23,8 @@ export const GridCell = memo(function GridCell({
   onMouseDown,
   onMouseEnter,
   selectionIndex,
-  uniqueColor,
+  position,
 }: GridCellProps) {
-  const position = Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11;
-
   const getBaseStyles = () => {
     // Theme word (Christmas)
     if (isThemeWord && isFound) {
@@ -42,20 +40,19 @@ export const GridCell = memo(function GridCell({
       if (letter === 'T' && position === 82) return 'bg-red-500 text-white border-black';
       if (letter === 'A' && position === 81) return 'bg-green-500 text-white border-black';
       
-      // All other found words are green
       return 'bg-green-500 text-white border-black';
     }
 
-    // Currently selected letter
+    // Currently selected
     if (isSelected) {
       return 'bg-blue-500 text-white border-blue-400';
     }
 
-    // Default state with hover
+    // Default with hover - using predefined hover colors
     return cn(
       'bg-white text-gray-900 border-gray-200',
       'hover:text-white active:text-white',
-      `hover:${uniqueColor} active:${uniqueColor}`
+      'hover:bg-blue-500 active:bg-blue-500'
     );
   };
 
