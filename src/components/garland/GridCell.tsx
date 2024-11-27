@@ -33,8 +33,9 @@ export const GridCell = memo(function GridCell({
       return 'bg-green-500 text-white border-red-500';
     }
     
-    // Found words with specific colors for SANTA
+    // Found words
     if (isFound) {
+      // Special case for SANTA
       const santaColors: { [key: number]: string } = {
         71: 'bg-orange-500', // S
         72: 'bg-blue-500',   // A
@@ -47,9 +48,8 @@ export const GridCell = memo(function GridCell({
         return `${santaColors[position]} text-white border-black`;
       }
       
-      // Extract color components for found non-SANTA words
-      const [, color, shade] = uniqueColor.split('-');
-      return `bg-${color}-${shade} text-white border-black`;
+      // All other found words are green
+      return 'bg-green-500 text-white border-black';
     }
 
     // Currently selected letter
