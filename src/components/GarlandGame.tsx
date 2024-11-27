@@ -6,12 +6,16 @@ import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
 import { useWordSelection } from '@/hooks/useWordSelection';
 
 interface GarlandGameProps {
-  words: string[];
-  themeWord: string;
+  words?: string[];
+  themeWord?: string;
   onComplete?: () => void;
 }
 
-export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) {
+export function GarlandGame({ 
+  words = ['santa', 'sleigh', 'cookies', 'mistletoe', 'frost', 'rudolph'],
+  themeWord = 'christmas',
+  onComplete 
+}: GarlandGameProps) {
   const [foundWords, setFoundWords] = useState<string[]>([]);
   const { selectedCells, currentWord, handleCellMouseDown, handleCellMouseEnter, handleMouseUp } = 
     useWordSelection(words, foundWords, setFoundWords, themeWord, onComplete);

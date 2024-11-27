@@ -24,14 +24,7 @@ export function GridCell({
   selectionIndex,
 }: GridCellProps) {
   const getRandomChristmasColor = () => {
-    const colors = [
-      'bg-blue-500',
-      'bg-green-500',
-      'bg-red-500',
-      'bg-yellow-500',
-      'bg-orange-500'
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
+    return CHRISTMAS_COLORS[Math.floor(Math.random() * CHRISTMAS_COLORS.length)];
   };
 
   const getColors = () => {
@@ -45,7 +38,7 @@ export function GridCell({
       };
     }
     
-    // Found words
+    // Found words - keep their color based on word index
     if (isFound) {
       const colorIndex = foundWordIndex % CHRISTMAS_COLORS.length;
       return {
@@ -59,7 +52,7 @@ export function GridCell({
     // Currently selected letter
     if (isSelected) {
       return {
-        bg: getRandomChristmasColor(),
+        bg: `bg-[${CHRISTMAS_COLORS[selectionIndex % CHRISTMAS_COLORS.length]}]`,
         text: 'text-white',
         border: 'border-transparent',
         hover: '',
@@ -84,7 +77,7 @@ export function GridCell({
       className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
         border-2 transition-colors duration-300 shadow-lg
         ${colors.bg} ${colors.text} ${colors.border} ${colors.hover}
-        ${!isFound && !isSelected ? 'hover:' + getRandomChristmasColor() : ''}
+        ${!isFound && !isSelected ? 'hover:bg-[' + getRandomChristmasColor() + ']' : ''}
         ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}
       onMouseEnter={!isFound ? onMouseEnter : undefined}
