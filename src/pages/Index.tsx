@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CalendarDay } from "@/components/CalendarDay";
 import { generateCalendarData } from "@/lib/date-utils";
+import { isDayCompleted } from "@/lib/game-state";
 
 const Index = () => {
   const [days] = useState(generateCalendarData());
@@ -24,6 +25,7 @@ const Index = () => {
             <CalendarDay
               key={dayInfo.day}
               dayInfo={dayInfo}
+              isCompleted={isDayCompleted(dayInfo.day)}
             />
           ))}
         </div>

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Alert, AlertDescription } from "./ui/alert";
+import { NorthSortHeader } from "./northsort/NorthSortHeader";
+import { CompletedGroup } from "./northsort/CompletedGroup";
+import { WordGrid } from "./northsort/WordGrid";
 
 interface NorthSortGameProps {
   groups: Array<{
@@ -20,7 +22,6 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
   const [showCongrats, setShowCongrats] = useState(false);
   const [remainingAttempts, setRemainingAttempts] = useState(4);
   const [gameOver, setGameOver] = useState(false);
-  const [revealIndex, setRevealIndex] = useState(0);
 
   const allWords = groups.flatMap(group => group.words);
   const remainingWords = allWords.filter(word => 
@@ -49,6 +50,23 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
       }
     }
     return false;
+  };
+
+  const revealGroups = () => {
+    let currentIndex = 0;
+    const revealNextGroup = () => {
+      if (currentIndex < groups.length) {
+        const nextGroup = groups[currentIndex];
+        if (!completedGroups.includes(nextGroup.category)) {
+          setCompletedGroups(prev => [...prev, nextGroup.category]);
+        }
+        currentIndex++;
+        if (currentIndex < groups.length) {
+          setTimeout(revealNextGroup, 2000);
+        }
+      }
+    };
+    revealNextGroup();
   };
 
   const handleSubmit = () => {
@@ -83,21 +101,6 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
       setRemainingAttempts(prev => prev - 1);
       if (remainingAttempts <= 1) {
         setGameOver(true);
-        const revealGroups = () => {
-          if (revealIndex < groups.length) {
-            console.log(`Revealing group ${revealIndex + 1} of ${groups.length}`);
-            setCompletedGroups(prev => {
-              const nextGroup = groups[revealIndex];
-              return prev.includes(nextGroup.category) 
-                ? prev 
-                : [...prev, nextGroup.category];
-            });
-            setRevealIndex(prev => prev + 1);
-            if (revealIndex < groups.length - 1) {
-              setTimeout(revealGroups, 2000);
-            }
-          }
-        };
         revealGroups();
       }
     }
@@ -105,73 +108,35 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
 
   return (
     <div className="container px-2 sm:px-4">
-      <h3 className="text-2xl font-bold mb-4 text-center text-red-700">
-        NorthSort #1 🎁
-      </h3>
+      <NorthSortHeader remainingAttempts={remainingAttempts} />
 
       <div className="relative rounded-lg p-4 bg-white/5 backdrop-blur-sm border border-red-200/30">
-        <Alert className="mb-4">
-          <AlertDescription>
-            Attempts remaining: {remainingAttempts}
-          </AlertDescription>
-        </Alert>
-
         <div className="space-y-4">
-          <div className="space-y-2">
-            {completedGroups.map((category, index) => {
+          <div className="space-y-3">
+            {completedGroups.map((category) => {
               const group = groups.find(g => g.category === category)!;
               return (
-                <motion.div
+                <CompletedGroup
                   key={category}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="p-3 rounded-lg"
-                  style={{ backgroundColor: group.color }}
-                >
-                  <h4 className="font-semibold mb-2 text-white">{category}</h4>
-                  <div className="grid grid-cols-4 gap-2">
-                    {group.words.map(word => (
-                      <div
-                        key={word}
-                        className="px-2 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center md:aspect-[2.5/1] aspect-[2.5/1]"
-                      >
-                        <span className="text-xs sm:text-sm text-center break-words">
-                          {word}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
+                  category={category}
+                  color={group.color}
+                  words={group.words}
+                />
               );
             })}
           </div>
 
-          {!gameOver && (
-            <div className="grid grid-cols-4 gap-2">
-              {remainingWords.map(word => (
-                <motion.button
-                  key={word}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleWordClick(word)}
-                  className={`px-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center md:aspect-[2.5/1] aspect-[2.5/1] w-full
-                    ${selectedWords.includes(word)
-                      ? 'bg-red-600 text-white'
-                      : 'bg-white hover:bg-red-50'
-                    }`}
-                >
-                  <span className="break-words text-center">
-                    {word}
-                  </span>
-                </motion.button>
-              ))}
-            </div>
+          {!gameOver && remainingWords.length > 0 && (
+            <WordGrid
+              words={remainingWords}
+              selectedWords={selectedWords}
+              onWordClick={handleWordClick}
+            />
           )}
 
           <Button
             onClick={handleSubmit}
-            disabled={selectedWords.length !== 4}
+            disabled={selectedWords.length !== 4 || gameOver}
             className="w-full mt-4 bg-red-600 hover:bg-red-700"
           >
             Submit Selection
