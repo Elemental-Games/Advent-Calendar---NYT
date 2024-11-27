@@ -35,12 +35,24 @@ export function GridCell({
       };
     }
     
-    // Found words
+    // Found words with specific colors for SANTA
     if (isFound) {
+      // Special handling for SANTA word positions
+      const santaColors: { [key: number]: string } = {
+        71: 'bg-orange-500', // S
+        72: 'bg-blue-500',   // A
+        73: 'bg-yellow-500', // N
+        82: 'bg-red-500',    // T
+        81: 'bg-green-500'   // A
+      };
+      
+      const position = Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11;
+      const specificColor = santaColors[position];
+      
       return {
-        bg: `bg-[${uniqueColor}]`,
+        bg: specificColor || `bg-[${uniqueColor}]`,
         text: 'text-white',
-        border: 'border-yellow-400',
+        border: 'border-black',
         hover: '',
       };
     }
