@@ -131,22 +131,22 @@ const puzzleData: { [key: number]: PuzzleContent } = {
       {
         category: "Decorations",
         color: "rgb(234 179 8)",
-        words: ["HOLLY", "GARLAND", "STAR", "ANGEL"]
+        words: ["GARLAND", "HOLLY", "ANGEL", "STAR"]
       },
       {
         category: "Santa's Snacks",
         color: "rgb(34 197 94)",
-        words: ["MINTS", "COOKIES", "CAKE", "MILK"]
+        words: ["CAKE", "MINTS", "MILK", "COOKIES"]
       },
       {
         category: "Gift Wrap",
         color: "rgb(59 130 246)",
-        words: ["STRING", "BOW", "PAPER", "RIBBON"]
+        words: ["BOW", "STRING", "RIBBON", "PAPER"]
       },
       {
         category: "Holiday Drinks",
         color: "rgb(239 68 68)",
-        words: ["COFFEE", "WINE", "BEER", "EGGNOG"]
+        words: ["WINE", "BEER", "COFFEE", "EGGNOG"]
       }
     ]
   },

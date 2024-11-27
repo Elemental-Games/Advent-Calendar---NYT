@@ -129,6 +129,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
         revealGroups();
       }
     }
+    setSelectedWords([]);
   };
 
   return (
