@@ -1,17 +1,28 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
-// Define the grid as a constant since it's static
-const grid = [
-  ['S', 'L', 'E', 'S', 'F', 'R'],
-  ['H', 'G', 'I', 'A', 'S', 'O'],
-  ['M', 'I', 'T', 'M', 'T', 'R'],
-  ['S', 'T', 'L', 'S', 'O', 'U'],
-  ['T', 'E', 'I', 'P', 'L', 'D'],
-  ['O', 'E', 'R', 'H', 'E', 'S'],
-  ['S', 'A', 'N', 'H', 'K', 'I'],
-  ['A', 'T', 'C', 'O', 'O', 'C'],
-];
+// Word position mappings
+const WORD_POSITIONS = {
+  'santa': [71, 72, 73, 82, 81],
+  'cookies': [86, 85, 84, 75, 76],
+  'sleigh': [11, 12, 13, 23, 22, 21],
+  'mistletoe': [31, 32, 41, 42, 43, 52, 51, 61, 62],
+  'frost': [15, 16, 26, 25, 35],
+  'rudolph': [36, 46, 56, 45, 55, 64],
+  'christmas': [83, 74, 63, 53, 44, 33, 34, 24, 14]
+};
+
+// Convert grid position (row, col) to position number
+const getPositionNumber = (row: number, col: number): number => {
+  return (row + 1) * 10 + (col + 1);
+};
+
+// Convert position number to grid position
+const getGridPosition = (pos: number): [number, number] => {
+  const row = Math.floor(pos / 10) - 1;
+  const col = (pos % 10) - 1;
+  return [row, col];
+};
 
 export function useWordSelection(
   words: string[],
@@ -49,7 +60,6 @@ export function useWordSelection(
     const lastCell = selectedCells[selectedCells.length - 1];
     
     if (selectedCells.includes(newCell)) {
-      // If hovering over a previously selected cell, remove all cells after it
       const index = selectedCells.indexOf(newCell);
       const newSelectedCells = selectedCells.slice(0, index + 1);
       setSelectedCells(newSelectedCells);
@@ -80,7 +90,21 @@ export function useWordSelection(
       return;
     }
 
-    if (words.includes(word) && !foundWords.includes(word)) {
+    // Check if the selected cells match any word's position pattern
+    const selectedPositions = selectedCells.map(cell => {
+      const row = Math.floor(cell / 6);
+      const col = cell % 6;
+      return getPositionNumber(row, col);
+    });
+
+    const isValidWord = Object.entries(WORD_POSITIONS).some(([validWord, positions]) => {
+      if (selectedPositions.length === positions.length) {
+        return selectedPositions.every((pos, index) => pos === positions[index]);
+      }
+      return false;
+    });
+
+    if (isValidWord && !foundWords.includes(word)) {
       setFoundWords([...foundWords, word]);
       if (word.toLowerCase() === themeWord.toLowerCase()) {
         toast.success("Congratulations! You found the theme word!");
@@ -93,6 +117,7 @@ export function useWordSelection(
         onComplete?.();
       }
     }
+    
     setSelectedCells([]);
     setCurrentWord('');
   }, [isDragging, currentWord, words, foundWords, themeWord, onComplete]);
@@ -105,3 +130,15 @@ export function useWordSelection(
     handleMouseUp
   };
 }
+
+// Define the grid as a constant since it's static
+const grid = [
+  ['S', 'L', 'E', 'S', 'F', 'R'],
+  ['H', 'G', 'I', 'A', 'S', 'O'],
+  ['M', 'I', 'T', 'M', 'T', 'R'],
+  ['S', 'T', 'L', 'S', 'O', 'U'],
+  ['T', 'E', 'I', 'P', 'L', 'D'],
+  ['O', 'E', 'R', 'H', 'E', 'S'],
+  ['S', 'A', 'N', 'H', 'K', 'I'],
+  ['A', 'T', 'C', 'O', 'O', 'C'],
+];
