@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 
 interface WordGridProps {
   words: string[];
@@ -8,9 +9,19 @@ interface WordGridProps {
 }
 
 export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGridProps) {
+  // Shuffle words only once when they change using useMemo
+  const shuffledWords = useMemo(() => {
+    const shuffled = [...words];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, [words]);
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {words.map(word => (
+      {shuffledWords.map(word => (
         <motion.button
           key={word}
           whileHover={{ scale: 1.02 }}
