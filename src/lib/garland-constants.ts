@@ -3,7 +3,8 @@ export const CHRISTMAS_COLORS = [
   'bg-green-500',  // Green
   'bg-blue-500',   // Blue
   'bg-yellow-500', // Yellow
-  'bg-purple-500', // Purple
+  'bg-yellow-500', // Yellow (duplicated to increase frequency)
+  'bg-yellow-500', // Yellow (duplicated to increase frequency)
 ] as const;
 
 export const GRID_CELL_SIZE = 40; // pixels
@@ -12,14 +13,14 @@ export const GRID_CELL_SIZE = 40; // pixels
 export const generateUniqueColors = () => {
   const colors: { [key: number]: string } = {};
   const pattern = [
-    [0, 3, 2, 1, 4, 0],  // Row 1: Red, Yellow, Blue, Green, Purple, Red
-    [4, 2, 1, 3, 0, 4],  // Row 2: Purple, Blue, Green, Yellow, Red, Purple
-    [2, 1, 0, 4, 3, 2],  // Row 3: Blue, Green, Red, Purple, Yellow, Blue
-    [3, 4, 2, 0, 1, 3],  // Row 4: Yellow, Purple, Blue, Red, Green, Yellow
-    [0, 3, 4, 2, 1, 0],  // Row 5: Red, Yellow, Purple, Blue, Green, Red
-    [4, 2, 1, 3, 0, 4],  // Row 6: Purple, Blue, Green, Yellow, Red, Purple
-    [2, 1, 0, 4, 3, 2],  // Row 7: Blue, Green, Red, Purple, Yellow, Blue
-    [3, 4, 2, 0, 1, 3],  // Row 8: Yellow, Purple, Blue, Red, Green, Yellow
+    [0, 3, 2, 1, 4, 0],  // Row 1
+    [4, 2, 1, 3, 0, 4],  // Row 2
+    [2, 1, 0, 4, 3, 2],  // Row 3
+    [3, 4, 2, 0, 1, 3],  // Row 4
+    [0, 3, 4, 2, 1, 0],  // Row 5
+    [4, 2, 1, 3, 0, 4],  // Row 6
+    [2, 1, 0, 4, 3, 2],  // Row 7
+    [3, 4, 2, 0, 1, 3],  // Row 8
   ];
   
   for (let row = 1; row <= 8; row++) {

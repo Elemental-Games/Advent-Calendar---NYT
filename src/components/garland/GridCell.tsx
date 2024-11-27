@@ -57,11 +57,11 @@ export const GridCell = memo(function GridCell({
 
     // Get the predefined color for hover/selection state
     const colors = generateUniqueColors();
-    const hoverColor = `hover:${colors[position]}` || 'hover:bg-blue-500';
+    const hoverColor = colors[position] || 'hover:bg-blue-500';
 
     // Currently selected - use the hover color without the 'hover:' prefix
     if (isSelected) {
-      return `${colors[position]} text-white`;
+      return `${colors[position].replace('hover:', '')} text-white`;
     }
 
     // Default state (not found, not selected)
