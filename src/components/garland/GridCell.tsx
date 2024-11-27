@@ -36,21 +36,22 @@ export const GridCell = memo(function GridCell({
     
     // Found words with specific colors
     if (isFound) {
+      const baseStyle = 'text-white border-2 border-black';
       switch(foundWordIndex) {
         case 0: // santa
-          return 'bg-red-500 text-white border-transparent';
+          return `bg-red-500 ${baseStyle}`;
         case 1: // frost
-          return 'bg-blue-500 text-white border-transparent';
+          return `bg-blue-500 ${baseStyle}`;
         case 2: // cookies
-          return 'bg-yellow-500 text-white border-transparent';
+          return `bg-yellow-500 ${baseStyle}`;
         case 3: // sleigh
-          return 'bg-red-500 text-white border-transparent';
+          return `bg-red-500 ${baseStyle}`;
         case 4: // mistletoe
-          return 'bg-green-500 text-white border-transparent';
+          return `bg-green-500 ${baseStyle}`;
         case 5: // rudolph
-          return 'bg-purple-500 text-white border-transparent';
+          return `bg-purple-500 ${baseStyle}`;
         default:
-          return 'bg-green-500 text-white border-transparent';
+          return `bg-green-500 ${baseStyle}`;
       }
     }
 
@@ -60,12 +61,12 @@ export const GridCell = memo(function GridCell({
 
     // Currently selected - use the hover color without the 'hover:' prefix
     if (isSelected) {
-      return `${hoverColor.replace('hover:', '')} text-white`;
+      return `${hoverColor.replace('hover:', '')} text-white border-2 border-black`;
     }
 
     // Default state (not found, not selected)
     return cn(
-      'bg-white text-gray-900 border-gray-200',
+      'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
       hoverColor
     );
@@ -81,7 +82,7 @@ export const GridCell = memo(function GridCell({
         className={cn(
           "w-10 h-10 rounded-full font-bold text-lg",
           "flex items-center justify-center",
-          "transition-all duration-200 shadow-lg border-2",
+          "transition-all duration-200 shadow-lg",
           getBaseStyles()
         )}
         onMouseDown={!isFound ? onMouseDown : undefined}
