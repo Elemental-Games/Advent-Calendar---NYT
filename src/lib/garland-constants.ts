@@ -16,9 +16,13 @@ export const generateUniqueColors = () => {
   for (let row = 1; row <= 8; row++) {
     for (let col = 1; col <= 6; col++) {
       const position = row * 10 + col;
-      colors[position] = CHRISTMAS_COLORS[colorIndex % CHRISTMAS_COLORS.length];
+      const color = CHRISTMAS_COLORS[colorIndex % CHRISTMAS_COLORS.length];
+      colors[position] = color;
+      console.log(`Assigning color for position ${position}:`, color);
       colorIndex++;
     }
   }
+  
+  console.log('Generated color map:', colors);
   return colors;
 };
