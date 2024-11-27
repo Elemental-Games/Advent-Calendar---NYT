@@ -37,7 +37,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     
     if (solution.includes(letter) && 
         previousOccurrences + correctPositionsCount < solutionLetterCount) {
-      return "bg-green-300 text-white border-red-300"; // Light red border for partially correct letters
+      return "bg-amber-700 text-white border-red-300"; // Changed to amber-700 for darkened gold
     }
     
     return "bg-gray-600 text-white border-gray-700";
