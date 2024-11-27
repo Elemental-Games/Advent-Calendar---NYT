@@ -17,7 +17,7 @@ export const generateUniqueColors = () => {
     for (let col = 1; col <= 6; col++) {
       const position = row * 10 + col;
       const color = CHRISTMAS_COLORS[colorIndex % CHRISTMAS_COLORS.length];
-      colors[position] = color;
+      colors[position] = color; // No longer adding hover: prefix
       console.log(`Assigning color for position ${position}:`, color);
       colorIndex++;
     }
