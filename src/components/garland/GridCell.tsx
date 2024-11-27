@@ -10,6 +10,7 @@ interface GridCellProps {
   isThemeWord: boolean;
   onMouseDown: () => void;
   onMouseEnter: () => void;
+  selectionIndex: number;
 }
 
 export function GridCell({
@@ -20,6 +21,7 @@ export function GridCell({
   isThemeWord,
   onMouseDown,
   onMouseEnter,
+  selectionIndex,
 }: GridCellProps) {
   const getColors = () => {
     if (isThemeWord) {
@@ -40,8 +42,9 @@ export function GridCell({
     }
 
     if (isSelected) {
+      const colorIndex = selectionIndex % CHRISTMAS_COLORS.length;
       return {
-        bg: 'bg-green-500',
+        bg: `bg-[${CHRISTMAS_COLORS[colorIndex]}]`,
         text: 'text-white',
         border: 'border-transparent',
       };
