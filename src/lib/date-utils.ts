@@ -2,6 +2,13 @@ import { format } from "date-fns";
 
 export type PuzzleType = "kringle" | "frostword" | "northsort" | "garland";
 
+export interface DayInfo {
+  day: number;
+  unlockTime: Date;
+  puzzleType: PuzzleType;
+  puzzleContent: PuzzleContent;
+}
+
 export interface PuzzleContent {
   word?: string;
   across?: Record<string, string>;
@@ -12,20 +19,37 @@ export interface PuzzleContent {
   themeWord?: string;
 }
 
-export interface CalendarDay {
-  day: number;
-  puzzleType: PuzzleType;
-  puzzleContent: PuzzleContent;
-}
-
 export function formatPuzzleTitle(day: number): string {
   return `${format(new Date(2023, 11, day), "MMMM do")}`;
 }
 
-export function generateCalendarData(): CalendarDay[] {
+export function formatCountdown(unlockTime: Date): string {
+  const now = new Date();
+  if (now >= unlockTime) {
+    return "Available now";
+  }
+
+  const diff = unlockTime.getTime() - now.getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+  if (days > 0) {
+    return `${days}d ${hours}h`;
+  } else if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  } else {
+    return `${minutes}m`;
+  }
+}
+
+export function generateCalendarData(): DayInfo[] {
+  const baseDate = new Date(2023, 11, 1, 7, 30); // December 1st, 2023 at 7:30 AM
+  
   return [
     {
       day: 1,
+      unlockTime: new Date(baseDate.getTime()),
       puzzleType: "kringle",
       puzzleContent: {
         word: "MERRY"
@@ -33,6 +57,7 @@ export function generateCalendarData(): CalendarDay[] {
     },
     {
       day: 2,
+      unlockTime: new Date(baseDate.getTime() + 24 * 60 * 60 * 1000),
       puzzleType: "frostword",
       puzzleContent: {
         across: {
@@ -55,34 +80,36 @@ export function generateCalendarData(): CalendarDay[] {
     },
     {
       day: 3,
+      unlockTime: new Date(baseDate.getTime() + 2 * 24 * 60 * 60 * 1000),
       puzzleType: "northsort",
       puzzleContent: {
         groups: [
           {
             category: "Christmas Decorations",
             color: "bg-red-100",
-            words: ["Tinsel", "Ornaments", "Garland", "Lights"]
+            words: ["Garland", "Tinsel", "Lights", "Ornaments"]
           },
           {
             category: "Reindeer Names",
             color: "bg-green-100",
-            words: ["Comet", "Cupid", "Dasher", "Vixen"]
+            words: ["Vixen", "Comet", "Dasher", "Cupid"]
           },
           {
             category: "Winter Weather",
             color: "bg-blue-100",
-            words: ["Frost", "Blizzard", "Sleet", "Snow"]
+            words: ["Snow", "Frost", "Blizzard", "Sleet"]
           },
           {
             category: "Holiday Treats",
             color: "bg-yellow-100",
-            words: ["Eggnog", "Cookies", "Candy", "Fudge"]
+            words: ["Fudge", "Cookies", "Eggnog", "Candy"]
           }
         ]
       }
     },
     {
       day: 4,
+      unlockTime: new Date(baseDate.getTime() + 3 * 24 * 60 * 60 * 1000),
       puzzleType: "garland",
       puzzleContent: {
         words: ["HOLLY", "JOLLY", "FOLLY", "FULLY", "FUNNY"],
