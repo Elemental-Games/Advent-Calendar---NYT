@@ -35,7 +35,8 @@ export function GridCell({
   };
 
   const getColors = () => {
-    if (isThemeWord) {
+    // Theme word (Christmas)
+    if (isThemeWord && isFound) {
       return {
         bg: 'bg-green-500',
         text: 'text-black',
@@ -44,6 +45,7 @@ export function GridCell({
       };
     }
     
+    // Found words
     if (isFound) {
       const colorIndex = foundWordIndex % CHRISTMAS_COLORS.length;
       return {
@@ -54,7 +56,9 @@ export function GridCell({
       };
     }
 
+    // Currently selected letter
     if (isSelected) {
+      // Use a random color when the letter is first selected
       return {
         bg: getRandomChristmasColor(),
         text: 'text-white',
@@ -63,6 +67,7 @@ export function GridCell({
       };
     }
 
+    // Default state (not selected, not found)
     return {
       bg: 'bg-white',
       text: 'text-gray-900',
@@ -83,6 +88,9 @@ export function GridCell({
         ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}
       onMouseEnter={!isFound ? onMouseEnter : undefined}
+      style={{ 
+        transition: 'background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out'
+      }}
     >
       {letter}
     </motion.button>
