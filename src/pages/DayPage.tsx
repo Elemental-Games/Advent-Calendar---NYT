@@ -20,7 +20,7 @@ const DayPage = () => {
   }
 
   const getTitle = () => {
-    if (dayInfo.day === 1) return "Kringle #1";
+    if (dayInfo.day === 1) return "Day 1 - Kringle #1";
     return dayInfo.puzzleType.charAt(0).toUpperCase() + dayInfo.puzzleType.slice(1);
   };
 

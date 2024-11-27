@@ -95,7 +95,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     <>
       <div className="max-w-sm mx-auto p-4 w-full">
         <h3 className="text-2xl font-bold mb-6 text-center text-green-700">
-          Day 1 🎄
+          Kringle #1 🎄
         </h3>
         <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
