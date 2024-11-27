@@ -98,6 +98,64 @@ export function formatCountdown(unlockTime: Date): string {
   }
 }
 
+const puzzleData: { [key: number]: PuzzleContent } = {
+  1: {
+    word: "SNOWY"
+  },
+  2: {
+    across: {
+      "1": "Santa's ride through the night sky",
+      "3": "Shines bright atop the tree",
+      "5": "Wrapped surprise under the tree"
+    },
+    down: {
+      "1": "Children's plaything",
+      "2": "Santa's little helper",
+      "4": "Color of Rudolph's nose"
+    },
+    answers: {
+      "a1": "SLEIGH",
+      "a3": "STAR",
+      "a5": "GIFT",
+      "d1": "TOY",
+      "d2": "ELF",
+      "d4": "RED"
+    },
+    size: {
+      rows: 5,
+      cols: 5
+    }
+  },
+  3: {
+    groups: [
+      {
+        category: "Decorations",
+        color: "rgb(234 179 8)",
+        words: ["STAR", "GARLAND", "ANGEL", "HOLLY"]
+      },
+      {
+        category: "Santa's Snacks",
+        color: "rgb(34 197 94)",
+        words: ["COOKIES", "MILK", "CAKE", "MINTS"]
+      },
+      {
+        category: "Gift Wrap",
+        color: "rgb(59 130 246)",
+        words: ["PAPER", "RIBBON", "STRING", "BOW"]
+      },
+      {
+        category: "Holiday Drinks",
+        color: "rgb(239 68 68)",
+        words: ["EGGNOG", "WINE", "COFFEE", "BEER"]
+      }
+    ]
+  },
+  4: {
+    words: ["SANTA", "SLEIGH", "RUDOLPH", "PRESENTS", "COOKIES", "STOCKINGS", "MISTLETOE"],
+    themeWord: "CHRISTMAS"
+  }
+};
+
 export function generateCalendarData(): DayInfo[] {
   return Array.from({ length: 24 }, (_, i) => ({
     day: i + 1,
