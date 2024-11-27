@@ -48,14 +48,15 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     });
   }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
 
-  // Calculate remaining words by excluding all words from completed groups
-  const remainingWords = groups.flatMap(group => {
-    // Only include words from groups that haven't been completed
-    if (!completedGroups.includes(group.category)) {
-      return group.words;
-    }
-    return [];
+  // Get all completed words from completed groups
+  const completedWords = completedGroups.flatMap(category => {
+    const group = groups.find(g => g.category === category);
+    return group ? group.words : [];
   });
+
+  // Filter out completed words from all available words
+  const remainingWords = groups.flatMap(group => group.words)
+    .filter(word => !completedWords.includes(word));
 
   const handleWordClick = (word: string) => {
     if (gameOver) return;
