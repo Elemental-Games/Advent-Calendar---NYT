@@ -18,11 +18,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         const wordleContent = content as { word: string };
         return (
           <div className="p-4">
-            <WordleGame 
-              solution={wordleContent.word} 
-              onComplete={onComplete}
-              day={day}
-            />
+            <WordleGame solution={wordleContent.word} onComplete={onComplete} />
           </div>
         );
       
