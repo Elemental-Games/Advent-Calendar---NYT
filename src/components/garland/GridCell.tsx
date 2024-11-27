@@ -85,12 +85,12 @@ export const GridCell = memo(function GridCell({
     }
 
     // Default state (not selected, not found)
+    const baseColor = uniqueColor.replace('bg-', '');
     return {
       bg: 'bg-white',
       text: 'text-gray-900',
       border: 'border-2 border-transparent',
-      hoverBg: uniqueColor,
-      hoverText: 'hover:text-white',
+      hover: `hover:bg-${baseColor}`,
     };
   };
 
@@ -103,7 +103,7 @@ export const GridCell = memo(function GridCell({
       className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
         transition-colors duration-300 shadow-lg
         ${colors.bg} ${colors.text} ${colors.border}
-        ${!isFound && !isSelected ? `hover:${colors.hoverBg} ${colors.hoverText}` : ''}
+        ${!isFound && !isSelected ? `${colors.hover} hover:text-white` : ''}
         ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}
       onMouseEnter={!isFound ? onMouseEnter : undefined}
