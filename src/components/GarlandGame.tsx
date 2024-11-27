@@ -18,7 +18,7 @@ export function GarlandGame({
   themeWord = 'christmas',
   onComplete 
 }: GarlandGameProps) {
-  const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [foundWordsWithIndex, setFoundWordsWithIndex] = useState<Array<{word: string, index: number}>>([]);
   const [showStartDialog, setShowStartDialog] = useState(true);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
@@ -26,18 +26,31 @@ export function GarlandGame({
   const [completionTime, setCompletionTime] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { selectedCells, currentWord, handleCellMouseDown, handleCellMouseEnter, handleMouseUp } = 
-    useWordSelection(words, foundWords, setFoundWords, themeWord, () => {
+  const handleWordFound = (word: string) => {
+    console.log('Word found:', word);
+    const wordIndex = words.indexOf(word);
+    setFoundWordsWithIndex(prev => [...prev, { word, index: wordIndex }]);
+    
+    if (word.toLowerCase() === themeWord.toLowerCase()) {
+      toast.success("You found the theme word!");
+    } else {
+      toast.success(`Found word: ${word}!`);
+    }
+
+    if (foundWordsWithIndex.length + 1 === words.length) {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
       setCompletionTime(elapsedTime);
       setShowCompletionDialog(true);
       onComplete?.();
-    });
+    }
+  };
 
-  const { isLetterInFoundWord } = useFoundWordDisplay(foundWords, themeWord);
-  const uniqueColors = generateUniqueColors();
+  const { selectedCells, currentWord, handleCellMouseDown, handleCellMouseEnter, handleMouseUp } = 
+    useWordSelection(words, foundWordsWithIndex.map(fw => fw.word), handleWordFound, themeWord);
+
+  const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -133,9 +146,9 @@ export function GarlandGame({
 
       <div className="space-y-4">
         <div className="text-sm">
-          Found words ({foundWords.length}/{words.length}):
+          Found words ({foundWordsWithIndex.length}/{words.length}):
           <div className="flex flex-wrap gap-2 mt-2">
-            {foundWords.map((word, index) => (
+            {foundWordsWithIndex.map(({ word }, index) => (
               <span
                 key={index}
                 className={`px-3 py-1 rounded-full ${

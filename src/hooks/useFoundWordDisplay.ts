@@ -1,6 +1,10 @@
 import { useCallback } from 'react';
 
-// Define the grid as a constant since it's static
+interface FoundWord {
+  word: string;
+  index: number;
+}
+
 const grid = [
   ['S', 'L', 'E', 'S', 'F', 'R'],
   ['H', 'G', 'I', 'A', 'S', 'O'],
@@ -12,7 +16,7 @@ const grid = [
   ['A', 'T', 'C', 'O', 'O', 'C'],
 ];
 
-export function useFoundWordDisplay(foundWords: string[], themeWord: string) {
+export function useFoundWordDisplay(foundWords: FoundWord[], themeWord: string) {
   const findWordIndexes = useCallback((word: string, startRow: number, startCol: number): number[] => {
     const indexes: number[] = [];
     const directions = [
@@ -48,13 +52,13 @@ export function useFoundWordDisplay(foundWords: string[], themeWord: string) {
   const isLetterInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
     const cellIndex = rowIndex * 6 + colIndex;
     
-    for (let i = 0; i < foundWords.length; i++) {
-      const word = foundWords[i];
+    for (const { word, index } of foundWords) {
       const wordIndexes = findWordIndexes(word, rowIndex, colIndex);
       if (wordIndexes.includes(cellIndex)) {
+        console.log(`Found word at cell ${cellIndex}:`, word, 'with index:', index);
         return { 
           found: true, 
-          wordIndex: i, 
+          wordIndex: index,
           isThemeWord: word.toLowerCase() === themeWord.toLowerCase() 
         };
       }
