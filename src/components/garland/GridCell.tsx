@@ -58,7 +58,6 @@ export function GridCell({
 
     // Currently selected letter
     if (isSelected) {
-      // Use a random color when the letter is first selected
       return {
         bg: getRandomChristmasColor(),
         text: 'text-white',
@@ -72,7 +71,7 @@ export function GridCell({
       bg: 'bg-white',
       text: 'text-gray-900',
       border: 'border-transparent',
-      hover: `hover:${getRandomChristmasColor()} hover:text-white`,
+      hover: 'hover:text-white',
     };
   };
 
@@ -85,6 +84,7 @@ export function GridCell({
       className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
         border-2 transition-colors duration-300 shadow-lg
         ${colors.bg} ${colors.text} ${colors.border} ${colors.hover}
+        ${!isFound && !isSelected ? 'hover:' + getRandomChristmasColor() : ''}
         ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}
       onMouseEnter={!isFound ? onMouseEnter : undefined}
