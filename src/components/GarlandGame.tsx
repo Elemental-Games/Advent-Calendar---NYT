@@ -1,23 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { GridCell } from './garland/GridCell';
+import { ConnectionLines } from './garland/ConnectionLines';
 
 interface GarlandGameProps {
   words: string[];
   themeWord: string;
   onComplete?: () => void;
 }
-
-const CHRISTMAS_COLORS = [
-  'rgb(255, 0, 0)',    // Red
-  'rgb(0, 255, 0)',    // Green
-  'rgb(0, 0, 255)',    // Blue
-  'rgb(255, 255, 0)',  // Yellow
-  'rgb(255, 0, 255)',  // Purple
-  'rgb(0, 255, 255)',  // Cyan
-  'rgb(255, 165, 0)',  // Orange
-  'rgb(255, 192, 203)', // Pink
-];
 
 export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) {
   const [selectedCells, setSelectedCells] = useState<number[]>([]);
@@ -50,7 +40,6 @@ export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) 
       const newCell = rowIndex * 6 + colIndex;
       const lastCell = selectedCells[selectedCells.length - 1];
       
-      // Check if cells are adjacent
       const lastRow = Math.floor(lastCell / 6);
       const lastCol = lastCell % 6;
       const isAdjacent = Math.abs(rowIndex - lastRow) <= 1 && Math.abs(colIndex - lastCol) <= 1;
@@ -125,55 +114,18 @@ export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) 
     setCurrentWord('');
   };
 
-  const getCellColor = (rowIndex: number, colIndex: number) => {
+  const isLetterInFoundWord = (rowIndex: number, colIndex: number) => {
     const cellIndex = rowIndex * 6 + colIndex;
     
-    // Check if this cell is part of any found word
     for (let i = 0; i < foundWords.length; i++) {
       const word = foundWords[i];
-      const wordIndexes: number[] = [];
-      
-      // Find all occurrences of this word in the grid
-      for (let startRow = 0; startRow < grid.length; startRow++) {
-        for (let startCol = 0; startCol < grid[0].length; startCol++) {
-          const possibleIndexes = findWordIndexes(word, startRow, startCol);
-          if (possibleIndexes.includes(cellIndex)) {
-            if (word.toLowerCase() === themeWord.toLowerCase()) {
-              return {
-                bg: 'bg-green-500',
-                text: 'text-white',
-                border: 'border-red-500',
-                found: true
-              };
-            }
-            return {
-              bg: `bg-[${CHRISTMAS_COLORS[i % CHRISTMAS_COLORS.length]}]`,
-              text: 'text-white',
-              border: 'border-yellow-300',
-              found: true
-            };
-          }
-        }
+      const wordIndexes = findWordIndexes(word, rowIndex, colIndex);
+      if (wordIndexes.includes(cellIndex)) {
+        return { found: true, wordIndex: i, isThemeWord: word.toLowerCase() === themeWord.toLowerCase() };
       }
     }
-
-    // For selected but not found cells
-    if (selectedCells.includes(cellIndex)) {
-      return {
-        bg: 'bg-green-500',
-        text: 'text-white',
-        border: 'border-transparent',
-        found: false
-      };
-    }
-
-    // Default state
-    return {
-      bg: 'bg-white',
-      text: 'text-gray-900',
-      border: 'border-transparent',
-      found: false
-    };
+    
+    return { found: false, wordIndex: -1, isThemeWord: false };
   };
 
   const findWordIndexes = (word: string, startRow: number, startCol: number): number[] => {
@@ -219,7 +171,7 @@ export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) 
 
       <div 
         ref={gridRef}
-        className="grid gap-2"
+        className="grid gap-2 relative"
         onMouseLeave={() => {
           if (isDragging) {
             setIsDragging(false);
@@ -227,37 +179,25 @@ export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) 
           }
         }}
       >
+        <ConnectionLines selectedCells={selectedCells} gridWidth={6} />
+        
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="flex gap-2">
             {row.map((letter, colIndex) => {
-              const colors = getCellColor(rowIndex, colIndex);
+              const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
+              const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
+              
               return (
-                <motion.button
+                <GridCell
                   key={`${rowIndex}-${colIndex}`}
-                  whileHover={{ scale: colors.found ? 1 : 1.05 }}
-                  whileTap={{ scale: colors.found ? 1 : 0.95 }}
-                  className={`w-10 h-10 rounded-lg font-bold text-lg flex items-center justify-center
-                    border-2 transition-colors duration-300
-                    ${colors.bg} ${colors.text} ${colors.border}
-                    ${colors.found ? 'cursor-default' : 'cursor-pointer'}`}
-                  onMouseDown={() => !colors.found && handleCellMouseDown(rowIndex, colIndex)}
+                  letter={letter}
+                  isSelected={isSelected}
+                  isFound={found}
+                  foundWordIndex={wordIndex}
+                  isThemeWord={isThemeWord}
+                  onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                   onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-                  onTouchStart={() => !colors.found && handleCellMouseDown(rowIndex, colIndex)}
-                  onTouchMove={(e) => {
-                    const touch = e.touches[0];
-                    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-                    const cellElement = element?.closest('button');
-                    if (cellElement) {
-                      const [row, col] = cellElement.getAttribute('data-position')?.split('-').map(Number) || [];
-                      if (typeof row === 'number' && typeof col === 'number') {
-                        handleCellMouseEnter(row, col);
-                      }
-                    }
-                  }}
-                  data-position={`${rowIndex}-${colIndex}`}
-                >
-                  {letter}
-                </motion.button>
+                />
               );
             })}
           </div>
