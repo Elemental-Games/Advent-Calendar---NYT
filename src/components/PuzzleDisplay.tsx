@@ -3,6 +3,7 @@ import { PuzzleContent, formatPuzzleTitle } from '@/lib/date-utils';
 import { WordleGame } from './WordleGame';
 import { CrosswordGame } from './CrosswordGame';
 import { NorthSortGame } from './NorthSortGame';
+import { GarlandGame } from './GarlandGame';
 
 interface PuzzleDisplayProps {
   type: "kringle" | "frostword" | "northsort" | "garland";
@@ -57,14 +58,11 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         const garlandContent = content as { words: string[]; themeWord: string };
         return (
           <div className="p-4">
-            <h3 className="text-xl font-bold mb-4">{formatPuzzleTitle(day)}</h3>
-            <div className="flex flex-wrap gap-2">
-              {garlandContent.words.map((word, index) => (
-                <span key={index} className="px-3 py-1 bg-red-100 rounded-full">
-                  {word}
-                </span>
-              ))}
-            </div>
+            <GarlandGame 
+              words={garlandContent.words}
+              themeWord={garlandContent.themeWord}
+              onComplete={onComplete}
+            />
           </div>
         );
       
