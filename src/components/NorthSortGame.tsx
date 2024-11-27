@@ -48,11 +48,14 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     });
   }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
 
-  const remainingWords = groups.flatMap(group => group.words).filter(word => 
-    !completedGroups.some(cat => 
-      groups.find(g => g.category === cat)?.words.includes(word)
-    )
-  );
+  // Calculate remaining words by excluding all words from completed groups
+  const remainingWords = groups.flatMap(group => {
+    // Only include words from groups that haven't been completed
+    if (!completedGroups.includes(group.category)) {
+      return group.words;
+    }
+    return [];
+  });
 
   const handleWordClick = (word: string) => {
     if (gameOver) return;
@@ -106,7 +109,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
 
     if (matchingGroup) {
       setCompletedGroups(prev => [...prev, matchingGroup.category]);
-      setSelectedWords([]); // Re-added this line to clear selections after a match
+      setSelectedWords([]);
       
       if (completedGroups.length + 1 === groups.length) {
         setShowCongrats(true);
@@ -127,7 +130,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
         setGameOver(true);
         revealGroups();
       }
-      setSelectedWords([]); // Also clear selections after an incorrect attempt
+      setSelectedWords([]);
     }
   };
 
