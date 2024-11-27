@@ -48,9 +48,11 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     });
   }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
 
-  // Get all words that haven't been completed yet
-  const remainingWords = groups.flatMap(group => 
-    !completedGroups.includes(group.category) ? group.words : []
+  const allWords = groups.flatMap(group => group.words);
+  const remainingWords = allWords.filter(word => 
+    !completedGroups.some(cat => 
+      groups.find(g => g.category === cat)?.words.includes(word)
+    )
   );
 
   const handleWordClick = (word: string) => {
