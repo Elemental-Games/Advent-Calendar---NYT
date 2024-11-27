@@ -35,9 +35,9 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGr
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {displayedWords.map(word => (
+        {displayedWords.map((word, index) => (
           <motion.button
-            key={word}
+            key={`${word}-${index}`}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onWordClick(word)}
