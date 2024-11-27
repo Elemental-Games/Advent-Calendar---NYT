@@ -37,7 +37,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     
     if (solution.includes(letter) && 
         previousOccurrences + correctPositionsCount < solutionLetterCount) {
-      return "bg-amber-700 text-white border-red-300"; // Changed to amber-700 for darkened gold
+      return "bg-amber-500 text-white border-red-300"; // Changed to amber-500 for a more Christmas-y gold
     }
     
     return "bg-gray-600 text-white border-gray-700";
