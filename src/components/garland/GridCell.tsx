@@ -27,21 +27,30 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const getBaseStyles = () => {
-    // Special case for SANTA
-    if (letter === 'S' && position === 71) return 'bg-red-500 text-white border-black';
-    if (letter === 'A' && position === 72) return 'bg-blue-500 text-white border-black';
-    if (letter === 'N' && position === 73) return 'bg-yellow-500 text-white border-black';
-    if (letter === 'T' && position === 82) return 'bg-purple-500 text-white border-black';
-    if (letter === 'A' && position === 81) return 'bg-green-500 text-white border-black';
-
     // Theme word (Christmas)
     if (isThemeWord && isFound) {
-      return 'bg-green-500 text-white border-black';
+      return 'bg-green-500 text-white border-2 border-red-500';
     }
     
-    // Found words (not SANTA or theme word)
+    // Found words with specific colors
     if (isFound) {
-      return 'bg-green-500 text-white border-black';
+      // Check for specific words based on foundWordIndex
+      switch(foundWordIndex) {
+        case 0: // santa
+          return 'bg-red-500 text-white';
+        case 1: // frost
+          return 'bg-blue-500 text-white';
+        case 2: // cookies
+          return 'bg-yellow-500 text-white';
+        case 3: // mistletoe
+          return 'bg-green-500 text-white';
+        case 4: // sleigh
+          return 'bg-red-500 text-white';
+        case 5: // rudolph
+          return 'bg-purple-500 text-white';
+        default:
+          return 'bg-green-500 text-white';
+      }
     }
 
     // Get the predefined color for hover/selection state
@@ -50,7 +59,7 @@ export const GridCell = memo(function GridCell({
 
     // Currently selected - use the hover color without the 'hover:' prefix
     if (isSelected) {
-      return `${colors[position]} text-white border-black`;
+      return `${colors[position]} text-white`;
     }
 
     // Default state (not found, not selected)
@@ -73,7 +82,7 @@ export const GridCell = memo(function GridCell({
           "flex items-center justify-center",
           "transition-all duration-200 shadow-lg border-2",
           getBaseStyles(),
-          isFound ? 'cursor-default' : 'cursor-pointer'
+          isFound && !isThemeWord ? 'border-transparent' : ''
         )}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
