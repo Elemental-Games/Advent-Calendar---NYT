@@ -51,7 +51,7 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
         isCompleted ? 
           "bg-emerald-600/90 border-emerald-700 backdrop-blur-sm" : 
         isAvailable ? 
-          "bg-red-600/90 border-green-600 backdrop-blur-sm" :
+          "bg-red-600/90 border-green-900 backdrop-blur-sm" :
           "bg-white/5 border-red-200/30 backdrop-blur-xl"
       )}
       onClick={handleClick}
@@ -60,7 +60,7 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
         <span className={cn(
           "text-xs font-medium",
           isCompleted ? "text-emerald-100" : 
-          isAvailable ? "text-amber-200" : 
+          isAvailable ? "text-green-900" : 
           "text-red-300"
         )}>
           {getDayAbbreviation(dayInfo.day)}
@@ -69,7 +69,7 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
       <span className={cn(
         "text-2xl font-bold mt-2",
         isCompleted ? "text-white" : 
-        isAvailable ? "text-amber-200" : 
+        isAvailable ? "text-green-900" : 
         "text-red-400"
       )}>
         {dayInfo.day}
@@ -82,10 +82,10 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
         <span className={cn(
           "text-xs font-medium mt-1",
           isCompleted ? "text-emerald-100" : 
-          isAvailable ? "text-green-300" : 
+          isAvailable ? "text-green-900" : 
           "text-red-300"
         )}>
-          {countdown}
+          {isAvailable ? "Available" : countdown}
         </span>
       )}
     </motion.div>
