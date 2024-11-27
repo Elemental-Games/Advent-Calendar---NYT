@@ -27,7 +27,8 @@ export const GridCell = memo(function GridCell({
   console.log('GridCell render:', { 
     letter, 
     isFound,
-    position: Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11 
+    position: Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11,
+    uniqueColor 
   });
 
   const getColors = () => {
@@ -44,7 +45,6 @@ export const GridCell = memo(function GridCell({
     // Found words with specific colors for SANTA
     if (isFound) {
       const position = Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11;
-      console.log('Position calculation:', position);
       
       const santaColors: { [key: number]: string } = {
         71: 'bg-orange-500', // S
@@ -55,7 +55,6 @@ export const GridCell = memo(function GridCell({
       };
       
       if (santaColors[position]) {
-        console.log('Applying SANTA color for position:', position, santaColors[position]);
         return {
           bg: santaColors[position],
           text: 'text-white',
@@ -83,13 +82,11 @@ export const GridCell = memo(function GridCell({
     }
 
     // Default state (not selected, not found)
-    // Use the uniqueColor for hover state
-    const hoverClass = uniqueColor.replace('bg-', 'hover:bg-');
     return {
       bg: 'bg-white',
       text: 'text-gray-900',
       border: 'border-2 border-transparent',
-      hover: `${hoverClass} hover:text-white`,
+      hover: `hover:${uniqueColor} hover:text-white`,
     };
   };
 
