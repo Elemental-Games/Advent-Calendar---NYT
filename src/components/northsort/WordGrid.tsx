@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Shuffle } from "lucide-react";
 
@@ -11,17 +11,7 @@ interface WordGridProps {
 }
 
 export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGridProps) {
-  const [displayedWords, setDisplayedWords] = useState<string[]>([]);
-
-  // Initial shuffle on component mount only
-  useEffect(() => {
-    const shuffled = [...words];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    setDisplayedWords(shuffled);
-  }, [words]);
+  const [displayedWords, setDisplayedWords] = useState<string[]>(words);
 
   const shuffleWords = () => {
     const shuffled = [...displayedWords];
@@ -35,9 +25,9 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGr
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {displayedWords.map((word, index) => (
+        {displayedWords.map((word) => (
           <motion.button
-            key={`${word}-${index}`}
+            key={word}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onWordClick(word)}
