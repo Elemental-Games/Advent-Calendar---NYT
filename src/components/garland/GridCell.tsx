@@ -27,37 +27,37 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const getBaseStyles = () => {
+    // Special case for SANTA
+    if (letter === 'S' && position === 71) return 'bg-red-500 text-white border-black';
+    if (letter === 'A' && position === 72) return 'bg-blue-500 text-white border-black';
+    if (letter === 'N' && position === 73) return 'bg-yellow-500 text-white border-black';
+    if (letter === 'T' && position === 82) return 'bg-purple-500 text-white border-black';
+    if (letter === 'A' && position === 81) return 'bg-green-500 text-white border-black';
+
     // Theme word (Christmas)
     if (isThemeWord && isFound) {
-      return 'bg-green-500 text-white border-red-500';
+      return 'bg-green-500 text-white border-black';
     }
     
-    // Found words
+    // Found words (not SANTA or theme word)
     if (isFound) {
-      // Special case for SANTA
-      if (letter === 'S' && position === 71) return 'bg-red-500 text-white border-black';
-      if (letter === 'A' && position === 72) return 'bg-blue-500 text-white border-black';
-      if (letter === 'N' && position === 73) return 'bg-yellow-500 text-white border-black';
-      if (letter === 'T' && position === 82) return 'bg-purple-500 text-white border-black';
-      if (letter === 'A' && position === 81) return 'bg-green-500 text-white border-black';
-      
       return 'bg-green-500 text-white border-black';
     }
 
-    // Get the predefined color for this position
+    // Get the predefined color for hover/selection state
     const colors = generateUniqueColors();
-    const hoverColor = colors[position] || 'hover:bg-blue-500';
+    const hoverColor = `hover:${colors[position]}` || 'hover:bg-blue-500';
 
     // Currently selected - use the hover color without the 'hover:' prefix
     if (isSelected) {
-      return `${hoverColor.replace('hover:', '')} text-white border-black`;
+      return `${colors[position]} text-white border-black`;
     }
 
+    // Default state (not found, not selected)
     return cn(
       'bg-white text-gray-900 border-gray-200',
       'hover:text-white active:text-white',
-      hoverColor,
-      `active:${hoverColor.replace('hover:', '')}`
+      hoverColor
     );
   };
 
