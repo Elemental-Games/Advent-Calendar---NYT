@@ -106,6 +106,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
 
     if (matchingGroup) {
       setCompletedGroups(prev => [...prev, matchingGroup.category]);
+      setSelectedWords([]); // Re-added this line to clear selections after a match
       
       if (completedGroups.length + 1 === groups.length) {
         setShowCongrats(true);
@@ -126,9 +127,8 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
         setGameOver(true);
         revealGroups();
       }
+      setSelectedWords([]); // Also clear selections after an incorrect attempt
     }
-    // Clear selected words after each attempt, whether correct or not
-    setSelectedWords([]);
   };
 
   return (
