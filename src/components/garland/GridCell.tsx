@@ -24,6 +24,12 @@ export function GridCell({
   selectionIndex,
   uniqueColor,
 }: GridCellProps) {
+  console.log('GridCell render:', { 
+    letter, 
+    isFound, 
+    position: Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11 
+  });
+
   const getColors = () => {
     // Theme word (Christmas)
     if (isThemeWord && isFound) {
@@ -37,7 +43,9 @@ export function GridCell({
     
     // Found words with specific colors for SANTA
     if (isFound) {
-      // Special handling for SANTA word positions
+      const position = Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11;
+      console.log('Position calculation:', position);
+      
       const santaColors: { [key: number]: string } = {
         71: 'bg-orange-500', // S
         72: 'bg-blue-500',   // A
@@ -46,13 +54,20 @@ export function GridCell({
         81: 'bg-green-500'   // A
       };
       
-      const position = Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11;
-      const specificColor = santaColors[position];
+      if (santaColors[position]) {
+        console.log('Applying SANTA color for position:', position, santaColors[position]);
+        return {
+          bg: santaColors[position],
+          text: 'text-white',
+          border: 'border-2 border-black',
+          hover: '',
+        };
+      }
       
       return {
-        bg: specificColor || `bg-[${uniqueColor}]`,
+        bg: 'bg-purple-500',
         text: 'text-white',
-        border: 'border-black',
+        border: 'border-2 border-black',
         hover: '',
       };
     }
@@ -60,19 +75,19 @@ export function GridCell({
     // Currently selected letter
     if (isSelected) {
       return {
-        bg: `bg-[${uniqueColor}]`,
+        bg: 'bg-blue-500',
         text: 'text-white',
-        border: 'border-blue-400',
+        border: 'border-2 border-blue-400',
         hover: '',
       };
     }
 
     // Default state (not selected, not found)
     return {
-      bg: 'bg-white hover:bg-opacity-90',
+      bg: 'bg-white',
       text: 'text-gray-900',
-      border: 'border-transparent',
-      hover: `hover:bg-[${uniqueColor}] hover:text-white`,
+      border: 'border-2 border-transparent',
+      hover: 'hover:bg-blue-500 hover:text-white',
     };
   };
 
@@ -83,7 +98,7 @@ export function GridCell({
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
       className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
-        border-2 transition-colors duration-300 shadow-lg
+        transition-colors duration-300 shadow-lg
         ${colors.bg} ${colors.text} ${colors.border} ${colors.hover}
         ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}
