@@ -29,6 +29,7 @@ export function GridCell({
         bg: 'bg-green-500',
         text: 'text-white',
         border: 'border-red-500',
+        hover: 'hover:bg-green-600',
       };
     }
     
@@ -38,6 +39,7 @@ export function GridCell({
         bg: `bg-[${CHRISTMAS_COLORS[colorIndex]}]`,
         text: 'text-white',
         border: 'border-yellow-300',
+        hover: '',
       };
     }
 
@@ -47,6 +49,7 @@ export function GridCell({
         bg: `bg-[${CHRISTMAS_COLORS[colorIndex]}]`,
         text: 'text-white',
         border: 'border-transparent',
+        hover: '',
       };
     }
 
@@ -54,6 +57,7 @@ export function GridCell({
       bg: 'bg-white',
       text: 'text-gray-900',
       border: 'border-transparent',
+      hover: 'hover:bg-blue-500 hover:text-white',
     };
   };
 
@@ -65,8 +69,8 @@ export function GridCell({
       whileTap={{ scale: isFound ? 1 : 0.95 }}
       className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
         border-2 transition-colors duration-300 shadow-lg
-        ${colors.bg} ${colors.text} ${colors.border}
-        ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
+        ${colors.bg} ${colors.text} ${colors.border} ${colors.hover}
+        ${isFound ? 'cursor-default border-yellow-400' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}
       onMouseEnter={!isFound ? onMouseEnter : undefined}
     >
