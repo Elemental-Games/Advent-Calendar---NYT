@@ -24,7 +24,6 @@ const Index = () => {
             <CalendarDay
               key={dayInfo.day}
               dayInfo={dayInfo}
-              isCompleted={dayInfo.day === 24}
             />
           ))}
         </div>

@@ -134,7 +134,7 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                     {group.words.map(word => (
                       <div
                         key={word}
-                        className="min-h-[3rem] px-2 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center md:aspect-[2.5/1] aspect-[1/2]"
+                        className="px-2 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center md:aspect-[2.5/1] aspect-[2.5/1]"
                       >
                         <span className="text-xs sm:text-sm text-center break-words">
                           {word}
@@ -155,7 +155,7 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleWordClick(word)}
-                  className={`min-h-[3rem] px-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center md:aspect-[2.5/1] aspect-[1/2] w-full
+                  className={`px-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center md:aspect-[2.5/1] aspect-[2.5/1] w-full
                     ${selectedWords.includes(word)
                       ? 'bg-red-600 text-white'
                       : 'bg-white hover:bg-red-50'

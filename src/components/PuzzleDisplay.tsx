@@ -8,16 +8,17 @@ interface PuzzleDisplayProps {
   type: "kringle" | "frostword" | "northsort" | "garland";
   content: PuzzleContent;
   day: number;
+  onComplete?: () => void;
 }
 
-export function PuzzleDisplay({ type, content, day }: PuzzleDisplayProps) {
+export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayProps) {
   const renderPuzzle = () => {
     switch (type) {
       case "kringle":
         const wordleContent = content as { word: string };
         return (
           <div className="p-4">
-            <WordleGame solution={wordleContent.word} />
+            <WordleGame solution={wordleContent.word} onComplete={onComplete} />
           </div>
         );
       
@@ -33,6 +34,7 @@ export function PuzzleDisplay({ type, content, day }: PuzzleDisplayProps) {
               across={crosswordContent.across}
               down={crosswordContent.down}
               answers={crosswordContent.answers}
+              onComplete={onComplete}
             />
           </div>
         );
@@ -43,7 +45,7 @@ export function PuzzleDisplay({ type, content, day }: PuzzleDisplayProps) {
         };
         return (
           <div className="p-4">
-            <NorthSortGame groups={northsortContent.groups} />
+            <NorthSortGame groups={northsortContent.groups} onComplete={onComplete} />
           </div>
         );
       
