@@ -106,7 +106,6 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
 
     if (matchingGroup) {
       setCompletedGroups(prev => [...prev, matchingGroup.category]);
-      setSelectedWords([]);
       
       if (completedGroups.length + 1 === groups.length) {
         setShowCongrats(true);
