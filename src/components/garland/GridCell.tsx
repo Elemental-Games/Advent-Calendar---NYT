@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { generateUniqueColors } from '@/lib/garland-constants';
 
 interface GridCellProps {
   letter: string;
@@ -43,17 +44,9 @@ export const GridCell = memo(function GridCell({
       return 'bg-green-500 text-white border-black';
     }
 
-    // Default with hover - using position-based colors
-    const hoverColors = {
-      1: 'hover:bg-red-500',
-      2: 'hover:bg-green-500',
-      3: 'hover:bg-blue-500',
-      4: 'hover:bg-yellow-500',
-      5: 'hover:bg-purple-500'
-    };
-
-    const colPosition = position % 10;
-    const hoverColor = hoverColors[colPosition as keyof typeof hoverColors] || 'hover:bg-blue-500';
+    // Get the predefined color for this position
+    const colors = generateUniqueColors();
+    const hoverColor = colors[position] || 'hover:bg-blue-500';
 
     // Currently selected - use the hover color without the 'hover:' prefix
     if (isSelected) {
