@@ -45,6 +45,7 @@ export const GridCell = memo(function GridCell({
       };
       
       if (santaColors[position]) {
+        console.log('SANTA position:', position, 'color:', santaColors[position]);
         return `${santaColors[position]} text-white border-black`;
       }
       
@@ -57,14 +58,11 @@ export const GridCell = memo(function GridCell({
       return 'bg-blue-500 text-white border-blue-400';
     }
 
-    // Extract color components for hover state
-    const [, color, shade] = uniqueColor.split('-');
-    
     // Default state with hover
     return cn(
       'bg-white text-gray-900 border-gray-200',
       'hover:text-white active:text-white',
-      `hover:bg-${color}-${shade} active:bg-${color}-${shade}`
+      `hover:${uniqueColor} active:${uniqueColor}`
     );
   };
 
