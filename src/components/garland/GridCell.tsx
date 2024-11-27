@@ -11,6 +11,7 @@ interface GridCellProps {
   onMouseDown: () => void;
   onMouseEnter: () => void;
   selectionIndex: number;
+  uniqueColor: string;
 }
 
 export function GridCell({
@@ -22,11 +23,8 @@ export function GridCell({
   onMouseDown,
   onMouseEnter,
   selectionIndex,
+  uniqueColor,
 }: GridCellProps) {
-  const getRandomChristmasColor = () => {
-    return CHRISTMAS_COLORS[Math.floor(Math.random() * CHRISTMAS_COLORS.length)];
-  };
-
   const getColors = () => {
     // Theme word (Christmas)
     if (isThemeWord && isFound) {
@@ -38,11 +36,10 @@ export function GridCell({
       };
     }
     
-    // Found words - keep their color based on word index
+    // Found words
     if (isFound) {
-      const colorIndex = foundWordIndex % CHRISTMAS_COLORS.length;
       return {
-        bg: `bg-[${CHRISTMAS_COLORS[colorIndex]}]`,
+        bg: `bg-[${uniqueColor}]`,
         text: 'text-white',
         border: 'border-yellow-400',
         hover: '',
@@ -52,7 +49,7 @@ export function GridCell({
     // Currently selected letter
     if (isSelected) {
       return {
-        bg: `bg-[${CHRISTMAS_COLORS[selectionIndex % CHRISTMAS_COLORS.length]}]`,
+        bg: `bg-[${uniqueColor}]`,
         text: 'text-white',
         border: 'border-transparent',
         hover: '',
@@ -64,7 +61,7 @@ export function GridCell({
       bg: 'bg-white',
       text: 'text-gray-900',
       border: 'border-transparent',
-      hover: 'hover:text-white',
+      hover: `hover:bg-[${uniqueColor}]`,
     };
   };
 
@@ -77,7 +74,6 @@ export function GridCell({
       className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
         border-2 transition-colors duration-300 shadow-lg
         ${colors.bg} ${colors.text} ${colors.border} ${colors.hover}
-        ${!isFound && !isSelected ? 'hover:bg-[' + getRandomChristmasColor() + ']' : ''}
         ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}
       onMouseEnter={!isFound ? onMouseEnter : undefined}

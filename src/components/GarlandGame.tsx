@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { GridCell } from './garland/GridCell';
-import { getRandomChristmasColor } from '@/lib/garland-constants';
+import { generateUniqueColors } from '@/lib/garland-constants';
 import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
 import { useWordSelection } from '@/hooks/useWordSelection';
 
@@ -21,6 +21,7 @@ export function GarlandGame({
     useWordSelection(words, foundWords, setFoundWords, themeWord, onComplete);
 
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWords, themeWord);
+  const uniqueColors = generateUniqueColors();
 
   const grid = [
     ['S', 'L', 'E', 'S', 'F', 'R'],
@@ -65,6 +66,7 @@ export function GarlandGame({
             {row.map((letter, colIndex) => {
               const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
               const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
+              const position = (rowIndex + 1) * 10 + (colIndex + 1);
               
               return (
                 <GridCell
@@ -77,6 +79,7 @@ export function GarlandGame({
                   onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                   onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
                   selectionIndex={selectedCells.indexOf(rowIndex * 6 + colIndex)}
+                  uniqueColor={uniqueColors[position]}
                 />
               );
             })}
