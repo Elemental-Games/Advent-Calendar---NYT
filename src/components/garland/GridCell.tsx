@@ -48,11 +48,24 @@ export const GridCell = memo(function GridCell({
       return 'bg-blue-500 text-white border-blue-400';
     }
 
-    // Default with hover - using predefined hover colors
+    // Default with hover - using position-based colors
+    const hoverColors = {
+      1: 'hover:bg-red-500',
+      2: 'hover:bg-green-500',
+      3: 'hover:bg-blue-500',
+      4: 'hover:bg-yellow-500',
+      5: 'hover:bg-orange-500',
+      6: 'hover:bg-purple-500'
+    };
+
+    const colPosition = position % 10;
+    const hoverColor = hoverColors[colPosition as keyof typeof hoverColors] || 'hover:bg-blue-500';
+
     return cn(
       'bg-white text-gray-900 border-gray-200',
       'hover:text-white active:text-white',
-      'hover:bg-blue-500 active:bg-blue-500'
+      hoverColor,
+      `active:${hoverColor.replace('hover:', '')}`
     );
   };
 
