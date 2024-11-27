@@ -1,3 +1,5 @@
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
 interface NorthSortHeaderProps {
   remainingAttempts: number;
 }
