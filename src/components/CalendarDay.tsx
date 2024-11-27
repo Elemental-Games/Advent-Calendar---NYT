@@ -7,6 +7,7 @@ import { isDayCompleted } from "@/lib/game-state";
 
 interface CalendarDayProps {
   dayInfo: DayInfo;
+  isCompleted?: boolean;
 }
 
 const getDayAbbreviation = (day: number): string => {
@@ -15,7 +16,7 @@ const getDayAbbreviation = (day: number): string => {
   return days[dayIndex];
 };
 
-export function CalendarDay({ dayInfo }: CalendarDayProps) {
+export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarDayProps) {
   const [countdown, setCountdown] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
   const navigate = useNavigate();
@@ -23,13 +24,13 @@ export function CalendarDay({ dayInfo }: CalendarDayProps) {
   useEffect(() => {
     const checkStatus = () => {
       setCountdown(formatCountdown(dayInfo.unlockTime));
-      setIsCompleted(isDayCompleted(dayInfo.day));
+      setIsCompleted(propIsCompleted ?? isDayCompleted(dayInfo.day));
     };
 
     checkStatus();
     const timer = setInterval(checkStatus, 1000);
     return () => clearInterval(timer);
-  }, [dayInfo.unlockTime, dayInfo.day]);
+  }, [dayInfo.unlockTime, dayInfo.day, propIsCompleted]);
 
   const isAvailable = dayInfo.day <= 4;
 
