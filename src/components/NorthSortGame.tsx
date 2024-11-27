@@ -66,11 +66,13 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
       setCompletedGroups(prev => [...prev, matchingGroup.category]);
       setSelectedWords([]);
       
-      if (completedGroups.length + 1 === groups.length - 1) {
+      // Only show congrats when all groups are completed
+      if (completedGroups.length + 1 === groups.length) {
         setShowCongrats(true);
         onComplete?.();
+      } else {
+        toast.success("Correct group!");
       }
-      toast.success("Correct group!");
     } else {
       const isNearMatch = checkNearMatch(selectedWords);
       if (isNearMatch) {
@@ -126,7 +128,7 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                     {group.words.map(word => (
                       <span
                         key={word}
-                        className="px-3 py-2 text-sm bg-white/90 rounded-lg shadow-sm text-center"
+                        className="px-3 py-2 text-sm bg-white/90 rounded-lg shadow-sm text-center aspect-[2/1]"
                       >
                         {word}
                       </span>
@@ -146,7 +148,7 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleWordClick(word)}
-                  className={`px-3 py-3 rounded-lg text-sm font-medium transition-colors
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors aspect-[2/1]
                     ${selectedWords.includes(word)
                       ? 'bg-red-600 text-white'
                       : 'bg-white hover:bg-red-50'
