@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -16,10 +16,11 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [isWinner, setIsWinner] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
   const [activeCell, setActiveCell] = useState<number>(-1);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
 
   const WORD_LENGTH = 5;
   const MAX_GUESSES = 6;
-  
+
   const isValidWord = (word: string) => {
     return word.length === WORD_LENGTH;
   };
@@ -91,12 +92,32 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentGuess, guesses, gameOver, solution, onComplete]);
 
+  const focusInput = () => {
+    hiddenInputRef.current?.focus();
+  };
+
   return (
     <>
-      <div className="max-w-sm mx-auto p-4 w-full">
+      <div className="max-w-sm mx-auto p-4 w-full" onClick={focusInput}>
         <h3 className="text-2xl font-bold mb-6 text-center text-green-700">
           Kringle #1 🎄
         </h3>
+        <input
+          ref={hiddenInputRef}
+          type="text"
+          className="opacity-0 absolute w-0 h-0"
+          value={currentGuess}
+          onChange={(e) => {
+            const value = e.target.value.toUpperCase();
+            if (value.length <= WORD_LENGTH && /^[A-Z]*$/.test(value)) {
+              setCurrentGuess(value);
+              setActiveCell(value.length - 1);
+            }
+          }}
+          autoComplete="off"
+          autoCapitalize="off"
+          spellCheck="false"
+        />
         <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
           {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-5 gap-2">

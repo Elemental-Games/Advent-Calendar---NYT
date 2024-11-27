@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface GridCellProps {
   letter: string;
@@ -25,16 +26,8 @@ export const GridCell = memo(function GridCell({
   uniqueColor,
 }: GridCellProps) {
   const position = Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11;
-  
-  console.log('GridCell render:', { 
-    letter,
-    position,
-    uniqueColor,
-    isFound,
-    isSelected
-  });
 
-  const getBaseColor = () => {
+  const getBaseStyles = () => {
     // Theme word (Christmas)
     if (isThemeWord && isFound) {
       return 'bg-green-500 text-white border-red-500';
@@ -62,39 +55,43 @@ export const GridCell = memo(function GridCell({
       return 'bg-blue-500 text-white border-blue-400';
     }
 
-    // Default state - white background with hover color from uniqueColor
-    const baseColor = uniqueColor.split('-')[1]; // Extract 'red' from 'bg-red-500'
-    const shade = uniqueColor.split('-')[2]; // Extract '500' from 'bg-red-500'
+    // Extract color components
+    const [, color, shade] = uniqueColor.split('-');
     
-    return `group-hover:bg-${baseColor}-${shade} group-hover:text-white bg-white text-gray-900`;
+    // Default state with hover
+    return cn(
+      'bg-white text-gray-900 border-gray-200',
+      'hover:text-white active:text-white',
+      `hover:bg-${color}-${shade} active:bg-${color}-${shade}`
+    );
   };
 
   return (
     <motion.div
-      className="group"
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
+      className="touch-none"
     >
       <button
-        className={`
-          w-10 h-10 
-          rounded-full 
-          font-bold 
-          text-lg 
-          flex 
-          items-center 
-          justify-center
-          transition-all 
-          duration-200 
-          shadow-lg
-          border-2
-          ${getBaseColor()}
-          ${isFound ? 'cursor-default' : 'cursor-pointer'}
-        `}
+        className={cn(
+          "w-10 h-10 rounded-full font-bold text-lg",
+          "flex items-center justify-center",
+          "transition-all duration-200 shadow-lg border-2",
+          getBaseStyles(),
+          isFound ? 'cursor-default' : 'cursor-pointer'
+        )}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
-        style={{ 
-          transition: 'all 0.2s ease-in-out'
+        onTouchStart={!isFound ? onMouseDown : undefined}
+        onTouchMove={(e) => {
+          if (!isFound) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element?.tagName === 'BUTTON') {
+              element.dispatchEvent(new MouseEvent('mouseenter'));
+            }
+          }
         }}
       >
         {letter}
