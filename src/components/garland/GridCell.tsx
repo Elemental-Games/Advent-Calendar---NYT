@@ -34,18 +34,13 @@ export const GridCell = memo(function GridCell({
     // Found words
     if (isFound) {
       // Special case for SANTA
-      if (letter === 'S' && position === 71) return 'bg-orange-500 text-white border-black';
+      if (letter === 'S' && position === 71) return 'bg-red-500 text-white border-black';
       if (letter === 'A' && position === 72) return 'bg-blue-500 text-white border-black';
       if (letter === 'N' && position === 73) return 'bg-yellow-500 text-white border-black';
-      if (letter === 'T' && position === 82) return 'bg-red-500 text-white border-black';
+      if (letter === 'T' && position === 82) return 'bg-purple-500 text-white border-black';
       if (letter === 'A' && position === 81) return 'bg-green-500 text-white border-black';
       
       return 'bg-green-500 text-white border-black';
-    }
-
-    // Currently selected
-    if (isSelected) {
-      return 'bg-blue-500 text-white border-blue-400';
     }
 
     // Default with hover - using position-based colors
@@ -54,12 +49,16 @@ export const GridCell = memo(function GridCell({
       2: 'hover:bg-green-500',
       3: 'hover:bg-blue-500',
       4: 'hover:bg-yellow-500',
-      5: 'hover:bg-orange-500',
-      6: 'hover:bg-purple-500'
+      5: 'hover:bg-purple-500'
     };
 
     const colPosition = position % 10;
     const hoverColor = hoverColors[colPosition as keyof typeof hoverColors] || 'hover:bg-blue-500';
+
+    // Currently selected - use the hover color without the 'hover:' prefix
+    if (isSelected) {
+      return `${hoverColor.replace('hover:', '')} text-white border-black`;
+    }
 
     return cn(
       'bg-white text-gray-900 border-gray-200',
