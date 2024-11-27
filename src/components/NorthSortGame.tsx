@@ -132,41 +132,41 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
   };
 
   return (
-    <div className="container px-2 sm:px-4">
+    <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
       <NorthSortHeader remainingAttempts={remainingAttempts} />
 
-      <div className="relative rounded-lg p-4 bg-white/5 backdrop-blur-sm border border-red-200/30">
-        <div className="space-y-4">
-          <div className="space-y-3">
-            {completedGroups.map((category) => {
-              const group = groups.find(g => g.category === category)!;
-              return (
-                <CompletedGroup
-                  key={category}
-                  category={category}
-                  color={group.color}
-                  words={group.words}
-                />
-              );
-            })}
-          </div>
+      <div className="space-y-6 mt-4">
+        <div className="space-y-6">
+          {completedGroups.map((category) => {
+            const group = groups.find(g => g.category === category)!;
+            return (
+              <CompletedGroup
+                key={category}
+                category={category}
+                color={group.color}
+                words={group.words}
+              />
+            );
+          })}
+        </div>
 
-          {!gameOver && remainingWords.length > 0 && (
+        {!gameOver && remainingWords.length > 0 && (
+          <div className="mt-6">
             <WordGrid
               words={remainingWords}
               selectedWords={selectedWords}
               onWordClick={handleWordClick}
             />
-          )}
+          </div>
+        )}
 
-          <Button
-            onClick={handleSubmit}
-            disabled={selectedWords.length !== 4 || gameOver}
-            className="w-full mt-4 bg-red-600 hover:bg-red-700"
-          >
-            Submit Selection
-          </Button>
-        </div>
+        <Button
+          onClick={handleSubmit}
+          disabled={selectedWords.length !== 4 || gameOver}
+          className="w-full mt-6 bg-red-600 hover:bg-red-700"
+        >
+          Submit Selection
+        </Button>
       </div>
 
       <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
