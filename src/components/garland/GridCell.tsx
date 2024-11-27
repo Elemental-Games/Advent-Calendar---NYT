@@ -60,8 +60,8 @@ export function GridCell({
     <motion.button
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
-      className={`w-10 h-10 rounded-lg font-bold text-lg flex items-center justify-center
-        border-2 transition-colors duration-300
+      className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
+        border-2 transition-colors duration-300 shadow-lg
         ${colors.bg} ${colors.text} ${colors.border}
         ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
       onMouseDown={!isFound ? onMouseDown : undefined}

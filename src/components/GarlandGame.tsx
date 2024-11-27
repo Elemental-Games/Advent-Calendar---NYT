@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { GridCell } from './garland/GridCell';
-import { ConnectionLines } from './garland/ConnectionLines';
+import { getRandomChristmasColor } from '@/lib/garland-constants';
 
 interface GarlandGameProps {
   words: string[];
@@ -14,7 +14,6 @@ export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) 
   const [foundWords, setFoundWords] = useState<string[]>([]);
   const [currentWord, setCurrentWord] = useState<string>('');
   const [isDragging, setIsDragging] = useState(false);
-  const gridRef = useRef<HTMLDivElement>(null);
 
   const grid = [
     ['S', 'L', 'E', 'S', 'F', 'R'],
@@ -163,14 +162,13 @@ export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) 
   return (
     <div className="flex flex-col items-center space-y-6 p-4">
       <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold">Theme Word: {themeWord}</h2>
+        <h2 className="text-xl font-bold">Garland #1</h2>
         <p className="text-sm text-muted-foreground">
-          Find words by clicking and dragging through adjacent letters
+          Theme: "Tis the Season"
         </p>
       </div>
 
       <div 
-        ref={gridRef}
         className="grid gap-2 relative"
         onMouseLeave={() => {
           if (isDragging) {
@@ -179,8 +177,6 @@ export function GarlandGame({ words, themeWord, onComplete }: GarlandGameProps) 
           }
         }}
       >
-        <ConnectionLines selectedCells={selectedCells} gridWidth={6} />
-        
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="flex gap-2">
             {row.map((letter, colIndex) => {
