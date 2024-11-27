@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CHRISTMAS_COLORS } from '@/lib/garland-constants';
 
 interface GridCellProps {
   letter: string;
@@ -51,17 +50,17 @@ export function GridCell({
       return {
         bg: `bg-[${uniqueColor}]`,
         text: 'text-white',
-        border: 'border-transparent',
+        border: 'border-blue-400',
         hover: '',
       };
     }
 
     // Default state (not selected, not found)
     return {
-      bg: 'bg-white',
+      bg: 'bg-white hover:bg-opacity-90',
       text: 'text-gray-900',
       border: 'border-transparent',
-      hover: `hover:bg-[${uniqueColor}]`,
+      hover: `hover:bg-[${uniqueColor}] hover:text-white`,
     };
   };
 
@@ -78,7 +77,7 @@ export function GridCell({
       onMouseDown={!isFound ? onMouseDown : undefined}
       onMouseEnter={!isFound ? onMouseEnter : undefined}
       style={{ 
-        transition: 'background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out'
+        transition: 'all 0.2s ease-in-out'
       }}
     >
       {letter}

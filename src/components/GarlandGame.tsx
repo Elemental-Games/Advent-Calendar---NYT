@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { GridCell } from './garland/GridCell';
 import { generateUniqueColors } from '@/lib/garland-constants';
 import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
 import { useWordSelection } from '@/hooks/useWordSelection';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Button } from './ui/button';
 
 interface GarlandGameProps {
   words?: string[];
@@ -17,11 +19,48 @@ export function GarlandGame({
   onComplete 
 }: GarlandGameProps) {
   const [foundWords, setFoundWords] = useState<string[]>([]);
+  const [showStartDialog, setShowStartDialog] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [completionTime, setCompletionTime] = useState<number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   const { selectedCells, currentWord, handleCellMouseDown, handleCellMouseEnter, handleMouseUp } = 
-    useWordSelection(words, foundWords, setFoundWords, themeWord, onComplete);
+    useWordSelection(words, foundWords, setFoundWords, themeWord, () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      setCompletionTime(elapsedTime);
+      onComplete?.();
+    });
 
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWords, themeWord);
   const uniqueColors = generateUniqueColors();
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    if (isStarted) {
+      timerRef.current = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isStarted]);
+
+  const handleStartGame = () => {
+    setIsStarted(true);
+    setShowStartDialog(false);
+    setElapsedTime(0);
+  };
 
   const grid = [
     ['S', 'L', 'E', 'S', 'F', 'R'],
@@ -55,6 +94,9 @@ export function GarlandGame({
         <p className="text-sm text-muted-foreground">
           Theme: "Tis the Season"
         </p>
+        <div className="text-lg font-mono text-blue-600">
+          {formatTime(elapsedTime)}
+        </div>
       </div>
 
       <div 
@@ -106,6 +148,24 @@ export function GarlandGame({
           </div>
         </div>
       </div>
+
+      <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-green-700">
+              Ready to Begin? 🎄
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-4">
+            <p className="text-lg">
+              Click start to begin the Garland word puzzle!
+            </p>
+            <Button onClick={handleStartGame} className="bg-green-600 hover:bg-green-700">
+              Start Timer
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
