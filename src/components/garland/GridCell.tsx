@@ -47,7 +47,9 @@ export const GridCell = memo(function GridCell({
         return `${santaColors[position]} text-white border-black`;
       }
       
-      return 'bg-purple-500 text-white border-black';
+      // Extract color components for found non-SANTA words
+      const [, color, shade] = uniqueColor.split('-');
+      return `bg-${color}-${shade} text-white border-black`;
     }
 
     // Currently selected letter
@@ -55,7 +57,7 @@ export const GridCell = memo(function GridCell({
       return 'bg-blue-500 text-white border-blue-400';
     }
 
-    // Extract color components
+    // Extract color components for hover state
     const [, color, shade] = uniqueColor.split('-');
     
     // Default state with hover
