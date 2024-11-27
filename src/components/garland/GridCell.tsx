@@ -52,7 +52,11 @@ export const GridCell = memo(function GridCell({
     }
 
     // Default state with hover
-    return 'bg-white text-gray-900 border-gray-200 hover:bg-blue-500 hover:text-white';
+    return cn(
+      'bg-white text-gray-900 border-gray-200',
+      'hover:text-white active:text-white',
+      `hover:${uniqueColor} active:${uniqueColor}`
+    );
   };
 
   return (
@@ -66,7 +70,8 @@ export const GridCell = memo(function GridCell({
           "w-10 h-10 rounded-full font-bold text-lg",
           "flex items-center justify-center",
           "transition-all duration-200 shadow-lg border-2",
-          getBaseStyles()
+          getBaseStyles(),
+          isFound ? 'cursor-default' : 'cursor-pointer'
         )}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}

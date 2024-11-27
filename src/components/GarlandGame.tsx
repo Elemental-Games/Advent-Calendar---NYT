@@ -20,6 +20,7 @@ export function GarlandGame({
 }: GarlandGameProps) {
   const [foundWords, setFoundWords] = useState<string[]>([]);
   const [showStartDialog, setShowStartDialog] = useState(true);
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completionTime, setCompletionTime] = useState<number | null>(null);
@@ -31,6 +32,7 @@ export function GarlandGame({
         clearInterval(timerRef.current);
       }
       setCompletionTime(elapsedTime);
+      setShowCompletionDialog(true);
       onComplete?.();
     });
 
@@ -94,7 +96,7 @@ export function GarlandGame({
         <p className="text-sm text-muted-foreground">
           Theme: "Tis the Season"
         </p>
-        <div className="text-lg font-mono text-blue-600">
+        <div className="text-lg font-mono text-green-600">
           {formatTime(elapsedTime)}
         </div>
       </div>
@@ -163,6 +165,27 @@ export function GarlandGame({
             <Button onClick={handleStartGame} className="bg-green-600 hover:bg-green-700">
               Start Timer
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showCompletionDialog} onOpenChange={setShowCompletionDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-green-700">
+              Congratulations! 🎄
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-4">
+            <p className="text-lg">
+              You completed the puzzle in:
+            </p>
+            <p className="text-4xl font-bold text-green-600 font-mono">
+              {formatTime(completionTime || 0)}
+            </p>
+            <p className="text-gray-600">
+              Well done! Come back tomorrow for a new challenge.
+            </p>
           </div>
         </DialogContent>
       </Dialog>
