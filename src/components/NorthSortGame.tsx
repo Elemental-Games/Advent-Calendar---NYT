@@ -66,7 +66,6 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
       setCompletedGroups(prev => [...prev, matchingGroup.category]);
       setSelectedWords([]);
       
-      // Only show congrats when all groups are completed
       if (completedGroups.length + 1 === groups.length) {
         setShowCongrats(true);
         onComplete?.();
@@ -86,9 +85,17 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
         setGameOver(true);
         const revealGroups = () => {
           if (revealIndex < groups.length) {
-            setCompletedGroups(prev => [...prev, groups[revealIndex].category]);
+            console.log(`Revealing group ${revealIndex + 1} of ${groups.length}`);
+            setCompletedGroups(prev => {
+              const nextGroup = groups[revealIndex];
+              return prev.includes(nextGroup.category) 
+                ? prev 
+                : [...prev, nextGroup.category];
+            });
             setRevealIndex(prev => prev + 1);
-            setTimeout(revealGroups, 2000);
+            if (revealIndex < groups.length - 1) {
+              setTimeout(revealGroups, 2000);
+            }
           }
         };
         revealGroups();
@@ -124,11 +131,11 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                   style={{ backgroundColor: group.color }}
                 >
                   <h4 className="font-semibold mb-2 text-white">{category}</h4>
-                  <div className="grid grid-cols-4 gap-1 sm:gap-2">
+                  <div className="grid grid-cols-4 gap-2">
                     {group.words.map(word => (
                       <div
                         key={word}
-                        className="min-h-[3rem] px-2 sm:px-3 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center aspect-[2.5/1]"
+                        className="min-h-[3rem] px-2 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center aspect-[1/2]"
                       >
                         <span className="text-xs sm:text-sm text-center break-words">
                           {word}
@@ -143,14 +150,14 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
 
           {/* Word selection grid */}
           {!gameOver && (
-            <div className="grid grid-cols-4 gap-1 sm:gap-2">
+            <div className="grid grid-cols-4 gap-2">
               {remainingWords.map(word => (
                 <motion.button
                   key={word}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleWordClick(word)}
-                  className={`min-h-[3rem] px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center aspect-[2.5/1]
+                  className={`min-h-[3rem] px-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center aspect-[1/2]
                     ${selectedWords.includes(word)
                       ? 'bg-red-600 text-white'
                       : 'bg-white hover:bg-red-50'
