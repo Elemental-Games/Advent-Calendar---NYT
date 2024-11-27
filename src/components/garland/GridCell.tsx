@@ -36,7 +36,6 @@ export const GridCell = memo(function GridCell({
     
     // Found words with specific colors
     if (isFound) {
-      // Check for specific words based on foundWordIndex
       switch(foundWordIndex) {
         case 0: // santa
           return 'bg-red-500 text-white border-transparent';
@@ -44,10 +43,10 @@ export const GridCell = memo(function GridCell({
           return 'bg-blue-500 text-white border-transparent';
         case 2: // cookies
           return 'bg-yellow-500 text-white border-transparent';
-        case 3: // mistletoe
-          return 'bg-green-500 text-white border-transparent';
-        case 4: // sleigh
+        case 3: // sleigh
           return 'bg-red-500 text-white border-transparent';
+        case 4: // mistletoe
+          return 'bg-green-500 text-white border-transparent';
         case 5: // rudolph
           return 'bg-purple-500 text-white border-transparent';
         default:
@@ -61,7 +60,7 @@ export const GridCell = memo(function GridCell({
 
     // Currently selected - use the hover color without the 'hover:' prefix
     if (isSelected) {
-      return `${colors[position].replace('hover:', '')} text-white`;
+      return `${hoverColor.replace('hover:', '')} text-white`;
     }
 
     // Default state (not found, not selected)
