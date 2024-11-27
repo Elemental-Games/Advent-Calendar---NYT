@@ -117,7 +117,6 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
         </Alert>
 
         <div className="space-y-4">
-          {/* Completed groups displayed in rows */}
           <div className="space-y-2">
             {completedGroups.map((category, index) => {
               const group = groups.find(g => g.category === category)!;
@@ -135,7 +134,7 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                     {group.words.map(word => (
                       <div
                         key={word}
-                        className="min-h-[3rem] px-2 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center aspect-[1/2]"
+                        className="min-h-[3rem] px-2 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center md:aspect-[2.5/1] aspect-[1/2]"
                       >
                         <span className="text-xs sm:text-sm text-center break-words">
                           {word}
@@ -148,7 +147,6 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
             })}
           </div>
 
-          {/* Word selection grid */}
           {!gameOver && (
             <div className="grid grid-cols-4 gap-2">
               {remainingWords.map(word => (
@@ -157,7 +155,7 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleWordClick(word)}
-                  className={`min-h-[3rem] px-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center aspect-[1/2]
+                  className={`min-h-[3rem] px-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center md:aspect-[2.5/1] aspect-[1/2] w-full
                     ${selectedWords.includes(word)
                       ? 'bg-red-600 text-white'
                       : 'bg-white hover:bg-red-50'
@@ -171,16 +169,13 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
             </div>
           )}
 
-          {/* Submit button */}
-          {!gameOver && (
-            <Button
-              onClick={handleSubmit}
-              disabled={selectedWords.length !== 4}
-              className="w-full mt-4 bg-red-600 hover:bg-red-700"
-            >
-              Submit Selection
-            </Button>
-          )}
+          <Button
+            onClick={handleSubmit}
+            disabled={selectedWords.length !== 4}
+            className="w-full mt-4 bg-red-600 hover:bg-red-700"
+          >
+            Submit Selection
+          </Button>
         </div>
       </div>
 

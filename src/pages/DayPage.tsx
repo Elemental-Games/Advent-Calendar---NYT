@@ -2,11 +2,39 @@ import { useParams, useNavigate } from "react-router-dom";
 import { generateCalendarData } from "@/lib/date-utils";
 import { PuzzleDisplay } from "@/components/PuzzleDisplay";
 import { Button } from "@/components/ui/button";
+import { markDayComplete, markDayIncomplete, isDayCompleted } from "@/lib/game-state";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const DayPage = () => {
   const { day } = useParams();
   const navigate = useNavigate();
-  const dayInfo = generateCalendarData().find(d => d.day === Number(day));
+  const dayNumber = Number(day);
+  const dayInfo = generateCalendarData().find(d => d.day === dayNumber);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  useEffect(() => {
+    if (dayNumber) {
+      setIsCompleted(isDayCompleted(dayNumber));
+    }
+  }, [dayNumber]);
+
+  const handleCompletion = () => {
+    if (dayNumber) {
+      markDayComplete(dayNumber);
+      setIsCompleted(true);
+      toast.success("Puzzle completed! Well done!");
+    }
+  };
+
+  const handleReset = () => {
+    if (dayNumber) {
+      markDayIncomplete(dayNumber);
+      setIsCompleted(false);
+      toast.info("Puzzle reset! Try again!");
+      window.location.reload();
+    }
+  };
 
   if (!dayInfo) {
     return (
@@ -29,6 +57,13 @@ const DayPage = () => {
           <h1 className="text-2xl font-bold text-red-700">
             Day {dayInfo.day}
           </h1>
+          <Button 
+            onClick={handleReset}
+            variant="outline"
+            className="text-red-600 border-red-600 hover:bg-red-50"
+          >
+            Reset Day
+          </Button>
         </div>
         
         {dayInfo.puzzleContent && (
@@ -37,6 +72,7 @@ const DayPage = () => {
               type={dayInfo.puzzleType}
               content={dayInfo.puzzleContent}
               day={dayInfo.day}
+              onComplete={handleCompletion}
             />
           </div>
         )}

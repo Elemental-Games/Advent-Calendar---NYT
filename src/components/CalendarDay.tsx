@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { DayInfo, formatCountdown } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { isDayCompleted } from "@/lib/game-state";
 
 interface CalendarDayProps {
   dayInfo: DayInfo;
-  isCompleted?: boolean;
 }
 
 const getDayAbbreviation = (day: number): string => {
@@ -15,24 +15,26 @@ const getDayAbbreviation = (day: number): string => {
   return days[dayIndex];
 };
 
-export function CalendarDay({ dayInfo, isCompleted = false }: CalendarDayProps) {
+export function CalendarDay({ dayInfo }: CalendarDayProps) {
   const [countdown, setCountdown] = useState("");
+  const [isCompleted, setIsCompleted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkStatus = () => {
       setCountdown(formatCountdown(dayInfo.unlockTime));
+      setIsCompleted(isDayCompleted(dayInfo.day));
     };
 
     checkStatus();
     const timer = setInterval(checkStatus, 1000);
     return () => clearInterval(timer);
-  }, [dayInfo.unlockTime]);
+  }, [dayInfo.unlockTime, dayInfo.day]);
 
   const isAvailable = dayInfo.day <= 4;
 
   const handleClick = () => {
-    if (isAvailable || isCompleted) {
+    if (isAvailable) {
       navigate(`/day/${dayInfo.day}`);
     }
   };
