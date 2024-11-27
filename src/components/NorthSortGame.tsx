@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Alert, AlertDescription } from "./ui/alert";
 import { NorthSortHeader } from "./northsort/NorthSortHeader";
 import { CompletedGroup } from "./northsort/CompletedGroup";
 import { WordGrid } from "./northsort/WordGrid";
+import { savePuzzleState, getPuzzleState } from "@/lib/game-state";
 
 interface NorthSortGameProps {
   groups: Array<{
@@ -14,14 +14,39 @@ interface NorthSortGameProps {
     words: string[];
   }>;
   onComplete?: () => void;
+  day: number;
 }
 
-export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
+export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [completedGroups, setCompletedGroups] = useState<string[]>([]);
   const [showCongrats, setShowCongrats] = useState(false);
   const [remainingAttempts, setRemainingAttempts] = useState(4);
   const [gameOver, setGameOver] = useState(false);
+
+  // Load saved state on mount
+  useEffect(() => {
+    const savedState = getPuzzleState(day);
+    if (savedState) {
+      setCompletedGroups(savedState.completedGroups || []);
+      setGameOver(savedState.gameOver || false);
+      setRemainingAttempts(savedState.remainingAttempts || 4);
+      if (savedState.showCongrats) {
+        setShowCongrats(true);
+        onComplete?.();
+      }
+    }
+  }, [day, onComplete]);
+
+  // Save state whenever it changes
+  useEffect(() => {
+    savePuzzleState(day, {
+      completedGroups,
+      gameOver,
+      remainingAttempts,
+      showCongrats
+    });
+  }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
 
   const allWords = groups.flatMap(group => group.words);
   const remainingWords = allWords.filter(word => 

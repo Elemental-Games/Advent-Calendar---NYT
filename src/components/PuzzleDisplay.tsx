@@ -45,7 +45,11 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         };
         return (
           <div className="p-4">
-            <NorthSortGame groups={northsortContent.groups} onComplete={onComplete} />
+            <NorthSortGame 
+              groups={northsortContent.groups} 
+              onComplete={onComplete}
+              day={day}
+            />
           </div>
         );
       
