@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 
 interface GridCellProps {
@@ -13,7 +13,7 @@ interface GridCellProps {
   uniqueColor: string;
 }
 
-export function GridCell({
+export const GridCell = memo(function GridCell({
   letter,
   isSelected,
   isFound,
@@ -26,7 +26,7 @@ export function GridCell({
 }: GridCellProps) {
   console.log('GridCell render:', { 
     letter, 
-    isFound, 
+    isFound,
     position: Math.floor(selectionIndex / 6) * 10 + (selectionIndex % 6) + 11 
   });
 
@@ -83,11 +83,13 @@ export function GridCell({
     }
 
     // Default state (not selected, not found)
+    // Use the uniqueColor for hover state
+    const hoverClass = uniqueColor.replace('bg-', 'hover:bg-');
     return {
       bg: 'bg-white',
       text: 'text-gray-900',
       border: 'border-2 border-transparent',
-      hover: 'hover:bg-blue-500 hover:text-white',
+      hover: `${hoverClass} hover:text-white`,
     };
   };
 
@@ -110,4 +112,4 @@ export function GridCell({
       {letter}
     </motion.button>
   );
-}
+});
