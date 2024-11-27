@@ -124,13 +124,13 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
                   style={{ backgroundColor: group.color }}
                 >
                   <h4 className="font-semibold mb-2 text-white">{category}</h4>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-4 gap-1 sm:gap-2">
                     {group.words.map(word => (
                       <div
                         key={word}
-                        className="min-h-[3rem] px-3 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center aspect-[2.5/1]"
+                        className="min-h-[3rem] px-2 sm:px-3 py-2 bg-white/90 rounded-lg shadow-sm flex items-center justify-center aspect-[2.5/1]"
                       >
-                        <span className="text-sm text-center break-words">
+                        <span className="text-xs sm:text-sm text-center break-words">
                           {word}
                         </span>
                       </div>
@@ -143,14 +143,14 @@ export function NorthSortGame({ groups, onComplete }: NorthSortGameProps) {
 
           {/* Word selection grid */}
           {!gameOver && (
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-1 sm:gap-2">
               {remainingWords.map(word => (
                 <motion.button
                   key={word}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleWordClick(word)}
-                  className={`min-h-[3rem] px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center aspect-[2.5/1]
+                  className={`min-h-[3rem] px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center aspect-[2.5/1]
                     ${selectedWords.includes(word)
                       ? 'bg-red-600 text-white'
                       : 'bg-white hover:bg-red-50'
