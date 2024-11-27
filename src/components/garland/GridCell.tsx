@@ -34,16 +34,10 @@ export const GridCell = memo(function GridCell({
     isSelected
   });
 
-  const getColors = () => {
+  const getBaseColor = () => {
     // Theme word (Christmas)
     if (isThemeWord && isFound) {
-      console.log('Theme word cell:', letter);
-      return {
-        bg: 'bg-green-500',
-        text: 'text-white',
-        border: 'border-red-500',
-        hover: '',
-      };
+      return 'bg-green-500 text-white border-red-500';
     }
     
     // Found words with specific colors for SANTA
@@ -57,61 +51,54 @@ export const GridCell = memo(function GridCell({
       };
       
       if (santaColors[position]) {
-        console.log('SANTA letter colors:', { letter, position, color: santaColors[position] });
-        return {
-          bg: santaColors[position],
-          text: 'text-white',
-          border: 'border-2 border-black',
-          hover: '',
-        };
+        return `${santaColors[position]} text-white border-black`;
       }
       
-      return {
-        bg: 'bg-purple-500',
-        text: 'text-white',
-        border: 'border-2 border-black',
-        hover: '',
-      };
+      return 'bg-purple-500 text-white border-black';
     }
 
     // Currently selected letter
     if (isSelected) {
-      return {
-        bg: 'bg-blue-500',
-        text: 'text-white',
-        border: 'border-2 border-blue-400',
-        hover: '',
-      };
+      return 'bg-blue-500 text-white border-blue-400';
     }
 
-    // Default state (not selected, not found)
-    const baseColor = uniqueColor.replace('bg-', '');
-    return {
-      bg: 'bg-white',
-      text: 'text-gray-900',
-      border: 'border-2 border-transparent',
-      hover: `hover:bg-${baseColor}`,
-    };
+    // Default state - white background with hover color from uniqueColor
+    const baseColor = uniqueColor.split('-')[1]; // Extract 'red' from 'bg-red-500'
+    const shade = uniqueColor.split('-')[2]; // Extract '500' from 'bg-red-500'
+    
+    return `group-hover:bg-${baseColor}-${shade} group-hover:text-white bg-white text-gray-900`;
   };
 
-  const colors = getColors();
-
   return (
-    <motion.button
+    <motion.div
+      className="group"
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
-      className={`w-10 h-10 rounded-full font-bold text-lg flex items-center justify-center
-        transition-colors duration-300 shadow-lg
-        ${colors.bg} ${colors.text} ${colors.border}
-        ${!isFound && !isSelected ? `${colors.hover} hover:text-white` : ''}
-        ${isFound ? 'cursor-default' : 'cursor-pointer'}`}
-      onMouseDown={!isFound ? onMouseDown : undefined}
-      onMouseEnter={!isFound ? onMouseEnter : undefined}
-      style={{ 
-        transition: 'all 0.2s ease-in-out'
-      }}
     >
-      {letter}
-    </motion.button>
+      <button
+        className={`
+          w-10 h-10 
+          rounded-full 
+          font-bold 
+          text-lg 
+          flex 
+          items-center 
+          justify-center
+          transition-all 
+          duration-200 
+          shadow-lg
+          border-2
+          ${getBaseColor()}
+          ${isFound ? 'cursor-default' : 'cursor-pointer'}
+        `}
+        onMouseDown={!isFound ? onMouseDown : undefined}
+        onMouseEnter={!isFound ? onMouseEnter : undefined}
+        style={{ 
+          transition: 'all 0.2s ease-in-out'
+        }}
+      >
+        {letter}
+      </button>
+    </motion.div>
   );
 });
