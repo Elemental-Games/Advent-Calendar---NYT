@@ -1,5 +1,17 @@
 import { useCallback } from 'react';
 
+// Define the grid as a constant since it's static
+const grid = [
+  ['S', 'L', 'E', 'S', 'F', 'R'],
+  ['H', 'G', 'I', 'A', 'S', 'O'],
+  ['M', 'I', 'T', 'M', 'T', 'R'],
+  ['S', 'T', 'L', 'S', 'O', 'U'],
+  ['T', 'E', 'I', 'P', 'L', 'D'],
+  ['O', 'E', 'R', 'H', 'E', 'S'],
+  ['S', 'A', 'N', 'H', 'K', 'I'],
+  ['A', 'T', 'C', 'O', 'O', 'C'],
+];
+
 export function useFoundWordDisplay(foundWords: string[], themeWord: string) {
   const findWordIndexes = useCallback((word: string, startRow: number, startCol: number): number[] => {
     const indexes: number[] = [];

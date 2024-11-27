@@ -1,6 +1,18 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
+// Define the grid as a constant since it's static
+const grid = [
+  ['S', 'L', 'E', 'S', 'F', 'R'],
+  ['H', 'G', 'I', 'A', 'S', 'O'],
+  ['M', 'I', 'T', 'M', 'T', 'R'],
+  ['S', 'T', 'L', 'S', 'O', 'U'],
+  ['T', 'E', 'I', 'P', 'L', 'D'],
+  ['O', 'E', 'R', 'H', 'E', 'S'],
+  ['S', 'A', 'N', 'H', 'K', 'I'],
+  ['A', 'T', 'C', 'O', 'O', 'C'],
+];
+
 export function useWordSelection(
   words: string[],
   foundWords: string[],
@@ -11,6 +23,8 @@ export function useWordSelection(
   const [selectedCells, setSelectedCells] = useState<number[]>([]);
   const [currentWord, setCurrentWord] = useState<string>('');
   const [isDragging, setIsDragging] = useState(false);
+
+  const isWordFound = (word: string) => foundWords.includes(word);
 
   const getCurrentWord = (cells: number[]): string => {
     return cells.map(cell => {
