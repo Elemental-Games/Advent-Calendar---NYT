@@ -4,11 +4,11 @@ import { toast } from 'sonner';
 // Word position mappings
 const WORD_POSITIONS = {
   'santa': [71, 72, 73, 82, 81],
-  'cookies': [83, 84, 85, 86, 87, 88],  // Updated position
+  'cookies': [86, 85, 84, 75, 76, 65, 66],  // Updated positions
   'sleigh': [11, 12, 13, 23, 22, 21],
   'mistletoe': [31, 32, 41, 42, 43, 52, 51, 61, 62],
   'frost': [15, 16, 26, 25, 35],
-  'rudolph': [16, 26, 36, 46, 56, 66],  // Updated position
+  'rudolph': [36, 46, 56, 45, 55, 54, 64],  // Updated positions
   'christmas': [83, 74, 63, 53, 44, 33, 34, 24, 14]
 };
 

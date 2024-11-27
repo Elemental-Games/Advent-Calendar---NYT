@@ -36,18 +36,11 @@ export const GridCell = memo(function GridCell({
     // Found words
     if (isFound) {
       // Special case for SANTA
-      const santaColors: { [key: number]: string } = {
-        71: 'bg-orange-500', // S
-        72: 'bg-blue-500',   // A
-        73: 'bg-yellow-500', // N
-        82: 'bg-red-500',    // T
-        81: 'bg-green-500'   // A
-      };
-      
-      if (santaColors[position]) {
-        console.log('SANTA position:', position, 'color:', santaColors[position]);
-        return `${santaColors[position]} text-white border-black`;
-      }
+      if (letter === 'S' && position === 71) return 'bg-orange-500 text-white border-black';
+      if (letter === 'A' && position === 72) return 'bg-blue-500 text-white border-black';
+      if (letter === 'N' && position === 73) return 'bg-yellow-500 text-white border-black';
+      if (letter === 'T' && position === 82) return 'bg-red-500 text-white border-black';
+      if (letter === 'A' && position === 81) return 'bg-green-500 text-white border-black';
       
       // All other found words are green
       return 'bg-green-500 text-white border-black';
@@ -59,11 +52,7 @@ export const GridCell = memo(function GridCell({
     }
 
     // Default state with hover
-    return cn(
-      'bg-white text-gray-900 border-gray-200',
-      'hover:text-white active:text-white',
-      `hover:${uniqueColor} active:${uniqueColor}`
-    );
+    return 'bg-white text-gray-900 border-gray-200 hover:bg-blue-500 hover:text-white';
   };
 
   return (
@@ -77,8 +66,7 @@ export const GridCell = memo(function GridCell({
           "w-10 h-10 rounded-full font-bold text-lg",
           "flex items-center justify-center",
           "transition-all duration-200 shadow-lg border-2",
-          getBaseStyles(),
-          isFound ? 'cursor-default' : 'cursor-pointer'
+          getBaseStyles()
         )}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
