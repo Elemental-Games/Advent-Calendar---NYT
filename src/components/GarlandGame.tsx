@@ -13,6 +13,49 @@ interface GarlandGameProps {
   onComplete?: () => void;
 }
 
+// Split into smaller components to reduce file size
+const GameHeader = ({ elapsedTime }: { elapsedTime: number }) => {
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="text-center space-y-2">
+      <h2 className="text-xl font-bold">Garland #1</h2>
+      <p className="text-sm text-muted-foreground">
+        Theme: "Tis the Season"
+      </p>
+      <div className="text-lg font-mono text-green-600">
+        {formatTime(elapsedTime)}
+      </div>
+    </div>
+  );
+};
+
+const FoundWordsList = ({ foundWords }: { foundWords: Array<{word: string, index: number}> }) => (
+  <div className="space-y-4">
+    <div className="text-sm">
+      Found words ({foundWords.length}/6):
+      <div className="flex flex-wrap gap-2 mt-2">
+        {foundWords.map(({ word }, index) => (
+          <span
+            key={index}
+            className={`px-3 py-1 rounded-full ${
+              word.toLowerCase() === 'christmas'
+                ? 'bg-green-500 text-white border-2 border-red-500'
+                : 'bg-green-100 text-green-800'
+            }`}
+          >
+            {word}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 export function GarlandGame({ 
   words = ['santa', 'sleigh', 'cookies', 'mistletoe', 'frost', 'rudolph'],
   themeWord = 'christmas',
@@ -26,15 +69,16 @@ export function GarlandGame({
   const [completionTime, setCompletionTime] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleWordFound = (word: string) => {
-    console.log('Word found:', word);
-    const wordIndex = words.indexOf(word);
-    setFoundWordsWithIndex(prev => [...prev, { word, index: wordIndex }]);
+  const handleWordFound = (foundWords: string[]) => {
+    const newWord = foundWords[foundWords.length - 1];
+    console.log('Word found:', newWord);
+    const wordIndex = words.indexOf(newWord);
+    setFoundWordsWithIndex(prev => [...prev, { word: newWord, index: wordIndex }]);
     
-    if (word.toLowerCase() === themeWord.toLowerCase()) {
+    if (newWord.toLowerCase() === themeWord.toLowerCase()) {
       toast.success("You found the theme word!");
     } else {
-      toast.success(`Found word: ${word}!`);
+      toast.success(`Found word: ${newWord}!`);
     }
 
     if (foundWordsWithIndex.length + 1 === words.length) {
@@ -51,12 +95,6 @@ export function GarlandGame({
     useWordSelection(words, foundWordsWithIndex.map(fw => fw.word), handleWordFound, themeWord);
 
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   useEffect(() => {
     if (isStarted) {
@@ -104,15 +142,7 @@ export function GarlandGame({
 
   return (
     <div className="flex flex-col items-center space-y-6 p-4">
-      <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold">Garland #1</h2>
-        <p className="text-sm text-muted-foreground">
-          Theme: "Tis the Season"
-        </p>
-        <div className="text-lg font-mono text-green-600">
-          {formatTime(elapsedTime)}
-        </div>
-      </div>
+      <GameHeader elapsedTime={elapsedTime} />
 
       <div 
         className="grid gap-2 relative"
@@ -144,25 +174,7 @@ export function GarlandGame({
         ))}
       </div>
 
-      <div className="space-y-4">
-        <div className="text-sm">
-          Found words ({foundWordsWithIndex.length}/{words.length}):
-          <div className="flex flex-wrap gap-2 mt-2">
-            {foundWordsWithIndex.map(({ word }, index) => (
-              <span
-                key={index}
-                className={`px-3 py-1 rounded-full ${
-                  word.toLowerCase() === themeWord.toLowerCase()
-                    ? 'bg-green-500 text-white border-2 border-red-500'
-                    : 'bg-green-100 text-green-800'
-                }`}
-              >
-                {word}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      <FoundWordsList foundWords={foundWordsWithIndex} />
 
       <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
         <DialogContent className="sm:max-w-md">
@@ -194,7 +206,7 @@ export function GarlandGame({
               You completed the puzzle in:
             </p>
             <p className="text-4xl font-bold text-green-600 font-mono">
-              {formatTime(completionTime || 0)}
+              {completionTime !== null ? `${Math.floor(completionTime / 60)}:${(completionTime % 60).toString().padStart(2, '0')}` : '0:00'}
             </p>
             <p className="text-gray-600">
               Well done! Come back tomorrow for a new challenge.
