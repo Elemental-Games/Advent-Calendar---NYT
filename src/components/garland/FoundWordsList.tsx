@@ -1,0 +1,29 @@
+import React from 'react';
+
+interface FoundWordsListProps {
+  foundWords: Array<{word: string, index: number}>;
+}
+
+export function FoundWordsList({ foundWords }: FoundWordsListProps) {
+  return (
+    <div className="space-y-4">
+      <div className="text-sm">
+        Found words ({foundWords.length}/6):
+        <div className="flex flex-wrap gap-2 mt-2">
+          {foundWords.map(({ word }, index) => (
+            <span
+              key={index}
+              className={`px-3 py-1 rounded-full ${
+                word.toLowerCase() === 'christmas'
+                  ? 'bg-green-500 text-white border-2 border-red-500'
+                  : 'bg-green-100 text-green-800'
+              }`}
+            >
+              {word}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

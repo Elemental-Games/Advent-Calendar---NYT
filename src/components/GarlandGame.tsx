@@ -1,60 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { GridCell } from './garland/GridCell';
 import { generateUniqueColors } from '@/lib/garland-constants';
 import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
 import { useWordSelection } from '@/hooks/useWordSelection';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
+import { GameHeader } from './garland/GameHeader';
+import { FoundWordsList } from './garland/FoundWordsList';
+import { GameGrid } from './garland/GameGrid';
 
 interface GarlandGameProps {
   words?: string[];
   themeWord?: string;
   onComplete?: () => void;
 }
-
-// Split into smaller components to reduce file size
-const GameHeader = ({ elapsedTime }: { elapsedTime: number }) => {
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  return (
-    <div className="text-center space-y-2">
-      <h2 className="text-xl font-bold">Garland #1</h2>
-      <p className="text-sm text-muted-foreground">
-        Theme: "Tis the Season"
-      </p>
-      <div className="text-lg font-mono text-green-600">
-        {formatTime(elapsedTime)}
-      </div>
-    </div>
-  );
-};
-
-const FoundWordsList = ({ foundWords }: { foundWords: Array<{word: string, index: number}> }) => (
-  <div className="space-y-4">
-    <div className="text-sm">
-      Found words ({foundWords.length}/6):
-      <div className="flex flex-wrap gap-2 mt-2">
-        {foundWords.map(({ word }, index) => (
-          <span
-            key={index}
-            className={`px-3 py-1 rounded-full ${
-              word.toLowerCase() === 'christmas'
-                ? 'bg-green-500 text-white border-2 border-red-500'
-                : 'bg-green-100 text-green-800'
-            }`}
-          >
-            {word}
-          </span>
-        ))}
-      </div>
-    </div>
-  </div>
-);
 
 export function GarlandGame({ 
   words = ['santa', 'sleigh', 'cookies', 'mistletoe', 'frost', 'rudolph'],
@@ -126,53 +85,20 @@ export function GarlandGame({
     ['A', 'T', 'C', 'O', 'O', 'C'],
   ];
 
-  useEffect(() => {
-    const handleGlobalMouseUp = () => {
-      handleMouseUp();
-    };
-
-    window.addEventListener('mouseup', handleGlobalMouseUp);
-    window.addEventListener('touchend', handleGlobalMouseUp);
-
-    return () => {
-      window.removeEventListener('mouseup', handleGlobalMouseUp);
-      window.removeEventListener('touchend', handleGlobalMouseUp);
-    };
-  }, [handleMouseUp]);
-
   return (
     <div className="flex flex-col items-center space-y-6 p-4">
       <GameHeader elapsedTime={elapsedTime} />
 
-      <div 
-        className="grid gap-2 relative"
-        onMouseLeave={handleMouseUp}
-      >
-        {grid.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex gap-2">
-            {row.map((letter, colIndex) => {
-              const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
-              const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
-              const position = (rowIndex + 1) * 10 + (colIndex + 1);
-              
-              return (
-                <GridCell
-                  key={`${rowIndex}-${colIndex}`}
-                  letter={letter}
-                  isSelected={isSelected}
-                  isFound={found}
-                  foundWordIndex={wordIndex}
-                  isThemeWord={isThemeWord}
-                  onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                  onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-                  selectionIndex={selectedCells.indexOf(rowIndex * 6 + colIndex)}
-                  position={position}
-                />
-              );
-            })}
-          </div>
-        ))}
-      </div>
+      <GameGrid
+        grid={grid}
+        selectedCells={selectedCells}
+        foundWordsWithIndex={foundWordsWithIndex}
+        themeWord={themeWord}
+        handleCellMouseDown={handleCellMouseDown}
+        handleCellMouseEnter={handleCellMouseEnter}
+        handleMouseUp={handleMouseUp}
+        isLetterInFoundWord={isLetterInFoundWord}
+      />
 
       <FoundWordsList foundWords={foundWordsWithIndex} />
 

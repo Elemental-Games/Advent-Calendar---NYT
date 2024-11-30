@@ -27,49 +27,58 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const getBaseStyles = () => {
-    console.log('Cell state:', { isFound, foundWordIndex, isThemeWord }); // Debug log
-    
-    // Theme word (Christmas)
     if (isThemeWord && isFound) {
       return 'bg-green-500 text-white border-2 border-red-500';
     }
     
-    // Found words with specific colors
     if (isFound) {
       const baseStyle = 'text-white border-2 border-black';
       switch(foundWordIndex) {
-        case 0: // santa
-          return `bg-red-500 ${baseStyle}`;
-        case 1: // frost
-          return `bg-blue-500 ${baseStyle}`;
-        case 2: // cookies
-          return `bg-yellow-500 ${baseStyle}`;
-        case 3: // sleigh
-          return `bg-red-500 ${baseStyle}`;
-        case 4: // mistletoe
-          return `bg-green-500 ${baseStyle}`;
-        case 5: // rudolph
-          return `bg-purple-500 ${baseStyle}`;
-        default:
-          return `bg-green-500 ${baseStyle}`;
+        case 0: return `bg-red-500 ${baseStyle}`;
+        case 1: return `bg-blue-500 ${baseStyle}`;
+        case 2: return `bg-yellow-500 ${baseStyle}`;
+        case 3: return `bg-red-500 ${baseStyle}`;
+        case 4: return `bg-green-500 ${baseStyle}`;
+        case 5: return `bg-purple-500 ${baseStyle}`;
+        default: return `bg-green-500 ${baseStyle}`;
       }
     }
 
-    // Get the predefined color for hover/selection state
     const colors = generateUniqueColors();
     const hoverColor = colors[position] || 'hover:bg-blue-500';
 
-    // Currently selected - use the hover color without the 'hover:' prefix
     if (isSelected) {
       return `${hoverColor.replace('hover:', '')} text-white border-2 border-black`;
     }
 
-    // Default state (not found, not selected)
     return cn(
       'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
       hoverColor
     );
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!isFound) {
+      e.preventDefault();
+      onMouseDown();
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isFound) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (element?.tagName === 'BUTTON') {
+        const event = new MouseEvent('mouseenter', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        });
+        element.dispatchEvent(event);
+      }
+    }
   };
 
   return (
@@ -87,17 +96,8 @@ export const GridCell = memo(function GridCell({
         )}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
-        onTouchStart={!isFound ? onMouseDown : undefined}
-        onTouchMove={(e) => {
-          if (!isFound) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const element = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (element?.tagName === 'BUTTON') {
-              element.dispatchEvent(new MouseEvent('mouseenter'));
-            }
-          }
-        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
       >
         {letter}
       </button>
