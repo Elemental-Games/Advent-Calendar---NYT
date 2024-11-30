@@ -3,6 +3,8 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { WordleBoard } from "./wordle/WordleBoard";
 import { WordleInput } from "./wordle/WordleInput";
+import { Button } from "./ui/button";
+import { Send } from "lucide-react";
 
 interface WordleGameProps {
   solution: string;
@@ -72,7 +74,6 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     }
   };
 
-  // Only listen for Enter and Backspace on window
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -85,10 +86,19 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           Kringle #1 🎄
         </h3>
         
-        <WordleInput 
-          currentGuess={currentGuess}
-          onInput={handleInput}
-        />
+        <div className="relative">
+          <WordleInput 
+            currentGuess={currentGuess}
+            onInput={handleInput}
+          />
+          <Button
+            size="icon"
+            className="absolute right-0 top-0 md:hidden"
+            onClick={handleEnterPress}
+          >
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
 
         <WordleBoard
           guesses={guesses}
