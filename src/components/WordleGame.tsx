@@ -17,13 +17,75 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [showCongrats, setShowCongrats] = useState(false);
   const [activeCell, setActiveCell] = useState<number>(-1);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const lastKeyPressTime = useRef<number>(0);
 
   const WORD_LENGTH = 5;
   const MAX_GUESSES = 6;
+  const DEBOUNCE_TIME = 100; // ms
 
   const isValidWord = (word: string) => {
     return word.length === WORD_LENGTH;
   };
+
+  const handleKeyInput = (key: string) => {
+    const now = Date.now();
+    if (now - lastKeyPressTime.current < DEBOUNCE_TIME) {
+      return; // Debounce rapid inputs
+    }
+    lastKeyPressTime.current = now;
+
+    if (gameOver) return;
+
+    console.log('Processing key:', key); // Debug log
+
+    if (key === "Enter") {
+      if (currentGuess.length !== WORD_LENGTH) {
+        toast.error("Word must be 5 letters");
+        return;
+      }
+
+      if (!isValidWord(currentGuess)) {
+        toast.error("Not a valid word");
+        return;
+      }
+      
+      const newGuesses = [...guesses, currentGuess.toUpperCase()];
+      setGuesses(newGuesses);
+      setCurrentGuess("");
+      setActiveCell(-1);
+
+      if (currentGuess.toUpperCase() === solution) {
+        setIsWinner(true);
+        setGameOver(true);
+        setTimeout(() => setShowCongrats(true), 1500);
+        onComplete?.();
+      } else if (newGuesses.length >= MAX_GUESSES) {
+        toast.error(`Game Over! The word was ${solution}`);
+        setGameOver(true);
+      }
+    } else if (key === "Backspace") {
+      setCurrentGuess(prev => {
+        const newGuess = prev.slice(0, -1);
+        setActiveCell(newGuess.length);
+        return newGuess;
+      });
+    } else if (/^[A-Za-z]$/.test(key) && currentGuess.length < WORD_LENGTH) {
+      setCurrentGuess(prev => {
+        const newGuess = prev + key.toUpperCase();
+        setActiveCell(newGuess.length - 1);
+        return newGuess;
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      handleKeyInput(e.key);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentGuess, guesses, gameOver]);
 
   const getLetterStyle = (letter: string, index: number, guess: string) => {
     if (!letter) return "bg-transparent border-red-200";
@@ -44,61 +106,9 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     return "bg-gray-600 text-white border-gray-700";
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameOver) return;
-
-      if (e.key === "Enter") {
-        if (currentGuess.length !== WORD_LENGTH) {
-          toast.error("Word must be 5 letters");
-          return;
-        }
-
-        if (!isValidWord(currentGuess)) {
-          toast.error("Not a valid word");
-          return;
-        }
-        
-        const newGuesses = [...guesses, currentGuess.toUpperCase()];
-        setGuesses(newGuesses);
-        setCurrentGuess("");
-        setActiveCell(-1);
-
-        if (currentGuess.toUpperCase() === solution) {
-          setIsWinner(true);
-          setGameOver(true);
-          setTimeout(() => setShowCongrats(true), 1500);
-          onComplete?.();
-        } else if (newGuesses.length >= MAX_GUESSES) {
-          toast.error(`Game Over! The word was ${solution}`);
-          setGameOver(true);
-        }
-      } else if (e.key === "Backspace") {
-        setCurrentGuess(prev => {
-          const newGuess = prev.slice(0, -1);
-          setActiveCell(newGuess.length);
-          return newGuess;
-        });
-      } else if (/^[A-Za-z]$/.test(e.key) && currentGuess.length < WORD_LENGTH) {
-        setCurrentGuess(prev => {
-          const newGuess = prev + e.key.toUpperCase();
-          setActiveCell(newGuess.length - 1);
-          return newGuess;
-        });
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentGuess, guesses, gameOver, solution, onComplete]);
-
-  const focusInput = () => {
-    hiddenInputRef.current?.focus();
-  };
-
   return (
     <>
-      <div className="max-w-sm mx-auto p-4 w-full" onClick={focusInput}>
+      <div className="max-w-sm mx-auto p-4 w-full" onClick={() => hiddenInputRef.current?.focus()}>
         <h3 className="text-2xl font-bold mb-6 text-center text-green-700">
           Kringle #1 🎄
         </h3>
