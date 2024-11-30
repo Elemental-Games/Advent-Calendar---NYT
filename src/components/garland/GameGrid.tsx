@@ -26,6 +26,7 @@ export function GameGrid({
     <div 
       className="grid gap-2 relative touch-none"
       onMouseLeave={handleMouseUp}
+      onMouseUp={handleMouseUp}
       onTouchEnd={handleMouseUp}
       onTouchCancel={handleMouseUp}
     >
@@ -46,6 +47,7 @@ export function GameGrid({
                 isThemeWord={isThemeWord}
                 onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                 onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                onMouseUp={handleMouseUp}
                 selectionIndex={selectedCells.indexOf(rowIndex * 6 + colIndex)}
                 position={position}
               />

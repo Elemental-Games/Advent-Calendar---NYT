@@ -11,6 +11,7 @@ interface GridCellProps {
   isThemeWord: boolean;
   onMouseDown: () => void;
   onMouseEnter: () => void;
+  onMouseUp: () => void;
   selectionIndex: number;
   position: number;
 }
@@ -23,6 +24,7 @@ export const GridCell = memo(function GridCell({
   isThemeWord,
   onMouseDown,
   onMouseEnter,
+  onMouseUp,
   selectionIndex,
   position,
 }: GridCellProps) {
@@ -81,6 +83,13 @@ export const GridCell = memo(function GridCell({
     }
   };
 
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isFound) {
+      e.preventDefault();
+      onMouseUp();
+    }
+  };
+
   return (
     <motion.div
       whileHover={{ scale: isFound ? 1 : 1.05 }}
@@ -96,8 +105,10 @@ export const GridCell = memo(function GridCell({
         )}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
+        onMouseUp={!isFound ? onMouseUp : undefined}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {letter}
       </button>

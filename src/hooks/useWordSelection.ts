@@ -79,18 +79,9 @@ export function useWordSelection(
     }
   }, [isDragging, selectedCells]);
 
-  const handleMouseUp = useCallback(() => {
-    if (!isDragging) return;
+  const checkWordValidity = useCallback(() => {
+    if (!isDragging || currentWord.length < 3) return false;
     
-    setIsDragging(false);
-    const word = currentWord;
-    
-    if (word.length < 3) {
-      setSelectedCells([]);
-      setCurrentWord('');
-      return;
-    }
-
     // Check if the selected cells match any word's position pattern
     const selectedPositions = selectedCells.map(cell => {
       const row = Math.floor(cell / 6);
@@ -100,7 +91,7 @@ export function useWordSelection(
       return pos;
     });
 
-    console.log('Checking word:', word, 'positions:', selectedPositions);
+    console.log('Checking word:', currentWord, 'positions:', selectedPositions);
     console.log('Valid positions:', WORD_POSITIONS);
 
     const isValidWord = Object.entries(WORD_POSITIONS).some(([validWord, positions]) => {
@@ -113,7 +104,22 @@ export function useWordSelection(
       return false;
     });
 
-    if (isValidWord && !foundWords.includes(word)) {
+    return isValidWord && !foundWords.includes(currentWord);
+  }, [isDragging, currentWord, selectedCells, foundWords]);
+
+  const handleMouseUp = useCallback(() => {
+    if (!isDragging) return;
+    
+    setIsDragging(false);
+    const word = currentWord;
+    
+    if (word.length < 3) {
+      setSelectedCells([]);
+      setCurrentWord('');
+      return;
+    }
+
+    if (checkWordValidity()) {
       setFoundWords([...foundWords, word]);
       if (word.toLowerCase() === themeWord.toLowerCase()) {
         toast.success("Congratulations! You found the theme word!");
@@ -125,11 +131,13 @@ export function useWordSelection(
         toast.success('Congratulations! You found all the words!');
         onComplete?.();
       }
+    } else if (word.length >= 3) {
+      toast.error("That's not a valid word pattern!");
     }
     
     setSelectedCells([]);
     setCurrentWord('');
-  }, [isDragging, currentWord, words, foundWords, themeWord, onComplete]);
+  }, [isDragging, currentWord, words, foundWords, themeWord, onComplete, checkWordValidity]);
 
   return {
     selectedCells,
