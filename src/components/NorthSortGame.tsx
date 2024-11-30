@@ -48,12 +48,14 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     });
   }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
 
-  const allWords = groups.flatMap(group => group.words);
-  const remainingWords = allWords.filter(word => 
-    !completedGroups.some(cat => 
-      groups.find(g => g.category === cat)?.words.includes(word)
-    )
+  // Get all completed words
+  const completedWords = completedGroups.flatMap(category => 
+    groups.find(g => g.category === category)?.words || []
   );
+
+  // Filter out completed words from all words
+  const allWords = groups.flatMap(group => group.words);
+  const remainingWords = allWords.filter(word => !completedWords.includes(word));
 
   const handleWordClick = (word: string) => {
     if (gameOver) return;
