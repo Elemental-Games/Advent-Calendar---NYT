@@ -32,6 +32,14 @@ export function WordleBoard({ guesses, currentGuess, activeCell, solution, isWin
     return "bg-gray-600 text-white border-gray-700";
   };
 
+  const handleCellClick = () => {
+    // Focus the hidden input when any cell is clicked
+    const hiddenInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+    if (hiddenInput) {
+      hiddenInput.focus();
+    }
+  };
+
   return (
     <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
       {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
@@ -65,7 +73,7 @@ export function WordleBoard({ guesses, currentGuess, activeCell, solution, isWin
                   : undefined
                 }
                 className={cn(
-                  "w-full relative",
+                  "w-full relative cursor-pointer",
                   "before:content-[''] before:float-left before:pt-[100%]",
                   "border-2 rounded",
                   "text-2xl font-bold uppercase transition-all duration-300",
@@ -73,6 +81,7 @@ export function WordleBoard({ guesses, currentGuess, activeCell, solution, isWin
                   isActive && "border-red-500 shadow-lg scale-105",
                   rowIndex === guesses.length && !letter && "hover:border-red-400"
                 )}
+                onClick={handleCellClick}
               >
                 <div className="absolute inset-0 flex items-center justify-center">
                   {letter}
