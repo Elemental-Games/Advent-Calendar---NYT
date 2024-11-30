@@ -103,7 +103,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         <div className="mt-6 flex justify-center">
           <Button 
             onClick={handleSubmit}
-            className="w-full max-w-[200px]"
+            className="w-full max-w-[200px] bg-green-700 hover:bg-green-800 text-white border-2 border-red-500 shadow-lg transition-all duration-300"
             disabled={gameOver}
           >
             Submit
