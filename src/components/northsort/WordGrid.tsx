@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
 
 interface WordGridProps {
   words: string[];
@@ -9,18 +9,21 @@ interface WordGridProps {
 }
 
 export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGridProps) {
-  // Randomize initial word placement more thoroughly
-  const arrangedWords = useMemo(() => {
-    const shuffled = [...words];
-    
-    // Fisher-Yates shuffle algorithm
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    
-    return shuffled;
-  }, [words]); // Only re-run when words array changes
+  const [arrangedWords, setArrangedWords] = useState<string[]>([]);
+
+  // Only shuffle once when component mounts
+  useEffect(() => {
+    const shuffleWords = (array: string[]) => {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    };
+
+    setArrangedWords(shuffleWords(words));
+  }, []); // Empty dependency array means this only runs once on mount
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
