@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { WordleBoard } from "./wordle/WordleBoard";
 import { WordleInput } from "./wordle/WordleInput";
 import { Button } from "./ui/button";
-import { Send } from "lucide-react";
 
 interface WordleGameProps {
   solution: string;
@@ -35,7 +34,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     }
   };
 
-  const handleEnterPress = () => {
+  const handleSubmit = () => {
     if (currentGuess.length !== WORD_LENGTH) {
       toast.error("Word must be 5 letters");
       return;
@@ -64,7 +63,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleEnterPress();
+      handleSubmit();
     } else if (e.key === "Backspace") {
       setCurrentGuess(prev => {
         const newGuess = prev.slice(0, -1);
@@ -91,13 +90,6 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
             currentGuess={currentGuess}
             onInput={handleInput}
           />
-          <Button
-            size="icon"
-            className="absolute right-0 top-0 md:hidden"
-            onClick={handleEnterPress}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
         </div>
 
         <WordleBoard
@@ -107,6 +99,16 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           solution={solution}
           isWinner={isWinner}
         />
+
+        <div className="mt-6 flex justify-center">
+          <Button 
+            onClick={handleSubmit}
+            className="w-full max-w-[200px]"
+            disabled={gameOver}
+          >
+            Submit
+          </Button>
+        </div>
       </div>
 
       <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
