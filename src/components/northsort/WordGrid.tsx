@@ -11,26 +11,28 @@ interface WordGridProps {
 export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGridProps) {
   // Arrange words so related ones are separated
   const arrangedWords = useMemo(() => {
-    const shuffled = [...words];
-    // Group words by their group (assuming 4 words per group)
-    const groups: string[][] = [];
-    for (let i = 0; i < shuffled.length; i += 4) {
-      groups.push(shuffled.slice(i, i + 4));
+    // Create a custom arrangement by swapping specific words
+    const customArrangement = [...words];
+    
+    // Find indices of words to swap
+    const hollyIndex = customArrangement.findIndex(word => word.toLowerCase() === 'holly');
+    const wineIndex = customArrangement.findIndex(word => word.toLowerCase() === 'wine');
+    const cookiesIndex = customArrangement.findIndex(word => word.toLowerCase() === 'cookies');
+    const garlandIndex = customArrangement.findIndex(word => word.toLowerCase() === 'garland');
+    
+    // Swap holly and wine
+    if (hollyIndex !== -1 && wineIndex !== -1) {
+      [customArrangement[hollyIndex], customArrangement[wineIndex]] = 
+      [customArrangement[wineIndex], customArrangement[hollyIndex]];
     }
     
-    // Interleave words from different groups
-    const result: string[] = [];
-    const maxLength = Math.max(...groups.map(g => g.length));
-    
-    for (let i = 0; i < maxLength; i++) {
-      groups.forEach(group => {
-        if (group[i]) {
-          result.push(group[i]);
-        }
-      });
+    // Swap cookies and garland
+    if (cookiesIndex !== -1 && garlandIndex !== -1) {
+      [customArrangement[cookiesIndex], customArrangement[garlandIndex]] = 
+      [customArrangement[garlandIndex], customArrangement[cookiesIndex]];
     }
     
-    return result;
+    return customArrangement;
   }, [words]);
 
   return (

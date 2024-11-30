@@ -109,6 +109,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       setCompletedGroups(prev => [...prev, matchingGroup.category]);
       setSelectedWords([]);
       
+      // Check if this was the last group
       if (completedGroups.length + 1 === groups.length) {
         setShowCongrats(true);
         onComplete?.();
