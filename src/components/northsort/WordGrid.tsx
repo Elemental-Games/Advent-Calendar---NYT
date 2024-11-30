@@ -9,29 +9,18 @@ interface WordGridProps {
 }
 
 export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGridProps) {
-  // Arrange words so related ones are separated
+  // Randomize initial word placement more thoroughly
   const arrangedWords = useMemo(() => {
     const shuffled = [...words];
-    // Group words by their group (assuming 4 words per group)
-    const groups: string[][] = [];
-    for (let i = 0; i < shuffled.length; i += 4) {
-      groups.push(shuffled.slice(i, i + 4));
+    
+    // Fisher-Yates shuffle algorithm
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     
-    // Interleave words from different groups
-    const result: string[] = [];
-    const maxLength = Math.max(...groups.map(g => g.length));
-    
-    for (let i = 0; i < maxLength; i++) {
-      groups.forEach(group => {
-        if (group[i]) {
-          result.push(group[i]);
-        }
-      });
-    }
-    
-    return result;
-  }, [words]);
+    return shuffled;
+  }, [words]); // Only re-run when words array changes
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
