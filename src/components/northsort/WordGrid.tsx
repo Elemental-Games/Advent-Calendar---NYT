@@ -9,7 +9,7 @@ interface WordGridProps {
 }
 
 export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGridProps) {
-  // Randomize word arrangement using Fisher-Yates shuffle
+  // Randomize word arrangement only once on mount using Fisher-Yates shuffle
   const shuffledWords = useMemo(() => {
     const shuffled = [...words];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -17,7 +17,7 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGr
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
-  }, [words]);
+  }, []); // Empty dependency array means this only runs once on mount
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
