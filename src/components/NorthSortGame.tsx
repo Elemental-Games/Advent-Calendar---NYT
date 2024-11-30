@@ -77,23 +77,6 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     return false;
   };
 
-  const revealGroups = () => {
-    let currentIndex = 0;
-    const revealNextGroup = () => {
-      if (currentIndex < groups.length) {
-        const nextGroup = groups[currentIndex];
-        if (!completedGroups.includes(nextGroup.category)) {
-          setCompletedGroups(prev => [...prev, nextGroup.category]);
-        }
-        currentIndex++;
-        if (currentIndex < groups.length) {
-          setTimeout(revealNextGroup, 2000);
-        }
-      }
-    };
-    revealNextGroup();
-  };
-
   const handleSubmit = () => {
     if (selectedWords.length !== 4) {
       toast.error("Please select exactly 4 words");
@@ -126,7 +109,12 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       setRemainingAttempts(prev => prev - 1);
       if (remainingAttempts <= 1) {
         setGameOver(true);
-        revealGroups();
+        // Show all remaining groups
+        groups.forEach(group => {
+          if (!completedGroups.includes(group.category)) {
+            setCompletedGroups(prev => [...prev, group.category]);
+          }
+        });
       }
     }
   };
