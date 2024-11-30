@@ -111,8 +111,11 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       
       // Check if this was the last group
       if (completedGroups.length + 1 === groups.length) {
-        setShowCongrats(true);
-        onComplete?.();
+        // Add delay before showing congratulations to allow the last group to be visible
+        setTimeout(() => {
+          setShowCongrats(true);
+          onComplete?.();
+        }, 1000);
       } else {
         toast.success("Correct group!");
       }
