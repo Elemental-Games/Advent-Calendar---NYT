@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { CrosswordCell } from "./crossword/CrosswordCell";
+import { CrosswordGrid } from "./crossword/CrosswordGrid";
 import { CrosswordClue } from "./crossword/CrosswordClue";
+import { CrosswordHeader } from "./crossword/CrosswordHeader";
 
 interface CrosswordGameProps {
   across: Record<string, string>;
@@ -23,7 +24,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const cellRefs = useRef<(HTMLInputElement | null)[][]>(Array(5).fill(null).map(() => Array(5).fill(null)));
 
-  // 5x5 grid representation with valid input cells marked
   const grid = [
     ["P", "E", "N", "D", " "],
     ["O", "W", "I", "E", " "],
@@ -32,15 +32,8 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     [" ", " ", "A", "X", "E"]
   ];
 
-  // Helper to determine if a cell is part of a word
   const isValidCell = (row: number, col: number) => {
     return grid[row][col] !== " ";
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   useEffect(() => {
@@ -80,36 +73,13 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     const newGuesses = { ...guesses };
     if (clueNumber) {
       newGuesses[key] = (newGuesses[key] || '').slice(0, colIndex) + value + (newGuesses[key] || '').slice(colIndex + 1);
+      setGuesses(newGuesses);
     }
-    setGuesses(newGuesses);
 
-    // Move to next cell
     if (value) {
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
       if (nextCell) {
         cellRefs.current[nextCell.row][nextCell.col]?.focus();
-      }
-    }
-
-    // Check completion
-    const allFilled = Object.keys(answers).every(
-      key => newGuesses[key]?.length === answers[key].length
-    );
-
-    if (allFilled) {
-      const allCorrect = Object.entries(answers).every(
-        ([num, answer]) => newGuesses[num]?.toUpperCase() === answer.toUpperCase()
-      );
-
-      if (allCorrect) {
-        setCompletionTime(elapsedTime);
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-        toast.success("Congratulations! You've completed the Mini FrostWord!");
-        onComplete?.();
-      } else {
-        toast.error("Some letters are incorrect. Keep trying!");
       }
     }
   };
@@ -156,41 +126,53 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       null;
   };
 
+  const handleSubmit = () => {
+    const allFilled = Object.keys(answers).every(
+      key => guesses[key]?.length === answers[key].length
+    );
+
+    if (!allFilled) {
+      toast.error("Please fill in all boxes before submitting!");
+      return;
+    }
+
+    let incorrectCount = 0;
+    Object.entries(answers).forEach(([key, answer]) => {
+      if (guesses[key]?.toUpperCase() !== answer.toUpperCase()) {
+        incorrectCount++;
+      }
+    });
+
+    if (incorrectCount > 0) {
+      toast.error(`${incorrectCount} answer${incorrectCount > 1 ? 's are' : ' is'} incorrect. Keep trying!`);
+    } else {
+      setCompletionTime(elapsedTime);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      toast.success("Congratulations! You've completed the Mini FrostWord!");
+      onComplete?.();
+    }
+  };
+
   const currentClue = getCurrentClue();
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <h3 className="text-2xl font-bold mb-6 text-center text-blue-700">
-        Mini FrostWord ❄️
-      </h3>
-
-      <div className="text-center mb-4 text-lg font-mono text-blue-600">
-        {formatTime(elapsedTime)}
-      </div>
+      <CrosswordHeader elapsedTime={elapsedTime} />
       
       <div className="mb-8">
-        <div className="grid grid-cols-5 gap-1 w-full max-w-[350px] md:max-w-[450px] mx-auto">
-          {grid.map((row, rowIndex) => (
-            <div key={rowIndex} className="contents">
-              {row.map((letter, colIndex) => (
-                <CrosswordCell
-                  key={`${rowIndex}-${colIndex}`}
-                  value={guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`] || ""}
-                  clueNumber={getClueNumber(rowIndex, colIndex)}
-                  isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
-                  isPartOfWord={selectedCell && (
-                    (showDown && selectedCell.col === colIndex) ||
-                    (!showDown && selectedCell.row === rowIndex)
-                  ) && isValidCell(rowIndex, colIndex)}
-                  isValidCell={isValidCell(rowIndex, colIndex)}
-                  onClick={() => handleCellClick(rowIndex, colIndex)}
-                  onChange={(value) => handleInputChange(rowIndex, colIndex, value)}
-                  ref={el => cellRefs.current[rowIndex][colIndex] = el}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
+        <CrosswordGrid
+          grid={grid}
+          guesses={guesses}
+          showDown={showDown}
+          selectedCell={selectedCell}
+          isValidCell={isValidCell}
+          getClueNumber={getClueNumber}
+          handleCellClick={handleCellClick}
+          handleInputChange={handleInputChange}
+          cellRefs={cellRefs}
+        />
       </div>
 
       {currentClue && (
@@ -200,6 +182,15 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
           clue={currentClue.clue}
         />
       )}
+
+      <div className="flex justify-center mt-6">
+        <Button 
+          onClick={handleSubmit}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+        >
+          Submit
+        </Button>
+      </div>
 
       <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
         <DialogContent className="sm:max-w-md">
