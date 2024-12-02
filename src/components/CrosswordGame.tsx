@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { CrosswordGrid } from "./crossword/CrosswordGrid";
@@ -8,13 +8,12 @@ import { CrosswordControls } from "./crossword/CrosswordControls";
 import { CrosswordClueList } from "./crossword/CrosswordClueList";
 import { useCrosswordGame } from "@/hooks/useCrosswordGame";
 import { useCrosswordGrid } from "@/hooks/useCrosswordGrid";
+import { useCrosswordInput } from "@/hooks/useCrosswordInput";
 import { toast } from "sonner";
 import type { CrosswordGameProps } from "./crossword/types";
 
 export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGameProps) {
   const {
-    guesses,
-    setGuesses,
     showStartDialog,
     setShowStartDialog,
     isStarted,
@@ -24,10 +23,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     showDown,
     setShowDown,
     handleStartGame,
-    handleSubmit: originalHandleSubmit
   } = useCrosswordGame(answers, onComplete);
-
-  const [validatedCells, setValidatedCells] = useState<Record<string, boolean>>({});
 
   const {
     GRID,
@@ -38,48 +34,16 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     findPreviousCell
   } = useCrosswordGrid();
 
+  const {
+    guesses,
+    setGuesses,
+    validatedCells,
+    handleInputChange: baseHandleInputChange,
+    validateSubmission
+  } = useCrosswordInput(answers);
+
   const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
-    if (!isValidCell(rowIndex, colIndex)) return;
-
-    const clueNumber = getClueNumber(rowIndex, colIndex);
-    if (!clueNumber) return;
-
-    const acrossKey = `a${clueNumber}`;
-    const downKey = `d${clueNumber}`;
-    
-    const newGuesses = { ...guesses };
-    
-    // Initialize empty strings if needed
-    if (!newGuesses[acrossKey]) newGuesses[acrossKey] = '';
-    if (!newGuesses[downKey]) newGuesses[downKey] = '';
-    
-    // Find the position within the word for both across and down
-    let acrossPos = 0;
-    let downPos = 0;
-    
-    // Calculate across position
-    for (let col = 0; col < colIndex; col++) {
-      if (isValidCell(rowIndex, col)) acrossPos++;
-    }
-    
-    // Calculate down position
-    for (let row = 0; row < rowIndex; row++) {
-      if (isValidCell(row, colIndex)) downPos++;
-    }
-    
-    // Update the specific position in both directions
-    newGuesses[acrossKey] = 
-      newGuesses[acrossKey].slice(0, acrossPos) + 
-      value + 
-      newGuesses[acrossKey].slice(acrossPos + 1);
-      
-    newGuesses[downKey] = 
-      newGuesses[downKey].slice(0, downPos) + 
-      value + 
-      newGuesses[downKey].slice(downPos + 1);
-
-    setGuesses(newGuesses);
-    console.log(`Updated cell value at ${rowIndex},${colIndex} to ${value}`);
+    baseHandleInputChange(rowIndex, colIndex, value, isValidCell, getClueNumber);
 
     if (value) {
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
@@ -116,35 +80,11 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   const handleSubmit = () => {
-    const newValidatedCells: Record<string, boolean> = {};
-    let allCorrect = true;
-
-    // Check each cell against the correct answers
-    GRID.forEach((row, rowIndex) => {
-      row.forEach((_, colIndex) => {
-        if (!isValidCell(rowIndex, colIndex)) return;
-        
-        const clueNumber = getClueNumber(rowIndex, colIndex);
-        if (!clueNumber) return;
-
-        const cellKey = `${rowIndex}-${colIndex}`;
-        const userValue = guesses[`a${clueNumber}`] || '';
-        const correctValue = GRID[rowIndex][colIndex];
-        
-        const isCorrect = userValue.toUpperCase() === correctValue.toUpperCase();
-        newValidatedCells[cellKey] = isCorrect;
-        
-        if (!isCorrect) {
-          allCorrect = false;
-        }
-      });
-    });
-
-    setValidatedCells(newValidatedCells);
+    const allCorrect = validateSubmission(GRID, isValidCell, getClueNumber);
 
     if (allCorrect) {
       toast.success(`Congratulations! You completed the puzzle in ${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}`);
-      originalHandleSubmit();
+      onComplete?.();
     } else {
       toast.error("Some answers are incorrect. Keep trying!");
     }
