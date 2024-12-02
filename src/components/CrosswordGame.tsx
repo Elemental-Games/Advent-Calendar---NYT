@@ -23,6 +23,8 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     showDown,
     setShowDown,
     handleStartGame,
+    showCompletionDialog,
+    setShowCompletionDialog
   } = useCrosswordGame(answers, onComplete);
 
   const {
@@ -43,7 +45,52 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   } = useCrosswordInput(answers);
 
   const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
-    baseHandleInputChange(rowIndex, colIndex, value, isValidCell, getClueNumber);
+    // Update both across and down values simultaneously
+    const clueNumber = getClueNumber(rowIndex, colIndex);
+    if (clueNumber) {
+      const newGuesses = { ...guesses };
+      
+      // Calculate positions for both across and down
+      let acrossPos = 0;
+      for (let col = 0; col < colIndex; col++) {
+        if (isValidCell(rowIndex, col)) acrossPos++;
+      }
+      
+      let downPos = 0;
+      for (let row = 0; row < rowIndex; row++) {
+        if (isValidCell(row, colIndex)) downPos++;
+      }
+
+      // Update both across and down values
+      if (across[clueNumber]) {
+        const acrossKey = `a${clueNumber}`;
+        if (!newGuesses[acrossKey]) {
+          newGuesses[acrossKey] = ' '.repeat(
+            Array(5).fill(null).filter((_, col) => isValidCell(rowIndex, col)).length
+          );
+        }
+        newGuesses[acrossKey] = 
+          newGuesses[acrossKey].slice(0, acrossPos) + 
+          value.toUpperCase() + 
+          newGuesses[acrossKey].slice(acrossPos + 1);
+      }
+
+      if (down[clueNumber]) {
+        const downKey = `d${clueNumber}`;
+        if (!newGuesses[downKey]) {
+          newGuesses[downKey] = ' '.repeat(
+            Array(5).fill(null).filter((_, row) => isValidCell(row, colIndex)).length
+          );
+        }
+        newGuesses[downKey] = 
+          newGuesses[downKey].slice(0, downPos) + 
+          value.toUpperCase() + 
+          newGuesses[downKey].slice(downPos + 1);
+      }
+
+      setGuesses(newGuesses);
+      console.log(`Updated cell value at ${rowIndex},${colIndex} to ${value}`);
+    }
 
     if (value) {
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
@@ -83,7 +130,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     const allCorrect = validateSubmission(GRID, isValidCell, getClueNumber);
 
     if (allCorrect) {
-      toast.success(`Congratulations! You completed the puzzle in ${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}`);
+      setShowCompletionDialog(true);
       onComplete?.();
     } else {
       toast.error("Some answers are incorrect. Keep trying!");
@@ -154,6 +201,24 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
             </p>
             <Button onClick={handleStartGame} className="bg-blue-600 hover:bg-blue-700">
               Start Timer
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showCompletionDialog} onOpenChange={setShowCompletionDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-green-700">
+              Congratulations! 🎄
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-4">
+            <p className="text-lg">
+              You completed the Mini FrostWord in {Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}!
+            </p>
+            <Button onClick={() => setShowCompletionDialog(false)} className="bg-green-600 hover:bg-green-700">
+              Close
             </Button>
           </div>
         </DialogContent>
