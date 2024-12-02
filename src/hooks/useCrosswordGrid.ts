@@ -15,10 +15,15 @@ export function useCrosswordGrid() {
   );
 
   const isValidCell = (row: number, col: number) => {
+    // Updated valid cell logic to include all cells that should accept input
+    if (row < 0 || row >= 5 || col < 0 || col >= 5) return false;
     return GRID[row][col] !== " ";
   };
 
   const getClueNumber = (rowIndex: number, colIndex: number) => {
+    if (!isValidCell(rowIndex, colIndex)) return "";
+
+    // Updated clue number mapping to include all valid positions
     if (rowIndex === 0 && colIndex === 0) return "1";
     if (rowIndex === 0 && colIndex === 1) return "2";
     if (rowIndex === 0 && colIndex === 2) return "3";
