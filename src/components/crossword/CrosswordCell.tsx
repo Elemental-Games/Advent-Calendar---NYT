@@ -54,6 +54,7 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
               "focus:outline-none uppercase text-2xl md:text-3xl font-bold",
               isValidCell ? "text-blue-700" : "text-slate-600"
             )}
+            readOnly
             disabled={!isValidCell}
           />
         )}

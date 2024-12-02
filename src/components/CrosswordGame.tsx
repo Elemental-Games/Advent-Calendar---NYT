@@ -6,6 +6,7 @@ import { CrosswordGrid } from "./crossword/CrosswordGrid";
 import { CrosswordClue } from "./crossword/CrosswordClue";
 import { CrosswordHeader } from "./crossword/CrosswordHeader";
 import { CrosswordControls } from "./crossword/CrosswordControls";
+import { CrosswordClueList } from "./crossword/CrosswordClueList";
 
 interface CrosswordGameProps {
   across: Record<string, string>;
@@ -222,6 +223,8 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
         onKeyPress={handleKeyPress}
         onBackspace={handleBackspace}
       />
+
+      <CrosswordClueList across={across} down={down} />
 
       <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
         <DialogContent className="sm:max-w-md">
