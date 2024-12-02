@@ -64,6 +64,7 @@ export function useCrosswordInput(answers: Record<string, string>) {
     getClueNumber: (row: number, col: number) => string
   ) => {
     const newValidatedCells: Record<string, boolean> = {};
+    let incorrectCount = 0;
     let allCorrect = true;
 
     grid.forEach((row, rowIndex) => {
@@ -82,13 +83,14 @@ export function useCrosswordInput(answers: Record<string, string>) {
         newValidatedCells[cellKey] = isCorrect;
         
         if (!isCorrect) {
+          incorrectCount++;
           allCorrect = false;
         }
       });
     });
 
     setValidatedCells(newValidatedCells);
-    return allCorrect;
+    return { allCorrect, incorrectCount };
   };
 
   return {

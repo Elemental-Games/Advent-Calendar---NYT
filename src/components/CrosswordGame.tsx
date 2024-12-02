@@ -24,7 +24,11 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     setShowDown,
     handleStartGame,
     showCompletionDialog,
-    setShowCompletionDialog
+    setShowCompletionDialog,
+    showIncorrectDialog,
+    setShowIncorrectDialog,
+    incorrectCount,
+    setIncorrectCount
   } = useCrosswordGame(answers, onComplete);
 
   const {
@@ -131,13 +135,14 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   const handleSubmit = () => {
-    const allCorrect = validateSubmission(GRID, isValidCell, getClueNumber);
+    const { allCorrect, incorrectCount } = validateSubmission(GRID, isValidCell, getClueNumber);
 
     if (allCorrect) {
       setShowCompletionDialog(true);
       onComplete?.();
     } else {
-      toast.error("Some answers are incorrect. Keep trying!");
+      setIncorrectCount(incorrectCount);
+      setShowIncorrectDialog(true);
     }
   };
 
@@ -223,6 +228,24 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
             </p>
             <Button onClick={() => setShowCompletionDialog(false)} className="bg-green-600 hover:bg-green-700">
               Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showIncorrectDialog} onOpenChange={setShowIncorrectDialog}>
+        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md w-[90vw] mx-auto">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-red-700">
+              Keep Trying! ❄️
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-4">
+            <p className="text-lg">
+              {incorrectCount} {incorrectCount === 1 ? 'answer is' : 'answers are'} incorrect. Keep trying!
+            </p>
+            <Button onClick={() => setShowIncorrectDialog(false)} className="bg-red-600 hover:bg-red-700">
+              Try Again
             </Button>
           </div>
         </DialogContent>
