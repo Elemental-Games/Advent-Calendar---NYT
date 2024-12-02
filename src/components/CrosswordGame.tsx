@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { CrosswordGrid } from "./crossword/CrosswordGrid";
@@ -49,11 +49,34 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     
     const newGuesses = { ...guesses };
     
+    // Initialize empty strings if needed
     if (!newGuesses[acrossKey]) newGuesses[acrossKey] = '';
     if (!newGuesses[downKey]) newGuesses[downKey] = '';
     
-    newGuesses[acrossKey] = value;
-    newGuesses[downKey] = value;
+    // Find the position within the word for both across and down
+    let acrossPos = 0;
+    let downPos = 0;
+    
+    // Calculate across position
+    for (let col = 0; col < colIndex; col++) {
+      if (isValidCell(rowIndex, col)) acrossPos++;
+    }
+    
+    // Calculate down position
+    for (let row = 0; row < rowIndex; row++) {
+      if (isValidCell(row, colIndex)) downPos++;
+    }
+    
+    // Update the specific position in both directions
+    newGuesses[acrossKey] = 
+      newGuesses[acrossKey].slice(0, acrossPos) + 
+      value + 
+      newGuesses[acrossKey].slice(acrossPos + 1);
+      
+    newGuesses[downKey] = 
+      newGuesses[downKey].slice(0, downPos) + 
+      value + 
+      newGuesses[downKey].slice(downPos + 1);
 
     setGuesses(newGuesses);
     console.log(`Updated cell value at ${rowIndex},${colIndex} to ${value}`);
