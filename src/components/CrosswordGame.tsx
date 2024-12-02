@@ -1,9 +1,5 @@
 import React from "react";
-import { CrosswordGrid } from "./crossword/CrosswordGrid";
-import { CrosswordClue } from "./crossword/CrosswordClue";
-import { CrosswordHeader } from "./crossword/CrosswordHeader";
-import { CrosswordControls } from "./crossword/CrosswordControls";
-import { CrosswordClueList } from "./crossword/CrosswordClueList";
+import { CrosswordLayout } from "./crossword/CrosswordLayout";
 import { StartDialog } from "./crossword/dialogs/StartDialog";
 import { CompletionDialog } from "./crossword/dialogs/CompletionDialog";
 import { IncorrectDialog } from "./crossword/dialogs/IncorrectDialog";
@@ -11,6 +7,7 @@ import { useCrosswordGame } from "@/hooks/useCrosswordGame";
 import { useCrosswordGrid } from "@/hooks/useCrosswordGrid";
 import { useCrosswordInput } from "@/hooks/useCrosswordInput";
 import { useCrosswordCellInput } from "@/hooks/useCrosswordCellInput";
+import { useClueManagement } from "@/hooks/useClueManagement";
 import type { CrosswordGameProps } from "./crossword/types";
 
 export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGameProps) {
@@ -60,6 +57,14 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     setGuesses
   );
 
+  const { getCurrentClue } = useClueManagement(
+    selectedCell,
+    showDown,
+    across,
+    down,
+    getClueNumber
+  );
+
   const handleKeyPress = (key: string) => {
     if (!selectedCell) return;
     handleInputChange(selectedCell.row, selectedCell.col, key);
@@ -87,57 +92,29 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     }
   };
 
-  const getCurrentClue = () => {
-    if (!selectedCell) return null;
-    const clueNumber = getClueNumber(selectedCell.row, selectedCell.col);
-    if (!clueNumber) return null;
-    
-    // Only show the clue for the current direction
-    if (showDown) {
-      const downClue = down[clueNumber];
-      return downClue ? { number: clueNumber, clue: downClue, direction: 'Down' } : null;
-    } else {
-      const acrossClue = across[clueNumber];
-      return acrossClue ? { number: clueNumber, clue: acrossClue, direction: 'Across' } : null;
-    }
-  };
-
   const currentClue = getCurrentClue();
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <CrosswordHeader elapsedTime={elapsedTime} />
-      
-      <div className="mb-8">
-        <CrosswordGrid
-          grid={GRID}
-          guesses={guesses}
-          showDown={showDown}
-          selectedCell={selectedCell}
-          isValidCell={isValidCell}
-          getClueNumber={getClueNumber}
-          handleCellClick={handleCellClick}
-          handleInputChange={handleInputChange}
-          cellRefs={cellRefs}
-          validatedCells={validatedCells}
-        />
-      </div>
-
-      {currentClue && (
-        <CrosswordClue
-          number={currentClue.number}
-          direction={currentClue.direction}
-          clue={currentClue.clue}
-        />
-      )}
-
-      <CrosswordControls
+    <>
+      <CrosswordLayout
+        elapsedTime={elapsedTime}
+        grid={GRID}
+        guesses={guesses}
+        showDown={showDown}
+        selectedCell={selectedCell}
+        isValidCell={isValidCell}
+        getClueNumber={getClueNumber}
+        handleCellClick={handleCellClick}
+        handleInputChange={handleInputChange}
+        cellRefs={cellRefs}
+        validatedCells={validatedCells}
+        currentClue={currentClue}
         onSubmit={handleSubmit}
         onKeyPress={handleKeyPress}
         onBackspace={() => selectedCell && handleBackspace(selectedCell)}
+        across={across}
+        down={down}
       />
-
-      <CrosswordClueList across={across} down={down} />
 
       <StartDialog
         open={showStartDialog}
@@ -156,6 +133,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
         onOpenChange={setShowIncorrectDialog}
         incorrectCount={incorrectCount}
       />
-    </div>
+    </>
   );
 }
