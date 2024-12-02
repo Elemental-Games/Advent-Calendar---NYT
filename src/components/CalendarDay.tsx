@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { DayInfo, formatCountdown } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { isDayCompleted } from "@/lib/game-state";
+import { isDayCompleted, markDayIncomplete } from "@/lib/game-state";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface CalendarDayProps {
@@ -24,6 +24,12 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Reset day 3 on component mount
+    if (dayInfo.day === 3) {
+      console.log('Resetting day 3 completion status');
+      markDayIncomplete(3);
+    }
+
     const checkStatus = () => {
       setCountdown(formatCountdown(dayInfo.unlockTime));
       setIsCompleted(propIsCompleted ?? isDayCompleted(dayInfo.day));
