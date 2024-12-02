@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { CrosswordGrid } from "./crossword/CrosswordGrid";
@@ -7,84 +6,34 @@ import { CrosswordClue } from "./crossword/CrosswordClue";
 import { CrosswordHeader } from "./crossword/CrosswordHeader";
 import { CrosswordControls } from "./crossword/CrosswordControls";
 import { CrosswordClueList } from "./crossword/CrosswordClueList";
-
-interface CrosswordGameProps {
-  across: Record<string, string>;
-  down: Record<string, string>;
-  answers: Record<string, string>;
-  onComplete?: () => void;
-}
+import { useCrosswordGame } from "@/hooks/useCrosswordGame";
+import { useCrosswordGrid } from "@/hooks/useCrosswordGrid";
+import type { CrosswordGameProps } from "./crossword/types";
 
 export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGameProps) {
-  const [guesses, setGuesses] = useState<Record<string, string>>({});
-  const [showStartDialog, setShowStartDialog] = useState(true);
-  const [isStarted, setIsStarted] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [completionTime, setCompletionTime] = useState<number | null>(null);
-  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
-  const [showDown, setShowDown] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const cellRefs = useRef<(HTMLInputElement | null)[][]>(Array(5).fill(null).map(() => Array(5).fill(null)));
+  const {
+    guesses,
+    setGuesses,
+    showStartDialog,
+    setShowStartDialog,
+    isStarted,
+    elapsedTime,
+    selectedCell,
+    setSelectedCell,
+    showDown,
+    setShowDown,
+    handleStartGame,
+    handleSubmit
+  } = useCrosswordGame(answers, onComplete);
 
-  const grid = [
-    ["P", "E", "N", "D", " "],
-    ["O", "W", "I", "E", " "],
-    ["S", "A", "N", "T", "A"],
-    ["E", "N", "J", "O", "Y"],
-    [" ", " ", "A", "X", "E"]
-  ];
-
-  const isValidCell = (row: number, col: number) => {
-    return grid[row][col] !== " ";
-  };
-
-  useEffect(() => {
-    if (isStarted) {
-      timerRef.current = setInterval(() => {
-        setElapsedTime(prev => prev + 1);
-      }, 1000);
-    }
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [isStarted]);
-
-  const handleStartGame = () => {
-    setIsStarted(true);
-    setShowStartDialog(false);
-    setElapsedTime(0);
-  };
-
-  const getClueNumber = (rowIndex: number, colIndex: number) => {
-    // Display simplified numbers that correspond to clue numbers
-    if (rowIndex === 0 && colIndex === 0) return "1"; // 1 across and 1 down
-    if (rowIndex === 0 && colIndex === 1) return "2"; // 2 down
-    if (rowIndex === 0 && colIndex === 2) return "3"; // 3 down
-    if (rowIndex === 0 && colIndex === 3) return "4"; // 4 down
-    if (rowIndex === 1 && colIndex === 0) return "5"; // 5 across
-    if (rowIndex === 2 && colIndex === 0) return "6"; // 6 across
-    if (rowIndex === 2 && colIndex === 4) return "7"; // 7 down
-    if (rowIndex === 3 && colIndex === 0) return "8"; // 8 across
-    if (rowIndex === 4 && colIndex === 2) return "9"; // 9 across
-    return "";
-  };
-
-  const getCellValue = (rowIndex: number, colIndex: number): string => {
-    const clueNumber = getClueNumber(rowIndex, colIndex);
-    if (!clueNumber) return "";
-
-    // Check both across and down guesses for this cell
-    const acrossKey = `a${clueNumber}`;
-    const downKey = `d${clueNumber}`;
-    
-    // If there's a value in either direction, use it
-    if (guesses[acrossKey]?.[colIndex]) return guesses[acrossKey][colIndex];
-    if (guesses[downKey]?.[rowIndex]) return guesses[downKey][rowIndex];
-    
-    return "";
-  };
+  const {
+    GRID,
+    cellRefs,
+    isValidCell,
+    getClueNumber,
+    findNextCell,
+    findPreviousCell
+  } = useCrosswordGrid();
 
   const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
     if (!isValidCell(rowIndex, colIndex)) return;
@@ -92,22 +41,17 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     const clueNumber = getClueNumber(rowIndex, colIndex);
     if (!clueNumber) return;
 
-    // Update both across and down guesses
     const acrossKey = `a${clueNumber}`;
     const downKey = `d${clueNumber}`;
     
     const newGuesses = { ...guesses };
     
-    // Update the current direction's guess
-    const currentKey = showDown ? downKey : acrossKey;
-    if (!newGuesses[currentKey]) newGuesses[currentKey] = '';
-    newGuesses[currentKey] = value;
-
-    // Also update the other direction's guess at the intersection
-    const otherKey = showDown ? acrossKey : downKey;
-    if (newGuesses[otherKey]) {
-      newGuesses[otherKey] = value;
-    }
+    // Update both across and down guesses
+    if (!newGuesses[acrossKey]) newGuesses[acrossKey] = '';
+    if (!newGuesses[downKey]) newGuesses[downKey] = '';
+    
+    newGuesses[acrossKey] = value;
+    newGuesses[downKey] = value;
 
     setGuesses(newGuesses);
     console.log(`Updated cell value at ${rowIndex},${colIndex} to ${value}`);
@@ -136,40 +80,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     }
   };
 
-  const findNextCell = (currentRow: number, currentCol: number, isDown: boolean): { row: number; col: number } | null => {
-    if (isDown) {
-      for (let row = currentRow + 1; row < 5; row++) {
-        if (isValidCell(row, currentCol)) {
-          return { row, col: currentCol };
-        }
-      }
-    } else {
-      for (let col = currentCol + 1; col < 5; col++) {
-        if (isValidCell(currentRow, col)) {
-          return { row: currentRow, col };
-        }
-      }
-    }
-    return null;
-  };
-
-  const findPreviousCell = (currentRow: number, currentCol: number, isDown: boolean): { row: number; col: number } | null => {
-    if (isDown) {
-      for (let row = currentRow - 1; row >= 0; row--) {
-        if (isValidCell(row, currentCol)) {
-          return { row, col: currentCol };
-        }
-      }
-    } else {
-      for (let col = currentCol - 1; col >= 0; col--) {
-        if (isValidCell(currentRow, col)) {
-          return { row: currentRow, col };
-        }
-      }
-    }
-    return null;
-  };
-
   const handleCellClick = (rowIndex: number, colIndex: number) => {
     if (!isValidCell(rowIndex, colIndex)) return;
     
@@ -194,35 +104,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       null;
   };
 
-  const handleSubmit = () => {
-    const allFilled = Object.keys(answers).every(
-      key => guesses[key]?.length === answers[key].length
-    );
-
-    if (!allFilled) {
-      toast.error("Please fill in all boxes before submitting!");
-      return;
-    }
-
-    let incorrectCount = 0;
-    Object.entries(answers).forEach(([key, answer]) => {
-      if (guesses[key]?.toUpperCase() !== answer.toUpperCase()) {
-        incorrectCount++;
-      }
-    });
-
-    if (incorrectCount > 0) {
-      toast.error(`${incorrectCount} answer${incorrectCount > 1 ? 's are' : ' is'} incorrect. Keep trying!`);
-    } else {
-      setCompletionTime(elapsedTime);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      toast.success("Congratulations! You've completed the Mini FrostWord!");
-      onComplete?.();
-    }
-  };
-
   const currentClue = getCurrentClue();
 
   return (
@@ -231,7 +112,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       
       <div className="mb-8">
         <CrosswordGrid
-          grid={grid}
+          grid={GRID}
           guesses={guesses}
           showDown={showDown}
           selectedCell={selectedCell}
