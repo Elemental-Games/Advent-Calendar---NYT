@@ -34,7 +34,7 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
     return () => clearInterval(timer);
   }, [dayInfo.unlockTime, dayInfo.day, propIsCompleted]);
 
-  const isAvailable = dayInfo.day <= 4;
+  const isAvailable = dayInfo.day === 1;  // Only day 1 is available
 
   const handleClick = () => {
     if (isAvailable) {
