@@ -38,7 +38,7 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
         "border-blue-200 bg-white"
       )}>
         {clueNumber && (
-          <span className="absolute top-0.5 left-0.5 text-[10px] text-blue-600">
+          <span className="absolute top-1 left-1 text-[10px] font-medium text-blue-600">
             {clueNumber}
           </span>
         )}

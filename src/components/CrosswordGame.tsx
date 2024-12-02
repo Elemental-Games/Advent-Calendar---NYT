@@ -58,10 +58,12 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   const getClueNumber = (rowIndex: number, colIndex: number) => {
+    // Updated clue numbers to match NYT Mini style
     if (rowIndex === 0 && colIndex === 0) return "1";
-    if (rowIndex === 1 && colIndex === 0) return "3";
     if (rowIndex === 0 && colIndex === 3) return "2";
-    if (rowIndex === 4 && colIndex === 0) return "5";
+    if (rowIndex === 1 && colIndex === 0) return "3";
+    if (rowIndex === 2 && colIndex === 0) return "4";
+    if (rowIndex === 4 && colIndex === 2) return "5";
     return "";
   };
 
@@ -77,6 +79,10 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       newGuesses[key] = (newGuesses[key] || '').slice(0, colIndex) + value + (newGuesses[key] || '').slice(colIndex + 1);
       setGuesses(newGuesses);
     }
+
+    // Always update the display value for the cell
+    const cellValue = value.toUpperCase();
+    console.log(`Setting value ${cellValue} at ${rowIndex},${colIndex}`);
 
     if (value) {
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
