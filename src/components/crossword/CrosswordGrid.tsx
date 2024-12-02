@@ -10,6 +10,7 @@ interface CrosswordGridProps {
   handleCellClick: (row: number, col: number) => void;
   handleInputChange: (row: number, col: number, value: string) => void;
   cellRefs: React.MutableRefObject<(HTMLInputElement | null)[][]>;
+  validatedCells?: Record<string, boolean>;
 }
 
 export function CrosswordGrid({
@@ -21,7 +22,8 @@ export function CrosswordGrid({
   getClueNumber,
   handleCellClick,
   handleInputChange,
-  cellRefs
+  cellRefs,
+  validatedCells = {}
 }: CrosswordGridProps) {
   return (
     <div className="grid grid-cols-5 gap-1 w-full max-w-[350px] md:max-w-[450px] mx-auto">
@@ -38,6 +40,7 @@ export function CrosswordGrid({
                 (!showDown && selectedCell.row === rowIndex)
               ) && isValidCell(rowIndex, colIndex)}
               isValidCell={isValidCell(rowIndex, colIndex)}
+              isValidated={validatedCells[`${rowIndex}-${colIndex}`]}
               onClick={() => handleCellClick(rowIndex, colIndex)}
               onChange={(value) => handleInputChange(rowIndex, colIndex, value)}
               ref={el => cellRefs.current[rowIndex][colIndex] = el}

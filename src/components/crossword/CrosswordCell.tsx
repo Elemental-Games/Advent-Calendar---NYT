@@ -7,6 +7,7 @@ interface CrosswordCellProps {
   isSelected: boolean;
   isPartOfWord: boolean;
   isValidCell: boolean;
+  isValidated?: boolean;
   onClick: () => void;
   onChange: (value: string) => void;
 }
@@ -17,6 +18,7 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
   isSelected,
   isPartOfWord,
   isValidCell,
+  isValidated,
   onClick, 
   onChange 
 }, ref) => {
@@ -34,6 +36,9 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
         "border-2 flex items-center justify-center cursor-pointer",
         !isValidCell ? "bg-slate-800/90 border-slate-700 cursor-not-allowed" :
         isSelected ? "border-blue-500 shadow-lg scale-105 bg-blue-50" :
+        isValidated !== undefined ? (
+          isValidated ? "border-blue-700 bg-blue-700/20" : "border-blue-300 bg-blue-200/20"
+        ) :
         isPartOfWord ? "border-blue-300 bg-blue-50/50" :
         "border-blue-200 bg-white"
       )}>

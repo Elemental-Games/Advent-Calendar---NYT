@@ -8,6 +8,7 @@ import { CrosswordControls } from "./crossword/CrosswordControls";
 import { CrosswordClueList } from "./crossword/CrosswordClueList";
 import { useCrosswordGame } from "@/hooks/useCrosswordGame";
 import { useCrosswordGrid } from "@/hooks/useCrosswordGrid";
+import { toast } from "sonner";
 import type { CrosswordGameProps } from "./crossword/types";
 
 export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGameProps) {
@@ -23,8 +24,10 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     showDown,
     setShowDown,
     handleStartGame,
-    handleSubmit
+    handleSubmit: originalHandleSubmit
   } = useCrosswordGame(answers, onComplete);
+
+  const [validatedCells, setValidatedCells] = useState<Record<string, boolean>>({});
 
   const {
     GRID,
@@ -46,7 +49,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     
     const newGuesses = { ...guesses };
     
-    // Update both across and down guesses
     if (!newGuesses[acrossKey]) newGuesses[acrossKey] = '';
     if (!newGuesses[downKey]) newGuesses[downKey] = '';
     
@@ -90,6 +92,41 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     }
   };
 
+  const handleSubmit = () => {
+    const newValidatedCells: Record<string, boolean> = {};
+    let allCorrect = true;
+
+    // Check each cell against the correct answers
+    GRID.forEach((row, rowIndex) => {
+      row.forEach((_, colIndex) => {
+        if (!isValidCell(rowIndex, colIndex)) return;
+        
+        const clueNumber = getClueNumber(rowIndex, colIndex);
+        if (!clueNumber) return;
+
+        const cellKey = `${rowIndex}-${colIndex}`;
+        const userValue = guesses[`a${clueNumber}`] || '';
+        const correctValue = GRID[rowIndex][colIndex];
+        
+        const isCorrect = userValue.toUpperCase() === correctValue.toUpperCase();
+        newValidatedCells[cellKey] = isCorrect;
+        
+        if (!isCorrect) {
+          allCorrect = false;
+        }
+      });
+    });
+
+    setValidatedCells(newValidatedCells);
+
+    if (allCorrect) {
+      toast.success(`Congratulations! You completed the puzzle in ${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}`);
+      originalHandleSubmit();
+    } else {
+      toast.error("Some answers are incorrect. Keep trying!");
+    }
+  };
+
   const getCurrentClue = () => {
     if (!selectedCell) return null;
     const clueNumber = getClueNumber(selectedCell.row, selectedCell.col);
@@ -121,6 +158,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
           handleCellClick={handleCellClick}
           handleInputChange={handleInputChange}
           cellRefs={cellRefs}
+          validatedCells={validatedCells}
         />
       </div>
 
