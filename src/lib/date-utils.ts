@@ -104,26 +104,34 @@ const puzzleData: { [key: number]: PuzzleContent } = {
   },
   2: {
     across: {
-      "1": "Santa's ride through the night sky",
-      "3": "Shines bright atop the tree",
-      "5": "Wrapped surprise under the tree"
+      "1": "Remain unfinished or undecided",
+      "5": "A child's way of saying \"ouch!\"",
+      "6": "Red hat guy",
+      "8": "have a good time",
+      "9": "needed to cut a tree"
     },
     down: {
-      "1": "Children's plaything",
-      "2": "Santa's little helper",
-      "4": "Color of Rudolph's nose"
+      "1": "strike a ____",
+      "2": "Obi Wan actor in Star Wars ____ McGregor",
+      "3": "Stealthy Warrior",
+      "4": "Cleansing Diet",
+      "7": "LETS GO"
     },
     answers: {
-      "a1": "SLEIGH",
-      "a3": "STAR",
-      "a5": "GIFT",
-      "d1": "TOY",
-      "d2": "ELF",
-      "d4": "RED"
+      "a1": "PEND",
+      "a5": "OWIE",
+      "a6": "SANTA",
+      "a8": "ENJOY",
+      "a9": "AXE",
+      "d1": "POSE",
+      "d2": "EWAN",
+      "d3": "NINJA",
+      "d4": "DETOX",
+      "d7": "AYE"
     },
     size: {
-      rows: 5,
-      cols: 5
+      rows: 9,
+      cols: 9
     }
   },
   3: {
