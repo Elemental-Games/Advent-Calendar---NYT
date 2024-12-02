@@ -18,7 +18,7 @@ export function IncorrectDialog({ open, onOpenChange, incorrectCount }: Incorrec
         </DialogHeader>
         <div className="text-center space-y-4">
           <p className="text-lg">
-            {incorrectCount} {incorrectCount === 1 ? 'answer is' : 'answers are'} incorrect. Keep trying!
+            {incorrectCount} {incorrectCount === 1 ? 'selection is' : 'selections are'} incorrect. Keep trying!
           </p>
           <Button onClick={() => onOpenChange(false)} className="bg-red-600 hover:bg-red-700">
             Try Again
