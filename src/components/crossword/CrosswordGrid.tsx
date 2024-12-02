@@ -29,22 +29,23 @@ export function CrosswordGrid({
   const { calculatePosition } = useGridCalculations();
 
   const getCellValue = (rowIndex: number, colIndex: number) => {
+    if (!isValidCell(rowIndex, colIndex)) return "";
+
     const clueNumber = getClueNumber(rowIndex, colIndex);
-    if (!clueNumber || !isValidCell(rowIndex, colIndex)) return "";
+    if (!clueNumber) return "";
 
     const { acrossPos, downPos } = calculatePosition(rowIndex, colIndex, isValidCell);
     
-    // Try to get value from both across and down guesses
     const acrossKey = `a${clueNumber}`;
     const downKey = `d${clueNumber}`;
     
-    // Prioritize the active direction but show any available value
+    // Show any available value, prioritizing the active direction
     const acrossValue = guesses[acrossKey]?.[acrossPos] || "";
     const downValue = guesses[downKey]?.[downPos] || "";
     
     console.log(`Cell ${rowIndex},${colIndex} - Across: ${acrossValue}, Down: ${downValue}`);
     
-    return acrossValue || downValue;
+    return acrossValue || downValue || "";
   };
 
   return (

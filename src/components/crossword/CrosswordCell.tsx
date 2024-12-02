@@ -52,7 +52,7 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
             ref={ref}
             type="text"
             maxLength={1}
-            value={value}
+            value={value || ''}
             onChange={(e) => onChange(e.target.value.toUpperCase())}
             className={cn(
               "w-full h-full text-center bg-transparent",
@@ -60,7 +60,6 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
               isValidCell ? "text-blue-700" : "text-slate-600"
             )}
             readOnly
-            disabled={!isValidCell}
           />
         )}
       </div>

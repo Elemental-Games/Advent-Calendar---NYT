@@ -45,52 +45,56 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   } = useCrosswordInput(answers);
 
   const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
-    // Update both across and down values simultaneously
+    console.log(`Handling input change at ${rowIndex},${colIndex} with value: ${value}`);
+    
     const clueNumber = getClueNumber(rowIndex, colIndex);
-    if (clueNumber) {
-      const newGuesses = { ...guesses };
-      
-      // Calculate positions for both across and down
-      let acrossPos = 0;
-      for (let col = 0; col < colIndex; col++) {
-        if (isValidCell(rowIndex, col)) acrossPos++;
-      }
-      
-      let downPos = 0;
-      for (let row = 0; row < rowIndex; row++) {
-        if (isValidCell(row, colIndex)) downPos++;
-      }
+    if (!clueNumber) return;
 
-      // Update both across and down values
-      if (across[clueNumber]) {
-        const acrossKey = `a${clueNumber}`;
-        if (!newGuesses[acrossKey]) {
-          newGuesses[acrossKey] = ' '.repeat(
-            Array(5).fill(null).filter((_, col) => isValidCell(rowIndex, col)).length
-          );
-        }
-        newGuesses[acrossKey] = 
-          newGuesses[acrossKey].slice(0, acrossPos) + 
-          value.toUpperCase() + 
-          newGuesses[acrossKey].slice(acrossPos + 1);
-      }
-
-      if (down[clueNumber]) {
-        const downKey = `d${clueNumber}`;
-        if (!newGuesses[downKey]) {
-          newGuesses[downKey] = ' '.repeat(
-            Array(5).fill(null).filter((_, row) => isValidCell(row, colIndex)).length
-          );
-        }
-        newGuesses[downKey] = 
-          newGuesses[downKey].slice(0, downPos) + 
-          value.toUpperCase() + 
-          newGuesses[downKey].slice(downPos + 1);
-      }
-
-      setGuesses(newGuesses);
-      console.log(`Updated cell value at ${rowIndex},${colIndex} to ${value}`);
+    const newGuesses = { ...guesses };
+    
+    // Calculate positions
+    let acrossPos = 0;
+    let downPos = 0;
+    
+    // Count valid cells up to the current position
+    for (let col = 0; col < colIndex; col++) {
+      if (isValidCell(rowIndex, col)) acrossPos++;
     }
+    for (let row = 0; row < rowIndex; row++) {
+      if (isValidCell(row, colIndex)) downPos++;
+    }
+
+    console.log(`Calculated positions - Across: ${acrossPos}, Down: ${downPos}`);
+
+    // Update both across and down values
+    const acrossKey = `a${clueNumber}`;
+    const downKey = `d${clueNumber}`;
+
+    // Initialize strings if they don't exist
+    if (!newGuesses[acrossKey]) {
+      newGuesses[acrossKey] = ' '.repeat(
+        Array(5).fill(null).filter((_, col) => isValidCell(rowIndex, col)).length
+      );
+    }
+    if (!newGuesses[downKey]) {
+      newGuesses[downKey] = ' '.repeat(
+        Array(5).fill(null).filter((_, row) => isValidCell(row, colIndex)).length
+      );
+    }
+
+    // Update both values
+    newGuesses[acrossKey] = 
+      newGuesses[acrossKey].slice(0, acrossPos) + 
+      value.toUpperCase() + 
+      newGuesses[acrossKey].slice(acrossPos + 1);
+    
+    newGuesses[downKey] = 
+      newGuesses[downKey].slice(0, downPos) + 
+      value.toUpperCase() + 
+      newGuesses[downKey].slice(downPos + 1);
+
+    console.log('Updated guesses:', newGuesses);
+    setGuesses(newGuesses);
 
     if (value) {
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
@@ -207,7 +211,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       </Dialog>
 
       <Dialog open={showCompletionDialog} onOpenChange={setShowCompletionDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md w-[90vw] mx-auto">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl font-bold text-green-700">
               Congratulations! 🎄
