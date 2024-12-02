@@ -25,21 +25,16 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
 
   // 5x5 grid representation with valid input cells marked
   const grid = [
-    ['', '1', '', '2', ''],
-    ['3', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['5', '', '', '', ''],
+    ["P", "E", "N", "D", " "],
+    ["O", "W", "I", "E", " "],
+    ["S", "A", "N", "T", "A"],
+    ["E", "N", "J", "O", "Y"],
+    [" ", " ", "A", "X", "E"]
   ];
 
   // Helper to determine if a cell is part of a word
   const isValidCell = (row: number, col: number) => {
-    const clueNumber = getClueNumber(row, col);
-    return clueNumber !== '' || 
-           (row === 1 && col >= 0 && col <= 4) || // STAR word
-           (row === 4 && col >= 0 && col <= 3) || // GIFT word
-           (col === 1 && row >= 0 && row <= 2) || // TOY word
-           (col === 3 && row >= 0 && row <= 2);   // ELF word
+    return grid[row][col] !== " ";
   };
 
   const formatTime = (seconds: number) => {
@@ -68,8 +63,11 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   const getClueNumber = (rowIndex: number, colIndex: number) => {
-    const cell = grid[rowIndex][colIndex];
-    return /[1-9]/.test(cell) ? cell : '';
+    if (rowIndex === 0 && colIndex === 0) return "1";
+    if (rowIndex === 1 && colIndex === 0) return "3";
+    if (rowIndex === 0 && colIndex === 3) return "2";
+    if (rowIndex === 4 && colIndex === 0) return "5";
+    return "";
   };
 
   const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
@@ -174,26 +172,22 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
         <div className="grid grid-cols-5 gap-1 w-full max-w-[350px] md:max-w-[450px] mx-auto">
           {grid.map((row, rowIndex) => (
             <div key={rowIndex} className="contents">
-              {row.map((_, colIndex) => {
-                const isPartOfSelectedWord = selectedCell && (
-                  (showDown && selectedCell.col === colIndex) ||
-                  (!showDown && selectedCell.row === rowIndex)
-                );
-                
-                return (
-                  <CrosswordCell
-                    key={`${rowIndex}-${colIndex}`}
-                    value={guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`] || ""}
-                    clueNumber={getClueNumber(rowIndex, colIndex)}
-                    isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
-                    isPartOfWord={isPartOfSelectedWord && isValidCell(rowIndex, colIndex)}
-                    isValidCell={isValidCell(rowIndex, colIndex)}
-                    onClick={() => handleCellClick(rowIndex, colIndex)}
-                    onChange={(value) => handleInputChange(rowIndex, colIndex, value)}
-                    ref={el => cellRefs.current[rowIndex][colIndex] = el}
-                  />
-                );
-              })}
+              {row.map((letter, colIndex) => (
+                <CrosswordCell
+                  key={`${rowIndex}-${colIndex}`}
+                  value={guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`] || ""}
+                  clueNumber={getClueNumber(rowIndex, colIndex)}
+                  isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
+                  isPartOfWord={selectedCell && (
+                    (showDown && selectedCell.col === colIndex) ||
+                    (!showDown && selectedCell.row === rowIndex)
+                  ) && isValidCell(rowIndex, colIndex)}
+                  isValidCell={isValidCell(rowIndex, colIndex)}
+                  onClick={() => handleCellClick(rowIndex, colIndex)}
+                  onChange={(value) => handleInputChange(rowIndex, colIndex, value)}
+                  ref={el => cellRefs.current[rowIndex][colIndex] = el}
+                />
+              ))}
             </div>
           ))}
         </div>
