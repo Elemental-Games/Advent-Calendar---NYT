@@ -100,16 +100,13 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     
     // Update the current direction's guess
     const currentKey = showDown ? downKey : acrossKey;
-    newGuesses[currentKey] = (newGuesses[currentKey] || '').slice(0, showDown ? rowIndex : colIndex) + 
-                            value + 
-                            (newGuesses[currentKey] || '').slice(showDown ? rowIndex + 1 : colIndex + 1);
+    if (!newGuesses[currentKey]) newGuesses[currentKey] = '';
+    newGuesses[currentKey] = value;
 
     // Also update the other direction's guess at the intersection
     const otherKey = showDown ? acrossKey : downKey;
     if (newGuesses[otherKey]) {
-      newGuesses[otherKey] = newGuesses[otherKey].slice(0, showDown ? colIndex : rowIndex) + 
-                            value + 
-                            newGuesses[otherKey].slice(showDown ? colIndex + 1 : rowIndex + 1);
+      newGuesses[otherKey] = value;
     }
 
     setGuesses(newGuesses);
