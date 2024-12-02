@@ -58,16 +58,16 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   const getClueNumber = (rowIndex: number, colIndex: number) => {
-    // Updated clue numbers to match the specified pattern
-    if (rowIndex === 0 && colIndex === 0) return "11"; // 1 across and 1 down
-    if (rowIndex === 0 && colIndex === 1) return "12"; // 2 down
-    if (rowIndex === 0 && colIndex === 2) return "13"; // 3 down
-    if (rowIndex === 0 && colIndex === 3) return "14"; // 4 down
-    if (rowIndex === 1 && colIndex === 0) return "21"; // 5 across
-    if (rowIndex === 2 && colIndex === 0) return "31"; // 6 across
-    if (rowIndex === 2 && colIndex === 4) return "35"; // 7 down
-    if (rowIndex === 3 && colIndex === 0) return "41"; // 8 across
-    if (rowIndex === 4 && colIndex === 2) return "53"; // 9 across
+    // Display simplified numbers that correspond to clue numbers
+    if (rowIndex === 0 && colIndex === 0) return "1"; // 1 across and 1 down
+    if (rowIndex === 0 && colIndex === 1) return "2"; // 2 down
+    if (rowIndex === 0 && colIndex === 2) return "3"; // 3 down
+    if (rowIndex === 0 && colIndex === 3) return "4"; // 4 down
+    if (rowIndex === 1 && colIndex === 0) return "5"; // 5 across
+    if (rowIndex === 2 && colIndex === 0) return "6"; // 6 across
+    if (rowIndex === 2 && colIndex === 4) return "7"; // 7 down
+    if (rowIndex === 3 && colIndex === 0) return "8"; // 8 across
+    if (rowIndex === 4 && colIndex === 2) return "9"; // 9 across
     return "";
   };
 
