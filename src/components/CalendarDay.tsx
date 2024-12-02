@@ -63,7 +63,7 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
           isCompleted ? 
             "bg-emerald-600/90 border-emerald-700 backdrop-blur-sm" : 
           isAvailable ? 
-            "bg-green-600/90 border-green-400 backdrop-blur-sm" :
+            "bg-red-600/90 border-red-400 backdrop-blur-sm" :
             "bg-white/5 border-red-200/30 backdrop-blur-xl"
         )}
         onClick={handleClick}

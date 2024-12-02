@@ -15,7 +15,7 @@ export function DayContent({ day, isCompleted, isAvailable, dayAbbreviation, cou
         <span className={cn(
           "text-xs font-medium",
           isCompleted ? "text-emerald-100" : 
-          isAvailable ? "text-green-400" : 
+          isAvailable ? "text-red-300" : 
           "text-red-300"
         )}>
           {dayAbbreviation}
@@ -37,7 +37,7 @@ export function DayContent({ day, isCompleted, isAvailable, dayAbbreviation, cou
         <span className={cn(
           "text-xs font-medium mt-1",
           isCompleted ? "text-emerald-100" : 
-          isAvailable ? "text-green-400" : 
+          isAvailable ? "text-red-300" : 
           "text-red-300"
         )}>
           {isAvailable ? "Available" : countdown}
