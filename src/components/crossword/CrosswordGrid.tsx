@@ -1,4 +1,5 @@
 import { CrosswordCell } from "./CrosswordCell";
+import { useGridCalculations } from "@/hooks/useGridCalculations";
 
 interface CrosswordGridProps {
   grid: string[][];
@@ -25,6 +26,27 @@ export function CrosswordGrid({
   cellRefs,
   validatedCells = {}
 }: CrosswordGridProps) {
+  const { calculatePosition } = useGridCalculations();
+
+  const getCellValue = (rowIndex: number, colIndex: number) => {
+    const clueNumber = getClueNumber(rowIndex, colIndex);
+    if (!clueNumber || !isValidCell(rowIndex, colIndex)) return "";
+
+    const { acrossPos, downPos } = calculatePosition(rowIndex, colIndex, isValidCell);
+    
+    // Try to get value from both across and down guesses
+    const acrossKey = `a${clueNumber}`;
+    const downKey = `d${clueNumber}`;
+    
+    // Prioritize the active direction but show any available value
+    const acrossValue = guesses[acrossKey]?.[acrossPos] || "";
+    const downValue = guesses[downKey]?.[downPos] || "";
+    
+    console.log(`Cell ${rowIndex},${colIndex} - Across: ${acrossValue}, Down: ${downValue}`);
+    
+    return acrossValue || downValue;
+  };
+
   return (
     <div className="grid grid-cols-5 gap-1 w-full max-w-[350px] md:max-w-[450px] mx-auto">
       {grid.map((row, rowIndex) => (
@@ -32,7 +54,7 @@ export function CrosswordGrid({
           {row.map((letter, colIndex) => (
             <CrosswordCell
               key={`${rowIndex}-${colIndex}`}
-              value={guesses[`${showDown ? 'd' : 'a'}${getClueNumber(rowIndex, colIndex)}`]?.[colIndex] || ""}
+              value={getCellValue(rowIndex, colIndex)}
               clueNumber={getClueNumber(rowIndex, colIndex)}
               isSelected={selectedCell?.row === rowIndex && selectedCell?.col === colIndex}
               isPartOfWord={selectedCell && (
