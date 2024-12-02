@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
 import { CrosswordGrid } from "./crossword/CrosswordGrid";
 import { CrosswordClue } from "./crossword/CrosswordClue";
 import { CrosswordHeader } from "./crossword/CrosswordHeader";
