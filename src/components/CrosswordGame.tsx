@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Button } from "./ui/button";
 import { CrosswordGrid } from "./crossword/CrosswordGrid";
 import { CrosswordClue } from "./crossword/CrosswordClue";
 import { CrosswordHeader } from "./crossword/CrosswordHeader";
+import { CrosswordControls } from "./crossword/CrosswordControls";
 
 interface CrosswordGameProps {
   across: Record<string, string>;
@@ -80,7 +80,23 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
       if (nextCell) {
         cellRefs.current[nextCell.row][nextCell.col]?.focus();
+        setSelectedCell(nextCell);
       }
+    }
+  };
+
+  const handleKeyPress = (key: string) => {
+    if (!selectedCell) return;
+    handleInputChange(selectedCell.row, selectedCell.col, key);
+  };
+
+  const handleBackspace = () => {
+    if (!selectedCell) return;
+    handleInputChange(selectedCell.row, selectedCell.col, '');
+    const prevCell = findPreviousCell(selectedCell.row, selectedCell.col, showDown);
+    if (prevCell) {
+      setSelectedCell(prevCell);
+      cellRefs.current[prevCell.row][prevCell.col]?.focus();
     }
   };
 
@@ -93,6 +109,23 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       }
     } else {
       for (let col = currentCol + 1; col < 5; col++) {
+        if (isValidCell(currentRow, col)) {
+          return { row: currentRow, col };
+        }
+      }
+    }
+    return null;
+  };
+
+  const findPreviousCell = (currentRow: number, currentCol: number, isDown: boolean): { row: number; col: number } | null => {
+    if (isDown) {
+      for (let row = currentRow - 1; row >= 0; row--) {
+        if (isValidCell(row, currentCol)) {
+          return { row, col: currentCol };
+        }
+      }
+    } else {
+      for (let col = currentCol - 1; col >= 0; col--) {
         if (isValidCell(currentRow, col)) {
           return { row: currentRow, col };
         }
@@ -183,14 +216,11 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
         />
       )}
 
-      <div className="flex justify-center mt-6">
-        <Button 
-          onClick={handleSubmit}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-8"
-        >
-          Submit
-        </Button>
-      </div>
+      <CrosswordControls
+        onSubmit={handleSubmit}
+        onKeyPress={handleKeyPress}
+        onBackspace={handleBackspace}
+      />
 
       <Dialog open={showStartDialog} onOpenChange={setShowStartDialog}>
         <DialogContent className="sm:max-w-md">
