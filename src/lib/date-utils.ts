@@ -12,6 +12,7 @@ interface CrosswordPuzzle {
   down: { [key: string]: string };
   size: { rows: number; cols: number };
   answers?: Record<string, string>;
+  grid?: string[][];
 }
 
 interface ConnectionsGroup {
@@ -130,9 +131,16 @@ const puzzleData: { [key: number]: PuzzleContent } = {
       "d7": "AYE"
     },
     size: {
-      rows: 9,
-      cols: 9
-    }
+      rows: 5,
+      cols: 5
+    },
+    grid: [
+      ["P", "E", "N", "D", " "],
+      ["O", "W", "I", "E", " "],
+      ["S", "A", "N", "T", "A"],
+      ["E", "N", "J", "O", "Y"],
+      [" ", " ", "A", "X", "E"]
+    ]
   },
   3: {
     groups: [
