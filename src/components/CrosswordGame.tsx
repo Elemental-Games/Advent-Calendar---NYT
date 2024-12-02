@@ -71,22 +71,49 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     return "";
   };
 
+  const getCellValue = (rowIndex: number, colIndex: number): string => {
+    const clueNumber = getClueNumber(rowIndex, colIndex);
+    if (!clueNumber) return "";
+
+    // Check both across and down guesses for this cell
+    const acrossKey = `a${clueNumber}`;
+    const downKey = `d${clueNumber}`;
+    
+    // If there's a value in either direction, use it
+    if (guesses[acrossKey]?.[colIndex]) return guesses[acrossKey][colIndex];
+    if (guesses[downKey]?.[rowIndex]) return guesses[downKey][rowIndex];
+    
+    return "";
+  };
+
   const handleInputChange = (rowIndex: number, colIndex: number, value: string) => {
     if (!isValidCell(rowIndex, colIndex)) return;
 
     const clueNumber = getClueNumber(rowIndex, colIndex);
-    const direction = showDown ? 'd' : 'a';
-    const key = `${direction}${clueNumber}`;
+    if (!clueNumber) return;
+
+    // Update both across and down guesses
+    const acrossKey = `a${clueNumber}`;
+    const downKey = `d${clueNumber}`;
     
     const newGuesses = { ...guesses };
-    if (clueNumber) {
-      newGuesses[key] = (newGuesses[key] || '').slice(0, colIndex) + value + (newGuesses[key] || '').slice(colIndex + 1);
-      setGuesses(newGuesses);
+    
+    // Update the current direction's guess
+    const currentKey = showDown ? downKey : acrossKey;
+    newGuesses[currentKey] = (newGuesses[currentKey] || '').slice(0, showDown ? rowIndex : colIndex) + 
+                            value + 
+                            (newGuesses[currentKey] || '').slice(showDown ? rowIndex + 1 : colIndex + 1);
+
+    // Also update the other direction's guess at the intersection
+    const otherKey = showDown ? acrossKey : downKey;
+    if (newGuesses[otherKey]) {
+      newGuesses[otherKey] = newGuesses[otherKey].slice(0, showDown ? colIndex : rowIndex) + 
+                            value + 
+                            newGuesses[otherKey].slice(showDown ? colIndex + 1 : rowIndex + 1);
     }
 
-    // Always update the display value for the cell
-    const cellValue = value.toUpperCase();
-    console.log(`Setting value ${cellValue} at ${rowIndex},${colIndex}`);
+    setGuesses(newGuesses);
+    console.log(`Updated cell value at ${rowIndex},${colIndex} to ${value}`);
 
     if (value) {
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
@@ -153,7 +180,6 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
       setShowDown(!showDown);
     } else {
       setSelectedCell({ row: rowIndex, col: colIndex });
-      setShowDown(false);
     }
   };
 
