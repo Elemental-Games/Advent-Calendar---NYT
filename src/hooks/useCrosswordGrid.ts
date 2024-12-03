@@ -15,15 +15,19 @@ export function useCrosswordGrid() {
   );
 
   const isValidCell = (row: number, col: number) => {
-    // Updated valid cell logic to include all cells that should accept input
     if (row < 0 || row >= 5 || col < 0 || col >= 5) return false;
+    
+    // Special handling for the middle section
+    if (row >= 2 && row <= 3) return true; // SANTA and ENJOY rows
+    if (col >= 2 && col <= 4 && row === 4) return true; // AXE row
+    
     return GRID[row][col] !== " ";
   };
 
   const getClueNumber = (rowIndex: number, colIndex: number) => {
     if (!isValidCell(rowIndex, colIndex)) return "";
 
-    // Updated clue number mapping to include all valid positions
+    // Clue number mapping for all valid positions
     if (rowIndex === 0 && colIndex === 0) return "1";
     if (rowIndex === 0 && colIndex === 1) return "2";
     if (rowIndex === 0 && colIndex === 2) return "3";
@@ -39,9 +43,9 @@ export function useCrosswordGrid() {
   const findNextCell = (
     currentRow: number,
     currentCol: number,
-    isDown: boolean
+    showDown: boolean
   ): CellPosition | null => {
-    if (isDown) {
+    if (showDown) {
       for (let row = currentRow + 1; row < 5; row++) {
         if (isValidCell(row, currentCol)) {
           return { row, col: currentCol };
@@ -60,9 +64,9 @@ export function useCrosswordGrid() {
   const findPreviousCell = (
     currentRow: number,
     currentCol: number,
-    isDown: boolean
+    showDown: boolean
   ): CellPosition | null => {
-    if (isDown) {
+    if (showDown) {
       for (let row = currentRow - 1; row >= 0; row--) {
         if (isValidCell(row, currentCol)) {
           return { row, col: currentCol };
