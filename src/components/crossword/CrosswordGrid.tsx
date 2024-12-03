@@ -6,19 +6,7 @@
 
 import { CrosswordCell } from "./CrosswordCell";
 import { useGridCalculations } from "@/hooks/useGridCalculations";
-
-interface CrosswordGridProps {
-  grid: string[][];
-  guesses: Record<string, string>;
-  showDown: boolean;
-  selectedCell: { row: number; col: number } | null;
-  isValidCell: (row: number, col: number) => boolean;
-  getClueNumber: (row: number, col: number) => string;
-  handleCellClick: (row: number, col: number) => void;
-  handleInputChange: (row: number, col: number, value: string) => void;
-  cellRefs: React.MutableRefObject<(HTMLInputElement | null)[][]>;
-  validatedCells?: Record<string, boolean>;
-}
+import type { CrosswordGridProps } from "./types";
 
 export function CrosswordGrid({
   grid,
@@ -35,23 +23,33 @@ export function CrosswordGrid({
   const { calculatePosition } = useGridCalculations();
 
   const getCellValue = (rowIndex: number, colIndex: number) => {
-    if (!isValidCell(rowIndex, colIndex)) return "";
+    if (!isValidCell(rowIndex, colIndex)) {
+      console.log(`Invalid cell at ${rowIndex},${colIndex}`);
+      return "";
+    }
 
     const clueNumber = getClueNumber(rowIndex, colIndex);
-    if (!clueNumber) return "";
+    if (!clueNumber) {
+      console.log(`No clue number for cell at ${rowIndex},${colIndex}`);
+      return "";
+    }
 
     const { acrossPos, downPos } = calculatePosition(rowIndex, colIndex, isValidCell);
     
     const acrossKey = `a${clueNumber}`;
     const downKey = `d${clueNumber}`;
     
-    // Show any available value, prioritizing the active direction
-    const acrossValue = guesses[acrossKey]?.[acrossPos] || "";
-    const downValue = guesses[downKey]?.[downPos] || "";
+    const acrossValue = guesses[acrossKey]?.[acrossPos];
+    const downValue = guesses[downKey]?.[downPos];
     
-    console.log(`Cell ${rowIndex},${colIndex} - Across: ${acrossValue}, Down: ${downValue}`);
+    console.log(`Cell ${rowIndex},${colIndex}:
+      Clue: ${clueNumber}
+      Across: ${acrossKey}[${acrossPos}] = ${acrossValue}
+      Down: ${downKey}[${downPos}] = ${downValue}
+      ShowDown: ${showDown}
+    `);
     
-    return acrossValue || downValue || "";
+    return showDown ? (downValue || acrossValue || "") : (acrossValue || downValue || "");
   };
 
   return (
