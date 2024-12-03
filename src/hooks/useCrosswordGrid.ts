@@ -22,14 +22,6 @@ export function useCrosswordGrid() {
 
   const isValidCell = (row: number, col: number) => {
     if (row < 0 || row >= 5 || col < 0 || col >= 5) return false;
-    
-    // All cells in SANTA and ENJOY rows are valid
-    if (row === 2 || row === 3) return true;
-    
-    // AXE cells in the last row
-    if (row === 4 && col >= 2 && col <= 4) return true;
-    
-    // Other cells are valid if they're not spaces
     return GRID[row][col] !== " ";
   };
 
