@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { WordleBoard } from "./wordle/WordleBoard";
 import { WordleInput } from "./wordle/WordleInput";
 import { Button } from "./ui/button";
+import { formatTime } from "@/lib/utils";
 
 interface WordleGameProps {
   solution: string;
@@ -17,9 +18,21 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [isWinner, setIsWinner] = useState(false);
   const [showCongrats, setShowCongrats] = useState(false);
   const [activeCell, setActiveCell] = useState<number>(-1);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [timerStarted, setTimerStarted] = useState(false);
 
   const WORD_LENGTH = 5;
   const MAX_GUESSES = 6;
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (timerStarted && !gameOver) {
+      timer = setInterval(() => {
+        setElapsedTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [timerStarted, gameOver]);
 
   const isValidWord = (word: string) => {
     return word.length === WORD_LENGTH;
@@ -27,6 +40,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
 
   const handleInput = (value: string) => {
     if (gameOver) return;
+    
+    if (!timerStarted) {
+      setTimerStarted(true);
+    }
     
     if (value.length <= WORD_LENGTH) {
       setCurrentGuess(value);
@@ -85,10 +102,19 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           Kringle #1 🎄
         </h3>
         
+        {gameOver && isWinner && (
+          <div className="text-center mb-4">
+            <p className="text-lg font-mono text-green-600">
+              Time: {formatTime(elapsedTime)}
+            </p>
+          </div>
+        )}
+
         <div className="relative">
           <WordleInput 
             currentGuess={currentGuess}
             onInput={handleInput}
+            disabled={gameOver}
           />
         </div>
 
@@ -120,7 +146,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              You've completed Day 1!
+              You've completed Day 1 in {formatTime(elapsedTime)}!
             </p>
             <p className="text-gray-600">
               Come back tomorrow for a new Christmas-themed challenge.
