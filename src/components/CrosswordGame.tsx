@@ -97,8 +97,11 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         completionTime: elapsedTime,
         guesses
       });
-      setShowCompletionDialog(true);
-      onComplete?.();
+      // Add delay before showing congratulations
+      setTimeout(() => {
+        setShowCompletionDialog(true);
+        onComplete?.();
+      }, 2000); // 2 second delay
     } else {
       setIncorrectCount(incorrectCount);
       setShowIncorrectDialog(true);
