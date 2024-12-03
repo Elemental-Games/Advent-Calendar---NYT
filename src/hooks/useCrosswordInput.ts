@@ -14,57 +14,6 @@ export function useCrosswordInput(answers: Record<string, string>) {
   const [validatedCells, setValidatedCells] = useState<Record<string, boolean>>({});
   const { calculatePosition } = useGridCalculations();
 
-  const handleInputChange = (
-    rowIndex: number, 
-    colIndex: number, 
-    value: string,
-    isValidCell: (row: number, col: number) => boolean,
-    getClueNumber: (row: number, col: number) => string
-  ) => {
-    if (!isValidCell(rowIndex, colIndex)) return;
-
-    const clueNumber = getClueNumber(rowIndex, colIndex);
-    if (!clueNumber) return;
-
-    const { acrossPos, downPos } = calculatePosition(rowIndex, colIndex, isValidCell);
-    
-    const newGuesses = { ...guesses };
-    const acrossKey = `a${clueNumber}`;
-    const downKey = `d${clueNumber}`;
-
-    // Initialize guess strings if they don't exist
-    if (!newGuesses[acrossKey]) {
-      newGuesses[acrossKey] = ' '.repeat(
-        Array(5).fill(null).filter((_, col) => isValidCell(rowIndex, col)).length
-      );
-    }
-    
-    if (!newGuesses[downKey]) {
-      newGuesses[downKey] = ' '.repeat(
-        Array(5).fill(null).filter((_, row) => isValidCell(row, colIndex)).length
-      );
-    }
-
-    // Update both across and down values to maintain consistency
-    newGuesses[acrossKey] = 
-      newGuesses[acrossKey].slice(0, acrossPos) + 
-      value.toUpperCase() + 
-      newGuesses[acrossKey].slice(acrossPos + 1);
-      
-    newGuesses[downKey] = 
-      newGuesses[downKey].slice(0, downPos) + 
-      value.toUpperCase() + 
-      newGuesses[downKey].slice(downPos + 1);
-
-    console.log(`Updated guesses for cell ${rowIndex},${colIndex}:`, {
-      across: newGuesses[acrossKey],
-      down: newGuesses[downKey],
-      pos: { acrossPos, downPos }
-    });
-
-    setGuesses(newGuesses);
-  };
-
   const validateSubmission = (
     grid: string[][],
     isValidCell: (row: number, col: number) => boolean,
@@ -75,37 +24,25 @@ export function useCrosswordInput(answers: Record<string, string>) {
     let allCorrect = true;
     let totalChecked = 0;
 
-    // Iterate through all cells in the grid
     for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
       for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
-        // Skip invalid cells (spaces in the grid)
         if (!isValidCell(rowIndex, colIndex)) {
-          console.log(`Skipping invalid cell at ${rowIndex},${colIndex}`);
           continue;
         }
 
         totalChecked++;
         const correctValue = grid[rowIndex][colIndex];
-        const clueNumber = getClueNumber(rowIndex, colIndex);
-        
-        if (!clueNumber) {
-          console.log(`No clue number for cell at ${rowIndex},${colIndex}`);
-          continue;
-        }
-
-        const { acrossPos } = calculatePosition(rowIndex, colIndex, isValidCell);
-        const acrossKey = `a${clueNumber}`;
-        const userValue = guesses[acrossKey]?.[acrossPos] || '';
-        
         const cellKey = `${rowIndex}-${colIndex}`;
+        
+        // Get user's input value
+        const clueNumber = getClueNumber(rowIndex, colIndex);
+        const { acrossPos } = calculatePosition(rowIndex, colIndex, isValidCell);
+        const acrossKey = clueNumber ? `a${clueNumber}` : '';
+        const userValue = clueNumber ? (guesses[acrossKey]?.[acrossPos] || '') : '';
+        
+        // Compare values
         const isCorrect = userValue.toUpperCase() === correctValue.toUpperCase();
         newValidatedCells[cellKey] = isCorrect;
-        
-        console.log(`Validating cell ${rowIndex},${colIndex}:`, {
-          userValue,
-          correctValue,
-          isCorrect
-        });
 
         if (!isCorrect) {
           incorrectCount++;
@@ -114,12 +51,7 @@ export function useCrosswordInput(answers: Record<string, string>) {
       }
     }
 
-    console.log(`Validation complete:`, {
-      totalCellsChecked: totalChecked,
-      incorrectCount,
-      allCorrect
-    });
-
+    console.log(`Validation complete - Checked ${totalChecked} cells, Found ${incorrectCount} incorrect`);
     setValidatedCells(newValidatedCells);
     return { allCorrect, incorrectCount };
   };
@@ -128,7 +60,6 @@ export function useCrosswordInput(answers: Record<string, string>) {
     guesses,
     setGuesses,
     validatedCells,
-    handleInputChange,
     validateSubmission
   };
 }
