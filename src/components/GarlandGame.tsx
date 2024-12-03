@@ -37,7 +37,7 @@ export function GarlandGame({
   const { selectedCells, currentWord, handleCellMouseDown, handleCellMouseEnter, handleMouseUp } = 
     useWordSelection(
       words, 
-      foundWordsWithIndex.map(fw => fw.word),
+      foundWordsWithIndex,
       setFoundWordsWithIndex,
       themeWord
     );
