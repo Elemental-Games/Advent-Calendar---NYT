@@ -2,6 +2,7 @@
  * Type definitions for the crossword puzzle components.
  * Contains interfaces for game props, cell positions, and guess states.
  * Ensures type safety across the crossword implementation.
+ * Includes validation-related types and interfaces.
  */
 
 export interface CrosswordGameProps {

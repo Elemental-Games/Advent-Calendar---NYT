@@ -1,3 +1,10 @@
+/**
+ * Hook for managing crossword puzzle input state and validation.
+ * Handles user input tracking, validation of submissions, and maintains
+ * the state of guesses and validated cells across the puzzle grid.
+ * Provides functions for checking answer correctness and managing feedback.
+ */
+
 import { useState } from 'react';
 import { useGridCalculations } from './useGridCalculations';
 import type { GuessState } from '@/components/crossword/types';

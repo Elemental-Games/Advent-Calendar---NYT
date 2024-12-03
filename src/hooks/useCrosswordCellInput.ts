@@ -1,3 +1,10 @@
+/**
+ * Hook for managing individual cell input in the crossword puzzle.
+ * Handles keyboard input, cell navigation, and input validation at the cell level.
+ * Coordinates with the grid state to ensure proper input handling and cell updates.
+ * Manages backspace functionality and cell selection behavior.
+ */
+
 import { useCallback } from 'react';
 import type { CellPosition } from '@/components/crossword/types';
 

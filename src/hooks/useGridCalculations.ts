@@ -1,3 +1,10 @@
+/**
+ * Utility hook for calculating positions and validating cells in the crossword grid.
+ * Provides functions to determine cell positions for both across and down directions,
+ * helping maintain consistency between different views of the same cell.
+ * Essential for proper input handling and validation in the crossword puzzle.
+ */
+
 export const useGridCalculations = () => {
   const calculatePosition = (rowIndex: number, colIndex: number, isValidCell: (row: number, col: number) => boolean) => {
     let acrossPos = 0;
