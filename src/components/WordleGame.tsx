@@ -102,7 +102,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     if (currentGuess === solution) {
       setIsWinner(true);
       setGameOver(true);
-      setTimeout(() => setShowCongrats(true), 1500);
+      setTimeout(() => setShowCongrats(true), 2000);
       onComplete?.();
     } else if (newGuesses.length >= MAX_GUESSES) {
       toast.error(`Game Over! The word was ${solution}`);
@@ -120,6 +120,20 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         return newGuess;
       });
     }
+  };
+
+  const handleReset = () => {
+    console.log('Resetting Kringle puzzle');
+    setGuesses([]);
+    setCurrentGuess("");
+    setGameOver(false);
+    setIsWinner(false);
+    setShowCongrats(false);
+    setActiveCell(-1);
+    setElapsedTime(0);
+    setTimerStarted(false);
+    localStorage.removeItem('wordle_state');
+    toast.info("Puzzle reset! Try again!");
   };
 
   useEffect(() => {
@@ -157,13 +171,20 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           isWinner={isWinner}
         />
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 flex justify-center gap-4">
           <Button 
             onClick={handleSubmit}
             className="w-full max-w-[200px] bg-green-700 hover:bg-green-800 text-white border-2 border-red-500 shadow-lg transition-all duration-300"
             disabled={gameOver}
           >
             Submit
+          </Button>
+          <Button
+            onClick={handleReset}
+            variant="outline"
+            className="text-red-600 border-red-600 hover:bg-red-50"
+          >
+            Reset Puzzle
           </Button>
         </div>
       </div>
