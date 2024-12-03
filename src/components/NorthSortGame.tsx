@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { NorthSortHeader } from "./northsort/NorthSortHeader";
 import { CompletedGroup } from "./northsort/CompletedGroup";
 import { WordGrid } from "./northsort/WordGrid";
-import { savePuzzleState, getPuzzleState } from "@/lib/game-state";
+import { useNorthSortGame } from "@/hooks/useNorthSortGame";
 
 interface NorthSortGameProps {
   groups: Array<{
@@ -18,41 +18,20 @@ interface NorthSortGameProps {
 }
 
 export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
-  const [selectedWords, setSelectedWords] = useState<string[]>([]);
-  const [completedGroups, setCompletedGroups] = useState<string[]>([]);
-  const [showCongrats, setShowCongrats] = useState(false);
-  const [remainingAttempts, setRemainingAttempts] = useState(4);
-  const [gameOver, setGameOver] = useState(false);
-
-  // Load saved state on mount
-  useEffect(() => {
-    const savedState = getPuzzleState(day);
-    if (savedState) {
-      setCompletedGroups(savedState.completedGroups || []);
-      setGameOver(savedState.gameOver || false);
-      setRemainingAttempts(savedState.remainingAttempts || 4);
-      if (savedState.showCongrats) {
-        setShowCongrats(true);
-        // If all groups are completed, show them
-        if (savedState.completedGroups?.length === groups.length) {
-          console.log('Loading completed state:', savedState);
-          setCompletedGroups(groups.map(g => g.category));
-          setGameOver(true);
-          onComplete?.();
-        }
-      }
-    }
-  }, [day, onComplete, groups]);
-
-  // Save state whenever it changes
-  useEffect(() => {
-    savePuzzleState(day, {
-      completedGroups,
-      gameOver,
-      remainingAttempts,
-      showCongrats
-    });
-  }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
+  const {
+    selectedWords,
+    setSelectedWords,
+    completedGroups,
+    setCompletedGroups,
+    showCongrats,
+    setShowCongrats,
+    remainingAttempts,
+    setRemainingAttempts,
+    gameOver,
+    setGameOver,
+    checkNearMatch,
+    revealGroups
+  } = useNorthSortGame(day, groups, onComplete);
 
   const allWords = groups.flatMap(group => group.words);
   const remainingWords = allWords.filter(word => 
@@ -69,35 +48,6 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     } else if (selectedWords.length < 4) {
       setSelectedWords(prev => [...prev, word]);
     }
-  };
-
-  const checkNearMatch = (selectedWords: string[]) => {
-    for (const group of groups) {
-      const matchingWords = selectedWords.filter(word => 
-        group.words.includes(word)
-      );
-      if (matchingWords.length === 3) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const revealGroups = () => {
-    let currentIndex = 0;
-    const revealNextGroup = () => {
-      if (currentIndex < groups.length) {
-        const nextGroup = groups[currentIndex];
-        if (!completedGroups.includes(nextGroup.category)) {
-          setCompletedGroups(prev => [...prev, nextGroup.category]);
-        }
-        currentIndex++;
-        if (currentIndex < groups.length) {
-          setTimeout(revealNextGroup, 2000);
-        }
-      }
-    };
-    revealNextGroup();
   };
 
   const handleSubmit = () => {
@@ -117,11 +67,11 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       
       // Check if this was the last group
       if (completedGroups.length + 1 === groups.length) {
-        // Add delay before showing congratulations to allow the last group to be visible
+        // Add delay before showing congratulations
         setTimeout(() => {
           setShowCongrats(true);
           onComplete?.();
-        }, 1000);
+        }, 2000); // 2 second delay
       } else {
         toast.success("Correct group!");
       }
@@ -141,8 +91,8 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     }
   };
 
-  // If the game is completed, show all completed groups
-  if (gameOver && completedGroups.length === groups.length) {
+  // Always show completed groups when game is over
+  if (gameOver) {
     return (
       <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
         <NorthSortHeader remainingAttempts={remainingAttempts} />
