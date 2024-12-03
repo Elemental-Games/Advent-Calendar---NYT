@@ -1,3 +1,14 @@
+/**
+ * GridCell Component
+ * Represents an individual cell in the game grid.
+ * Handles both mouse and touch interactions.
+ * Manages visual states including:
+ * - Normal state
+ * - Selected state
+ * - Found word state
+ * - Theme word state
+ * Uses Framer Motion for smooth animations and transitions.
+ */
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';

@@ -1,3 +1,9 @@
+/**
+ * FoundWordsList Component
+ * Displays a list of words that have been successfully found by the player.
+ * Shows special styling for the theme word when found.
+ * Tracks progress showing X/6 words found.
+ */
 import React from 'react';
 
 interface FoundWordsListProps {

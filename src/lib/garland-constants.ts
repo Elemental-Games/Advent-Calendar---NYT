@@ -1,3 +1,11 @@
+/**
+ * Garland Game Constants and Utilities
+ * Defines core game constants and helper functions including:
+ * - Color schemes for the game
+ * - Grid cell size
+ * - Color generation for different positions
+ * Used across all Garland game components for consistent styling and behavior.
+ */
 export const CHRISTMAS_COLORS = [
   'bg-red-500',    // Red
   'bg-green-500',  // Green

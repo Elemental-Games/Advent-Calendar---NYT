@@ -1,3 +1,9 @@
+/**
+ * GameHeader Component
+ * Displays the game title, theme, and elapsed time.
+ * Formats and shows the timer in minutes:seconds format.
+ * Provides context about the current game session.
+ */
 import React from 'react';
 
 interface GameHeaderProps {

@@ -1,3 +1,10 @@
+/**
+ * GameGrid Component
+ * Displays the main game grid of letters where players can select words.
+ * Handles mouse and touch interactions for word selection.
+ * Manages the visual state of cells (selected, found, theme word).
+ * Integrates with ConnectionLines for selection visualization.
+ */
 import React from 'react';
 import { GridCell } from './GridCell';
 

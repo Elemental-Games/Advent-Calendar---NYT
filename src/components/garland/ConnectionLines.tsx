@@ -1,3 +1,9 @@
+/**
+ * ConnectionLines Component
+ * Renders SVG lines connecting selected cells in the word grid.
+ * Creates visual feedback for the user's word selection path.
+ * Lines are drawn between consecutive selected cells with a distinctive style.
+ */
 import React from 'react';
 import { GRID_CELL_SIZE } from '@/lib/garland-constants';
 
