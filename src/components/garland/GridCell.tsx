@@ -41,18 +41,19 @@ export const GridCell = memo(function GridCell({
 }: GridCellProps) {
   const getBaseStyles = () => {
     if (isThemeWord && isFound) {
-      return 'bg-green-500 text-white border-2 border-red-500';
+      return 'bg-green-500 text-white border-2 border-red-500 cursor-not-allowed opacity-75';
     }
     
     if (isFound) {
-      const baseStyle = 'text-white border-2 border-black';
+      const baseStyle = 'text-white border-2 border-red-500 cursor-not-allowed opacity-75';
       switch(foundWordIndex) {
-        case 0: return `bg-red-500 ${baseStyle}`;
-        case 1: return `bg-blue-500 ${baseStyle}`;
-        case 2: return `bg-yellow-500 ${baseStyle}`;
-        case 3: return `bg-red-500 ${baseStyle}`;
+        case 0: return `bg-green-500 ${baseStyle}`;
+        case 1: return `bg-green-500 ${baseStyle}`;
+        case 2: return `bg-green-500 ${baseStyle}`;
+        case 3: return `bg-green-500 ${baseStyle}`;
         case 4: return `bg-green-500 ${baseStyle}`;
-        case 5: return `bg-purple-500 ${baseStyle}`;
+        case 5: return `bg-green-500 ${baseStyle}`;
+        case 6: return `bg-green-500 ${baseStyle}`;
         default: return `bg-green-500 ${baseStyle}`;
       }
     }

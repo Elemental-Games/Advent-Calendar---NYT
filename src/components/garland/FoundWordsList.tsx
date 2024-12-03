@@ -2,7 +2,7 @@
  * FoundWordsList Component
  * Displays a list of words that have been successfully found by the player.
  * Shows special styling for the theme word when found.
- * Tracks progress showing X/6 words found.
+ * Tracks progress showing X/7 words found.
  */
 import React from 'react';
 
@@ -11,10 +11,14 @@ interface FoundWordsListProps {
 }
 
 export function FoundWordsList({ foundWords }: FoundWordsListProps) {
+  const capitalizeFirstLetter = (word: string) => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  };
+
   return (
     <div className="space-y-4">
       <div className="text-sm">
-        Found words ({foundWords.length}/6):
+        Found words ({foundWords.length}/7):
         <div className="flex flex-wrap gap-2 mt-2">
           {foundWords.map(({ word }, index) => (
             <span
@@ -25,7 +29,7 @@ export function FoundWordsList({ foundWords }: FoundWordsListProps) {
                   : 'bg-green-100 text-green-800'
               }`}
             >
-              {word}
+              {capitalizeFirstLetter(word)}
             </span>
           ))}
         </div>
