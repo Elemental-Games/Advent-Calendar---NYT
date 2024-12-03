@@ -24,65 +24,67 @@ export function useCrosswordCellInput(
     if (!isValidCell(rowIndex, colIndex)) return;
 
     const newGuesses = { ...guesses };
-    let clueNumber;
     
-    if (showDown) {
-      // Find the starting clue number for this column
-      for (let row = rowIndex; row >= 0; row--) {
-        const num = getClueNumber(row, colIndex);
-        if (num) {
-          clueNumber = num;
-          break;
+    // Helper function to find clue number and position for a cell
+    const findClueAndPos = (row: number, col: number, isDown: boolean) => {
+      let clue = null;
+      let pos = 0;
+      
+      if (isDown) {
+        for (let r = row; r >= 0; r--) {
+          const num = getClueNumber(r, col);
+          if (num) {
+            clue = num;
+            pos = 0;
+            for (let r2 = r; r2 < row; r2++) {
+              if (isValidCell(r2, col)) pos++;
+            }
+            break;
+          }
+        }
+      } else {
+        for (let c = col; c >= 0; c--) {
+          const num = getClueNumber(row, c);
+          if (num) {
+            clue = num;
+            pos = 0;
+            for (let c2 = c; c2 < col; c2++) {
+              if (isValidCell(row, c2)) pos++;
+            }
+            break;
+          }
         }
       }
-    } else {
-      // Find the starting clue number for this row
-      for (let col = colIndex; col >= 0; col--) {
-        const num = getClueNumber(rowIndex, col);
-        if (num) {
-          clueNumber = num;
-          break;
-        }
+      
+      return { clue, pos };
+    };
+
+    // Update across word if exists
+    const { clue: acrossClue, pos: acrossPos } = findClueAndPos(rowIndex, colIndex, false);
+    if (acrossClue) {
+      const key = `a${acrossClue}`;
+      if (!newGuesses[key]) {
+        const length = Array(5).fill(null).filter((_, col) => isValidCell(rowIndex, col)).length;
+        newGuesses[key] = ' '.repeat(length);
       }
+      newGuesses[key] = newGuesses[key].slice(0, acrossPos) + value.toUpperCase() + newGuesses[key].slice(acrossPos + 1);
+      console.log(`Updated across word ${key} at position ${acrossPos}: ${newGuesses[key]}`);
     }
 
-    console.log(`Found clue number: ${clueNumber} for direction: ${showDown ? 'down' : 'across'}`);
-    if (!clueNumber) return;
-
-    const key = showDown ? `d${clueNumber}` : `a${clueNumber}`;
-    
-    // Calculate position within the word
-    let pos = 0;
-    if (showDown) {
-      for (let row = 0; row < rowIndex; row++) {
-        if (isValidCell(row, colIndex)) pos++;
+    // Update down word if exists
+    const { clue: downClue, pos: downPos } = findClueAndPos(rowIndex, colIndex, true);
+    if (downClue) {
+      const key = `d${downClue}`;
+      if (!newGuesses[key]) {
+        const length = Array(5).fill(null).filter((_, row) => isValidCell(row, colIndex)).length;
+        newGuesses[key] = ' '.repeat(length);
       }
-    } else {
-      for (let col = 0; col < colIndex; col++) {
-        if (isValidCell(rowIndex, col)) pos++;
-      }
+      newGuesses[key] = newGuesses[key].slice(0, downPos) + value.toUpperCase() + newGuesses[key].slice(downPos + 1);
+      console.log(`Updated down word ${key} at position ${downPos}: ${newGuesses[key]}`);
     }
 
-    console.log(`Calculated position ${pos} for key ${key}`);
-
-    // Initialize word if it doesn't exist
-    if (!newGuesses[key]) {
-      const length = showDown ?
-        Array(5).fill(null).filter((_, row) => isValidCell(row, colIndex)).length :
-        Array(5).fill(null).filter((_, col) => isValidCell(rowIndex, col)).length;
-      newGuesses[key] = ' '.repeat(length);
-    }
-
-    // Update the guess
-    newGuesses[key] = 
-      newGuesses[key].slice(0, pos) + 
-      value.toUpperCase() + 
-      newGuesses[key].slice(pos + 1);
-
-    console.log(`Updated guesses for ${key}:`, newGuesses[key]);
     setGuesses(newGuesses);
 
-    // Move to next cell if value was entered
     if (value) {
       const nextCell = findNextCell(rowIndex, colIndex, showDown);
       if (nextCell) {
