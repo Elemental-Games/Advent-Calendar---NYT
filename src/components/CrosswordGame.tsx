@@ -9,13 +9,12 @@ import { useCrosswordInput } from "@/hooks/useCrosswordInput";
 import { useCrosswordCellInput } from "@/hooks/useCrosswordCellInput";
 import { useClueManagement } from "@/hooks/useClueManagement";
 import { usePuzzleState } from "@/hooks/usePuzzleState";
-import { Button } from "@/components/ui/button";
 import { formatTime } from "@/lib/utils";
 import type { CrosswordGameProps } from "./crossword/types";
 
 export function CrosswordGame({ across, down, answers, onComplete, day }: CrosswordGameProps) {
   const puzzleId = `crossword_${day}`;
-  const { puzzleState, savePuzzleState, resetPuzzle } = usePuzzleState(puzzleId);
+  const { puzzleState, savePuzzleState } = usePuzzleState(puzzleId);
 
   const {
     showStartDialog,
@@ -89,6 +88,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
 
   const handleSubmit = () => {
     const { allCorrect, incorrectCount } = validateSubmission(GRID, isValidCell, getClueNumber);
+    console.log('Submission validation result:', { allCorrect, incorrectCount });
 
     if (allCorrect) {
       savePuzzleState({
@@ -112,12 +112,6 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         <div className="text-center space-y-4 mb-8">
           <h2 className="text-2xl font-bold text-green-600">Puzzle Completed!</h2>
           <p className="text-lg">Time: {formatTime(puzzleState.completionTime)}</p>
-          <Button 
-            onClick={resetPuzzle}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Reset Puzzle
-          </Button>
         </div>
 
         <CrosswordLayout
