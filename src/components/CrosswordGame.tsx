@@ -1,9 +1,3 @@
-/**
- * Main component that orchestrates the crossword puzzle game.
- * Manages game state, user interactions, and integrates all sub-components.
- * Handles game progression, validation, and completion logic.
- */
-
 import React from "react";
 import { CrosswordLayout } from "./crossword/CrosswordLayout";
 import { StartDialog } from "./crossword/dialogs/StartDialog";
@@ -14,9 +8,15 @@ import { useCrosswordGrid } from "@/hooks/useCrosswordGrid";
 import { useCrosswordInput } from "@/hooks/useCrosswordInput";
 import { useCrosswordCellInput } from "@/hooks/useCrosswordCellInput";
 import { useClueManagement } from "@/hooks/useClueManagement";
+import { usePuzzleState } from "@/hooks/usePuzzleState";
+import { Button } from "@/components/ui/button";
+import { formatTime } from "@/lib/utils";
 import type { CrosswordGameProps } from "./crossword/types";
 
-export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGameProps) {
+export function CrosswordGame({ across, down, answers, onComplete, day }: CrosswordGameProps) {
+  const puzzleId = `crossword_${day}`;
+  const { puzzleState, savePuzzleState, resetPuzzle } = usePuzzleState(puzzleId);
+
   const {
     showStartDialog,
     setShowStartDialog,
@@ -32,8 +32,9 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     showIncorrectDialog,
     setShowIncorrectDialog,
     incorrectCount,
-    setIncorrectCount
-  } = useCrosswordGame(answers, onComplete);
+    setIncorrectCount,
+    timerRef
+  } = useCrosswordGame(answers, onComplete, puzzleState.completed);
 
   const {
     GRID,
@@ -49,7 +50,7 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     setGuesses,
     validatedCells,
     validateSubmission
-  } = useCrosswordInput(answers);
+  } = useCrosswordInput(answers, puzzleState.guesses);
 
   const { handleInputChange, handleBackspace } = useCrosswordCellInput(
     isValidCell,
@@ -72,12 +73,12 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   );
 
   const handleKeyPress = (key: string) => {
-    if (!selectedCell) return;
+    if (!selectedCell || puzzleState.completed) return;
     handleInputChange(selectedCell.row, selectedCell.col, key);
   };
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
-    if (!isValidCell(rowIndex, colIndex)) return;
+    if (!isValidCell(rowIndex, colIndex) || puzzleState.completed) return;
     
     if (selectedCell?.row === rowIndex && selectedCell?.col === colIndex) {
       setShowDown(!showDown);
@@ -90,6 +91,11 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
     const { allCorrect, incorrectCount } = validateSubmission(GRID, isValidCell, getClueNumber);
 
     if (allCorrect) {
+      savePuzzleState({
+        completed: true,
+        completionTime: elapsedTime,
+        guesses
+      });
       setShowCompletionDialog(true);
       onComplete?.();
     } else {
@@ -99,6 +105,21 @@ export function CrosswordGame({ across, down, answers, onComplete }: CrosswordGa
   };
 
   const currentClue = getCurrentClue();
+
+  if (puzzleState.completed) {
+    return (
+      <div className="text-center space-y-4 p-8">
+        <h2 className="text-2xl font-bold text-green-600">Puzzle Completed!</h2>
+        <p className="text-lg">Time: {formatTime(puzzleState.completionTime)}</p>
+        <Button 
+          onClick={resetPuzzle}
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Reset Puzzle
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <>

@@ -10,6 +10,7 @@ export interface CrosswordGameProps {
   down: Record<string, string>;
   answers: Record<string, string>;
   onComplete?: () => void;
+  day: number;
 }
 
 export interface CrosswordGridProps {

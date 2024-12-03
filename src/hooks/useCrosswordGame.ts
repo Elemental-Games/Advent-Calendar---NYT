@@ -1,11 +1,6 @@
-/**
- * Hook for managing the core game state and functionality of the crossword puzzle.
- * Handles game progression, timer, cell selection, and completion states.
- */
-
 import { useState, useRef, useEffect } from "react";
 
-export function useCrosswordGame(answers: Record<string, string>, onComplete?: () => void) {
+export function useCrosswordGame(answers: Record<string, string>, onComplete?: () => void, isCompleted: boolean = false) {
   const [guesses, setGuesses] = useState<Record<string, string>>({});
   const [showStartDialog, setShowStartDialog] = useState(true);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
@@ -18,7 +13,7 @@ export function useCrosswordGame(answers: Record<string, string>, onComplete?: (
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (isStarted && !showCompletionDialog) {
+    if (isStarted && !showCompletionDialog && !isCompleted) {
       timerRef.current = setInterval(() => {
         setElapsedTime(prev => prev + 1);
       }, 1000);
@@ -28,7 +23,7 @@ export function useCrosswordGame(answers: Record<string, string>, onComplete?: (
         clearInterval(timerRef.current);
       }
     };
-  }, [isStarted, showCompletionDialog]);
+  }, [isStarted, showCompletionDialog, isCompleted]);
 
   const handleStartGame = () => {
     setIsStarted(true);
@@ -53,6 +48,7 @@ export function useCrosswordGame(answers: Record<string, string>, onComplete?: (
     setSelectedCell,
     showDown,
     setShowDown,
-    handleStartGame
+    handleStartGame,
+    timerRef
   };
 }
