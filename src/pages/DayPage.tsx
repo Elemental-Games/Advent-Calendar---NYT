@@ -29,10 +29,16 @@ const DayPage = () => {
 
   const handleReset = () => {
     if (dayNumber) {
+      console.log('Resetting day:', dayNumber);
       markDayIncomplete(dayNumber);
       setIsCompleted(false);
-      // Clear puzzle state from localStorage
+      
+      // Clear FrostWord puzzle state
       localStorage.removeItem(`crossword_${dayNumber}`);
+      
+      // Clear NorthSort puzzle state
+      localStorage.removeItem(`northsort_${dayNumber}`);
+      
       toast.info("Puzzle reset! Try again!");
       window.location.reload();
     }
