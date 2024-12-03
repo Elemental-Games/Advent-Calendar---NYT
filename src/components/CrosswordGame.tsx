@@ -50,7 +50,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
     setGuesses,
     validatedCells,
     validateSubmission
-  } = useCrosswordInput(answers, puzzleState.guesses);
+  } = useCrosswordInput(answers);
 
   const { handleInputChange, handleBackspace } = useCrosswordCellInput(
     isValidCell,
