@@ -31,6 +31,8 @@ const DayPage = () => {
     if (dayNumber) {
       markDayIncomplete(dayNumber);
       setIsCompleted(false);
+      // Clear puzzle state from localStorage
+      localStorage.removeItem(`crossword_${dayNumber}`);
       toast.info("Puzzle reset! Try again!");
       window.location.reload();
     }
