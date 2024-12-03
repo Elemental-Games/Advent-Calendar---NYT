@@ -72,11 +72,11 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
 
   const handleInput = (value: string) => {
     if (gameOver) return;
-    
+
     if (!timerStarted) {
       setTimerStarted(true);
     }
-    
+
     if (value.length <= WORD_LENGTH) {
       setCurrentGuess(value);
       setActiveCell(value.length - 1);
@@ -93,7 +93,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
       toast.error("Not a valid word");
       return;
     }
-    
+
     const newGuesses = [...guesses, currentGuess];
     setGuesses(newGuesses);
     setCurrentGuess("");
@@ -149,10 +149,17 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         </h3>
         
         {gameOver && isWinner && (
-          <div className="text-center mb-4">
+          <div className="text-center mb-4 space-y-4">
             <p className="text-lg font-mono text-green-600">
               Time: {formatTime(elapsedTime)}
             </p>
+            <Button
+              onClick={handleReset}
+              variant="outline"
+              className="text-red-600 border-red-600 hover:bg-red-50"
+            >
+              Reset Puzzle
+            </Button>
           </div>
         )}
 
@@ -171,20 +178,13 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           isWinner={isWinner}
         />
 
-        <div className="mt-6 flex justify-center gap-4">
+        <div className="mt-6 flex justify-center">
           <Button 
             onClick={handleSubmit}
             className="w-full max-w-[200px] bg-green-700 hover:bg-green-800 text-white border-2 border-red-500 shadow-lg transition-all duration-300"
             disabled={gameOver}
           >
             Submit
-          </Button>
-          <Button
-            onClick={handleReset}
-            variant="outline"
-            className="text-red-600 border-red-600 hover:bg-red-50"
-          >
-            Reset Puzzle
           </Button>
         </div>
       </div>
