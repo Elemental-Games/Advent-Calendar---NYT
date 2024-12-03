@@ -39,7 +39,7 @@ const DayPage = () => {
       // Clear NorthSort puzzle state
       localStorage.removeItem(`northsort_${dayNumber}`);
       
-      toast.info("Puzzle reset! Try again!");
+      toast.info("Day reset! Try again!");
       window.location.reload();
     }
   };
@@ -65,13 +65,15 @@ const DayPage = () => {
           <h1 className="text-2xl font-bold text-red-700">
             Day {dayInfo.day}
           </h1>
-          <Button 
-            onClick={handleReset}
-            variant="outline"
-            className="text-red-600 border-red-600 hover:bg-red-50"
-          >
-            Reset Day
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleReset}
+              variant="outline"
+              className="text-red-600 border-red-600 hover:bg-red-50"
+            >
+              Reset Day
+            </Button>
+          </div>
         </div>
         
         {dayInfo.puzzleContent && (
