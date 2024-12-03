@@ -23,33 +23,53 @@ export function CrosswordGrid({
   const { calculatePosition } = useGridCalculations();
 
   const getCellValue = (rowIndex: number, colIndex: number) => {
+    console.log(`Getting value for cell ${rowIndex},${colIndex}`);
     if (!isValidCell(rowIndex, colIndex)) {
       console.log(`Invalid cell at ${rowIndex},${colIndex}`);
       return "";
     }
 
-    const clueNumber = getClueNumber(rowIndex, colIndex);
-    if (!clueNumber) {
-      console.log(`No clue number for cell at ${rowIndex},${colIndex}`);
-      return "";
+    // Find the word this cell belongs to
+    let value = '';
+    let clueNumber;
+    
+    if (showDown) {
+      // Find the starting clue for this column
+      for (let row = rowIndex; row >= 0; row--) {
+        const num = getClueNumber(row, colIndex);
+        if (num) {
+          clueNumber = num;
+          break;
+        }
+      }
+      if (clueNumber) {
+        let pos = 0;
+        for (let row = 0; row < rowIndex; row++) {
+          if (isValidCell(row, colIndex)) pos++;
+        }
+        value = guesses[`d${clueNumber}`]?.[pos] || '';
+        console.log(`Down value for clue ${clueNumber} at position ${pos}: ${value}`);
+      }
+    } else {
+      // Find the starting clue for this row
+      for (let col = colIndex; col >= 0; col--) {
+        const num = getClueNumber(rowIndex, col);
+        if (num) {
+          clueNumber = num;
+          break;
+        }
+      }
+      if (clueNumber) {
+        let pos = 0;
+        for (let col = 0; col < colIndex; col++) {
+          if (isValidCell(rowIndex, col)) pos++;
+        }
+        value = guesses[`a${clueNumber}`]?.[pos] || '';
+        console.log(`Across value for clue ${clueNumber} at position ${pos}: ${value}`);
+      }
     }
 
-    const { acrossPos, downPos } = calculatePosition(rowIndex, colIndex, isValidCell);
-    
-    const acrossKey = `a${clueNumber}`;
-    const downKey = `d${clueNumber}`;
-    
-    const acrossValue = guesses[acrossKey]?.[acrossPos];
-    const downValue = guesses[downKey]?.[downPos];
-    
-    console.log(`Cell ${rowIndex},${colIndex}:
-      Clue: ${clueNumber}
-      Across: ${acrossKey}[${acrossPos}] = ${acrossValue}
-      Down: ${downKey}[${downPos}] = ${downValue}
-      ShowDown: ${showDown}
-    `);
-    
-    return showDown ? (downValue || acrossValue || "") : (acrossValue || downValue || "");
+    return value;
   };
 
   return (
