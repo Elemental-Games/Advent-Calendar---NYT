@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { DayInfo, formatCountdown } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { isDayCompleted, markDayIncomplete } from "@/lib/game-state";
+import { isDayCompleted } from "@/lib/game-state";
 import { CountdownDialog } from "./calendar/CountdownDialog";
 import { DayContent } from "./calendar/DayContent";
 
@@ -25,12 +25,6 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Reset day 3 on component mount
-    if (dayInfo.day === 3) {
-      console.log('Resetting day 3 completion status');
-      markDayIncomplete(3);
-    }
-
     const checkStatus = () => {
       setCountdown(formatCountdown(dayInfo.unlockTime));
       setIsCompleted(propIsCompleted ?? isDayCompleted(dayInfo.day));
@@ -41,12 +35,15 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
     return () => clearInterval(timer);
   }, [dayInfo.unlockTime, dayInfo.day, propIsCompleted]);
 
-  const isAvailable = dayInfo.day <= 2;  // Make days 1 and 2 available
+  const isAvailable = Date.now() >= dayInfo.unlockTime.getTime();
+  console.log(`Day ${dayInfo.day} availability:`, { isAvailable, currentTime: Date.now(), unlockTime: dayInfo.unlockTime.getTime() });
 
   const handleClick = () => {
     if (isAvailable || isCompleted) {
+      console.log(`Navigating to day ${dayInfo.day}`);
       navigate(`/day/${dayInfo.day}`);
     } else {
+      console.log(`Showing countdown for day ${dayInfo.day}`);
       setShowCountdown(true);
     }
   };
@@ -63,7 +60,7 @@ export function CalendarDay({ dayInfo, isCompleted: propIsCompleted }: CalendarD
           isCompleted ? 
             "bg-emerald-600/90 border-emerald-700 backdrop-blur-sm" : 
           isAvailable ? 
-            "bg-red-600/90 border-red-400 backdrop-blur-sm" :
+            "bg-red-600/90 border-red-400 backdrop-blur-sm hover:bg-red-700/90" :
             "bg-white/5 border-red-200/30 backdrop-blur-xl"
         )}
         onClick={handleClick}
