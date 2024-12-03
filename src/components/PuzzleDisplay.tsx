@@ -36,6 +36,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
               down={crosswordContent.down}
               answers={crosswordContent.answers}
               onComplete={onComplete}
+              day={day}
             />
           </div>
         );
