@@ -1,6 +1,12 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
+interface WordValidityResult {
+  valid: boolean;
+  word?: string;
+  index?: number;
+}
+
 export function useWordSelection(
   words: string[],
   foundWords: string[],
@@ -75,8 +81,10 @@ export function useWordSelection(
     }
   }, [isDragging, selectedCells, foundWords]);
 
-  const checkWordValidity = useCallback(() => {
-    if (!isDragging || currentWord.length < 3) return false;
+  const checkWordValidity = useCallback((): WordValidityResult => {
+    if (!isDragging || currentWord.length < 3) {
+      return { valid: false };
+    }
     
     const selectedPositions = selectedCells.map(cell => {
       const row = Math.floor(cell / 6);
@@ -90,7 +98,11 @@ export function useWordSelection(
     );
 
     if (wordEntry && !foundWords.includes(wordEntry[0])) {
-      return { valid: true, word: wordEntry[0], index: words.indexOf(wordEntry[0]) };
+      return { 
+        valid: true, 
+        word: wordEntry[0], 
+        index: words.indexOf(wordEntry[0]) 
+      };
     }
 
     return { valid: false };
@@ -108,7 +120,7 @@ export function useWordSelection(
     }
 
     const result = checkWordValidity();
-    if (result.valid && typeof result.index === 'number') {
+    if (result.valid && typeof result.index === 'number' && result.word) {
       setFoundWords([...foundWords.map(w => typeof w === 'string' ? { word: w, index: words.indexOf(w) } : w), { word: result.word, index: result.index }]);
     } else if (currentWord.length >= 3) {
       toast.error("That's not a valid word pattern!");
