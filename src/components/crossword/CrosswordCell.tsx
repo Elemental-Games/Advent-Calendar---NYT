@@ -15,6 +15,7 @@ interface CrosswordCellProps {
   isPartOfWord: boolean;
   isValidCell: boolean;
   isValidated?: boolean;
+  isCompleted?: boolean;
   onClick: () => void;
   onChange: (value: string) => void;
 }
@@ -26,6 +27,7 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
   isPartOfWord,
   isValidCell,
   isValidated,
+  isCompleted,
   onClick, 
   onChange 
 }, ref) => {
@@ -42,14 +44,16 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
     >
       <div className={cn(
         "absolute top-0 left-0 right-0 bottom-0",
-        "border-2 flex items-center justify-center cursor-pointer",
+        "border-2 flex items-center justify-center",
         !isValidCell ? "bg-slate-800/90 border-slate-700 cursor-not-allowed" :
+        isCompleted ? "border-green-700 bg-green-50" :
         isSelected ? "border-blue-500 shadow-lg scale-105 bg-blue-50" :
         isValidated !== undefined ? (
           isValidated ? "border-blue-700 bg-blue-700/20" : "border-blue-300 bg-blue-200/20"
         ) :
         isPartOfWord ? "border-blue-300 bg-blue-50/50" :
-        "border-blue-200 bg-white"
+        "border-blue-200 bg-white",
+        isCompleted ? "cursor-default" : "cursor-pointer"
       )}>
         {clueNumber && (
           <span className="absolute top-1 left-1 text-[10px] font-medium text-blue-600">
@@ -57,18 +61,13 @@ export const CrosswordCell = forwardRef<HTMLInputElement, CrosswordCellProps>(({
           </span>
         )}
         {isValidCell && (
-          <input
-            ref={ref}
-            type="text"
-            maxLength={1}
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value.toUpperCase())}
-            className={cn(
-              "w-full h-full text-center bg-transparent",
-              "focus:outline-none uppercase text-2xl md:text-3xl font-bold",
-              isValidCell ? "text-blue-700" : "text-slate-600"
-            )}
-          />
+          <div className={cn(
+            "w-full h-full flex items-center justify-center",
+            "text-2xl md:text-3xl font-bold",
+            isCompleted ? "text-green-700" : "text-blue-700"
+          )}>
+            {value}
+          </div>
         )}
       </div>
     </div>

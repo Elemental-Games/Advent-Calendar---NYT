@@ -108,15 +108,38 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
 
   if (puzzleState.completed) {
     return (
-      <div className="text-center space-y-4 p-8">
-        <h2 className="text-2xl font-bold text-green-600">Puzzle Completed!</h2>
-        <p className="text-lg">Time: {formatTime(puzzleState.completionTime)}</p>
-        <Button 
-          onClick={resetPuzzle}
-          className="bg-blue-600 hover:bg-blue-700 text-white"
-        >
-          Reset Puzzle
-        </Button>
+      <div className="space-y-4">
+        <div className="text-center space-y-4 mb-8">
+          <h2 className="text-2xl font-bold text-green-600">Puzzle Completed!</h2>
+          <p className="text-lg">Time: {formatTime(puzzleState.completionTime)}</p>
+          <Button 
+            onClick={resetPuzzle}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Reset Puzzle
+          </Button>
+        </div>
+
+        <CrosswordLayout
+          elapsedTime={puzzleState.completionTime}
+          grid={GRID}
+          guesses={puzzleState.guesses || {}}
+          showDown={showDown}
+          selectedCell={null}
+          isValidCell={isValidCell}
+          getClueNumber={getClueNumber}
+          handleCellClick={() => {}}
+          handleInputChange={() => {}}
+          cellRefs={cellRefs}
+          validatedCells={{}}
+          currentClue={null}
+          onSubmit={() => {}}
+          onKeyPress={() => {}}
+          onBackspace={() => {}}
+          across={across}
+          down={down}
+          isCompleted={true}
+        />
       </div>
     );
   }
@@ -141,6 +164,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         onBackspace={() => selectedCell && handleBackspace(selectedCell)}
         across={across}
         down={down}
+        isCompleted={false}
       />
 
       <StartDialog

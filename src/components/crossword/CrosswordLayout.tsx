@@ -30,6 +30,7 @@ interface CrosswordLayoutProps {
   onBackspace: () => void;
   across: Record<string, string>;
   down: Record<string, string>;
+  isCompleted?: boolean;
 }
 
 export function CrosswordLayout({
@@ -49,7 +50,8 @@ export function CrosswordLayout({
   onKeyPress,
   onBackspace,
   across,
-  down
+  down,
+  isCompleted = false
 }: CrosswordLayoutProps) {
   return (
     <div className="max-w-2xl mx-auto p-4">
@@ -67,10 +69,11 @@ export function CrosswordLayout({
           handleInputChange={handleInputChange}
           cellRefs={cellRefs}
           validatedCells={validatedCells}
+          isCompleted={isCompleted}
         />
       </div>
 
-      {currentClue && (
+      {currentClue && !isCompleted && (
         <CrosswordClue
           number={currentClue.number}
           direction={currentClue.direction}
@@ -78,11 +81,13 @@ export function CrosswordLayout({
         />
       )}
 
-      <CrosswordControls
-        onSubmit={onSubmit}
-        onKeyPress={onKeyPress}
-        onBackspace={onBackspace}
-      />
+      {!isCompleted && (
+        <CrosswordControls
+          onSubmit={onSubmit}
+          onKeyPress={onKeyPress}
+          onBackspace={onBackspace}
+        />
+      )}
 
       <CrosswordClueList across={across} down={down} />
     </div>

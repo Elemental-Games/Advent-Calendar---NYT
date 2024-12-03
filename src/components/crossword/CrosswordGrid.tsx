@@ -8,6 +8,10 @@ import { CrosswordCell } from "./CrosswordCell";
 import { useGridCalculations } from "@/hooks/useGridCalculations";
 import type { CrosswordGridProps } from "./types";
 
+interface ExtendedCrosswordGridProps extends CrosswordGridProps {
+  isCompleted?: boolean;
+}
+
 export function CrosswordGrid({
   grid,
   guesses,
@@ -18,8 +22,9 @@ export function CrosswordGrid({
   handleCellClick,
   handleInputChange,
   cellRefs,
-  validatedCells = {}
-}: CrosswordGridProps) {
+  validatedCells = {},
+  isCompleted = false
+}: ExtendedCrosswordGridProps) {
   const { calculatePosition } = useGridCalculations();
 
   const getCellValue = (rowIndex: number, colIndex: number) => {
@@ -84,6 +89,7 @@ export function CrosswordGrid({
               onClick={() => handleCellClick(rowIndex, colIndex)}
               onChange={(value) => handleInputChange(rowIndex, colIndex, value)}
               ref={el => cellRefs.current[rowIndex][colIndex] = el}
+              isCompleted={isCompleted}
             />
           ))}
         </div>
