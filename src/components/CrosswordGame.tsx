@@ -1,3 +1,9 @@
+/**
+ * Main component that orchestrates the crossword puzzle game.
+ * Manages game state, user interactions, and integrates all sub-components.
+ * Handles game progression, validation, and completion logic.
+ */
+
 import React from "react";
 import { CrosswordLayout } from "./crossword/CrosswordLayout";
 import { StartDialog } from "./crossword/dialogs/StartDialog";

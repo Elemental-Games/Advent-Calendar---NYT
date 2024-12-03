@@ -1,3 +1,9 @@
+/**
+ * Individual cell component for the crossword grid.
+ * Handles user input, displays cell content and clue numbers.
+ * Manages cell state including selection and validation feedback.
+ */
+
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 

@@ -1,3 +1,9 @@
+/**
+ * Contains game control elements including submit button and keyboard.
+ * Manages user input methods and game submission.
+ * Provides interface for puzzle completion and validation.
+ */
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { CrosswordKeyboard } from "./CrosswordKeyboard";

@@ -1,3 +1,9 @@
+/**
+ * Virtual keyboard component for mobile-friendly input.
+ * Provides touch-friendly letter input and backspace functionality.
+ * Ensures consistent input experience across devices.
+ */
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 

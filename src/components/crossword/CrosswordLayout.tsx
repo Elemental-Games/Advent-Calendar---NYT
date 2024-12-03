@@ -1,3 +1,9 @@
+/**
+ * Layout component that arranges all crossword elements.
+ * Provides structure for the grid, clues, controls, and game information.
+ * Acts as the main container for the crossword puzzle interface.
+ */
+
 import React from 'react';
 import { CrosswordHeader } from "./CrosswordHeader";
 import { CrosswordGrid } from "./CrosswordGrid";

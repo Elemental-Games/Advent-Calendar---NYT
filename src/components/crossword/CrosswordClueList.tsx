@@ -1,3 +1,9 @@
+/**
+ * Displays all crossword clues organized by direction.
+ * Shows separate sections for across and down clues.
+ * Provides reference for all puzzle clues during gameplay.
+ */
+
 interface CrosswordClueListProps {
   across: Record<string, string>;
   down: Record<string, string>;

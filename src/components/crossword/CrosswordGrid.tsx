@@ -1,3 +1,9 @@
+/**
+ * Renders the crossword puzzle grid.
+ * Manages the layout of cells and their interactions.
+ * Handles cell selection, input, and visual feedback.
+ */
+
 import { CrosswordCell } from "./CrosswordCell";
 import { useGridCalculations } from "@/hooks/useGridCalculations";
 

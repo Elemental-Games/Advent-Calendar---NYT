@@ -1,3 +1,9 @@
+/**
+ * Displays the current active clue.
+ * Shows clue number, direction, and text for the selected cell.
+ * Provides visual feedback for the current puzzle focus.
+ */
+
 interface CrosswordClueProps {
   number: string;
   direction: string;
