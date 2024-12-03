@@ -29,46 +29,47 @@ export function CrosswordGrid({
       return "";
     }
 
-    // Find the word this cell belongs to
-    let value = '';
-    let clueNumber;
-    
-    if (showDown) {
-      // Find the starting clue for this column
-      for (let row = rowIndex; row >= 0; row--) {
-        const num = getClueNumber(row, colIndex);
-        if (num) {
-          clueNumber = num;
-          break;
-        }
-      }
-      if (clueNumber) {
-        let pos = 0;
-        for (let row = 0; row < rowIndex; row++) {
-          if (isValidCell(row, colIndex)) pos++;
-        }
-        value = guesses[`d${clueNumber}`]?.[pos] || '';
-        console.log(`Down value for clue ${clueNumber} at position ${pos}: ${value}`);
-      }
-    } else {
-      // Find the starting clue for this row
-      for (let col = colIndex; col >= 0; col--) {
-        const num = getClueNumber(rowIndex, col);
-        if (num) {
-          clueNumber = num;
-          break;
-        }
-      }
-      if (clueNumber) {
-        let pos = 0;
-        for (let col = 0; col < colIndex; col++) {
-          if (isValidCell(rowIndex, col)) pos++;
-        }
-        value = guesses[`a${clueNumber}`]?.[pos] || '';
-        console.log(`Across value for clue ${clueNumber} at position ${pos}: ${value}`);
+    // Check for down value
+    let downValue = '';
+    let downClue;
+    for (let row = rowIndex; row >= 0; row--) {
+      const num = getClueNumber(row, colIndex);
+      if (num) {
+        downClue = num;
+        break;
       }
     }
+    if (downClue) {
+      let pos = 0;
+      for (let row = 0; row < rowIndex; row++) {
+        if (isValidCell(row, colIndex)) pos++;
+      }
+      downValue = guesses[`d${downClue}`]?.[pos] || '';
+      console.log(`Down value for clue ${downClue} at position ${pos}: ${downValue}`);
+    }
 
+    // Check for across value
+    let acrossValue = '';
+    let acrossClue;
+    for (let col = colIndex; col >= 0; col--) {
+      const num = getClueNumber(rowIndex, col);
+      if (num) {
+        acrossClue = num;
+        break;
+      }
+    }
+    if (acrossClue) {
+      let pos = 0;
+      for (let col = 0; col < colIndex; col++) {
+        if (isValidCell(rowIndex, col)) pos++;
+      }
+      acrossValue = guesses[`a${acrossClue}`]?.[pos] || '';
+      console.log(`Across value for clue ${acrossClue} at position ${pos}: ${acrossValue}`);
+    }
+
+    // Return based on current direction, preferring non-empty values
+    const value = showDown ? (downValue || acrossValue) : (acrossValue || downValue);
+    console.log(`Final value for cell ${rowIndex},${colIndex}: ${value}`);
     return value;
   };
 
