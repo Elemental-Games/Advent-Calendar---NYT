@@ -36,33 +36,44 @@ export function CrosswordGrid({
 
     // Always check both directions
     let value = '';
+    let foundValue = false;
     
-    // Check each word this cell belongs to
-    for (let row = rowIndex; row >= 0; row--) {
+    // First check down direction
+    for (let row = rowIndex; row >= 0 && !foundValue; row--) {
       const downClue = getClueNumber(row, colIndex);
       if (downClue) {
         let pos = 0;
         for (let r = row; r < rowIndex; r++) {
           if (isValidCell(r, colIndex)) pos++;
         }
-        const downValue = guesses[`d${downClue}`]?.[pos];
-        if (downValue && downValue !== ' ') value = downValue;
-        console.log(`Down value for clue ${downClue} at position ${pos}: ${downValue}`);
+        const key = `d${downClue}`;
+        console.log(`Checking down key ${key} at position ${pos}`);
+        if (guesses[key] && guesses[key][pos]) {
+          value = guesses[key][pos];
+          foundValue = true;
+          console.log(`Found down value: ${value} for clue ${downClue} at position ${pos}`);
+        }
         break;
       }
     }
 
-    for (let col = colIndex; col >= 0; col--) {
-      const acrossClue = getClueNumber(rowIndex, col);
-      if (acrossClue) {
-        let pos = 0;
-        for (let c = col; c < colIndex; c++) {
-          if (isValidCell(rowIndex, c)) pos++;
+    // Then check across direction if no value found
+    if (!foundValue) {
+      for (let col = colIndex; col >= 0; col--) {
+        const acrossClue = getClueNumber(rowIndex, col);
+        if (acrossClue) {
+          let pos = 0;
+          for (let c = col; c < colIndex; c++) {
+            if (isValidCell(rowIndex, c)) pos++;
+          }
+          const key = `a${acrossClue}`;
+          console.log(`Checking across key ${key} at position ${pos}`);
+          if (guesses[key] && guesses[key][pos]) {
+            value = guesses[key][pos];
+            console.log(`Found across value: ${value} for clue ${acrossClue} at position ${pos}`);
+          }
+          break;
         }
-        const acrossValue = guesses[`a${acrossClue}`]?.[pos];
-        if (acrossValue && acrossValue !== ' ') value = acrossValue;
-        console.log(`Across value for clue ${acrossClue} at position ${pos}: ${acrossValue}`);
-        break;
       }
     }
 
