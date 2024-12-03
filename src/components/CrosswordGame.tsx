@@ -34,7 +34,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
     incorrectCount,
     setIncorrectCount,
     timerRef
-  } = useCrosswordGame(answers, onComplete, puzzleState.completed);
+  } = useCrosswordGame(answers, puzzleState.completed);
 
   const {
     GRID,
