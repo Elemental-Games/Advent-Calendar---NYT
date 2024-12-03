@@ -24,43 +24,59 @@ export function useCrosswordInput(answers: Record<string, string>) {
     let allCorrect = true;
     let totalChecked = 0;
 
+    // Helper function to get the value for a cell from either direction
+    const getCellValue = (rowIndex: number, colIndex: number): string => {
+      let value = '';
+      
+      // Check down direction
+      for (let row = rowIndex; row >= 0; row--) {
+        const downClue = getClueNumber(row, colIndex);
+        if (downClue) {
+          let pos = 0;
+          for (let r = row; r < rowIndex; r++) {
+            if (isValidCell(r, colIndex)) pos++;
+          }
+          const downValue = guesses[`d${downClue}`]?.[pos];
+          if (downValue && downValue !== ' ') {
+            value = downValue;
+            break;
+          }
+        }
+      }
+
+      // Check across direction if no down value found
+      if (!value) {
+        for (let col = colIndex; col >= 0; col--) {
+          const acrossClue = getClueNumber(rowIndex, col);
+          if (acrossClue) {
+            let pos = 0;
+            for (let c = col; c < colIndex; c++) {
+              if (isValidCell(rowIndex, c)) pos++;
+            }
+            const acrossValue = guesses[`a${acrossClue}`]?.[pos];
+            if (acrossValue && acrossValue !== ' ') {
+              value = acrossValue;
+              break;
+            }
+          }
+        }
+      }
+
+      return value.toUpperCase();
+    };
+
     for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
       for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
         if (!isValidCell(rowIndex, colIndex)) continue;
 
         totalChecked++;
-        const correctValue = grid[rowIndex][colIndex];
+        const correctValue = grid[rowIndex][colIndex].toUpperCase();
         const cellKey = `${rowIndex}-${colIndex}`;
+        const value = getCellValue(rowIndex, colIndex);
         
-        // Get current cell value from any direction
-        let value = '';
-        for (let row = rowIndex; row >= 0; row--) {
-          if (getClueNumber(row, colIndex)) {
-            const downPos = rowIndex - row;
-            const downValue = guesses[`d${getClueNumber(row, colIndex)}`]?.[downPos];
-            if (downValue && downValue !== ' ') {
-              value = downValue;
-              break;
-            }
-          }
-        }
-
-        if (!value) {
-          for (let col = colIndex; col >= 0; col--) {
-            if (getClueNumber(rowIndex, col)) {
-              const acrossPos = colIndex - col;
-              const acrossValue = guesses[`a${getClueNumber(rowIndex, col)}`]?.[acrossPos];
-              if (acrossValue && acrossValue !== ' ') {
-                value = acrossValue;
-                break;
-              }
-            }
-          }
-        }
-
-        console.log(`Validating ${rowIndex},${colIndex}: Expected ${correctValue}, Got ${value}`);
+        console.log(`Validating cell ${rowIndex},${colIndex}: Expected ${correctValue}, Got ${value}`);
         
-        const isCorrect = value.toUpperCase() === correctValue.toUpperCase();
+        const isCorrect = value === correctValue;
         newValidatedCells[cellKey] = isCorrect;
 
         if (!isCorrect) {
