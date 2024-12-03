@@ -4,11 +4,11 @@ import { toast } from 'sonner';
 // Word position mappings
 const WORD_POSITIONS = {
   'santa': [71, 72, 73, 82, 81],
-  'cookies': [86, 85, 84, 75, 76, 65, 66],  // Updated positions
+  'cookies': [86, 85, 84, 75, 76, 65, 66],
   'sleigh': [11, 12, 13, 23, 22, 21],
   'mistletoe': [31, 32, 41, 42, 43, 52, 51, 61, 62],
   'frost': [15, 16, 26, 25, 35],
-  'rudolph': [36, 46, 56, 45, 55, 54, 64],  // Updated positions
+  'rudolph': [36, 46, 56, 45, 55, 54, 64],
   'christmas': [83, 74, 63, 53, 44, 33, 34, 24, 14]
 };
 
@@ -46,12 +46,10 @@ export function useWordSelection(
   };
 
   const handleCellMouseDown = useCallback((rowIndex: number, colIndex: number) => {
-    console.log('Mouse down on cell:', rowIndex, colIndex, 'Position:', getPositionNumber(rowIndex, colIndex));
-    if (!isWordFound(getCurrentWord([rowIndex * 6 + colIndex]))) {
-      setIsDragging(true);
-      setSelectedCells([rowIndex * 6 + colIndex]);
-      setCurrentWord(getCurrentWord([rowIndex * 6 + colIndex]));
-    }
+    console.log('Mouse down on cell:', rowIndex, colIndex);
+    setIsDragging(true);
+    setSelectedCells([rowIndex * 6 + colIndex]);
+    setCurrentWord(getCurrentWord([rowIndex * 6 + colIndex]));
   }, []);
 
   const handleCellMouseEnter = useCallback((rowIndex: number, colIndex: number) => {
@@ -82,29 +80,24 @@ export function useWordSelection(
   const checkWordValidity = useCallback(() => {
     if (!isDragging || currentWord.length < 3) return false;
     
-    // Check if the selected cells match any word's position pattern
     const selectedPositions = selectedCells.map(cell => {
       const row = Math.floor(cell / 6);
       const col = cell % 6;
-      const pos = getPositionNumber(row, col);
-      console.log('Selected position:', pos, 'for cell:', row, col);
-      return pos;
+      return getPositionNumber(row, col);
     });
 
     console.log('Checking word:', currentWord, 'positions:', selectedPositions);
-    console.log('Valid positions:', WORD_POSITIONS);
+    console.log('Already found words:', foundWords);
 
     const isValidWord = Object.entries(WORD_POSITIONS).some(([validWord, positions]) => {
-      console.log('Comparing with:', validWord, positions);
       if (selectedPositions.length === positions.length) {
         const matches = selectedPositions.every((pos, index) => pos === positions[index]);
-        console.log('Positions match?', matches);
-        return matches;
+        return matches && !foundWords.includes(validWord.toUpperCase());
       }
       return false;
     });
 
-    return isValidWord && !foundWords.includes(currentWord);
+    return isValidWord;
   }, [isDragging, currentWord, selectedCells, foundWords]);
 
   const handleMouseUp = useCallback(() => {
@@ -120,16 +113,20 @@ export function useWordSelection(
     }
 
     if (checkWordValidity()) {
-      setFoundWords([...foundWords, word]);
+      const newFoundWords = [...foundWords, word];
+      setFoundWords(newFoundWords);
+      
       if (word.toLowerCase() === themeWord.toLowerCase()) {
         toast.success("Congratulations! You found the theme word!");
       } else {
         toast.success(`Found word: ${word}!`);
       }
 
-      if (foundWords.length + 1 === words.length) {
-        toast.success('Congratulations! You found all the words!');
-        onComplete?.();
+      if (newFoundWords.length === words.length) {
+        setTimeout(() => {
+          toast.success('Congratulations! You found all the words!');
+          onComplete?.();
+        }, 500);
       }
     } else if (word.length >= 3) {
       toast.error("That's not a valid word pattern!");
@@ -137,7 +134,7 @@ export function useWordSelection(
     
     setSelectedCells([]);
     setCurrentWord('');
-  }, [isDragging, currentWord, words, foundWords, themeWord, onComplete, checkWordValidity]);
+  }, [isDragging, currentWord, words, foundWords, themeWord, onComplete, checkWordValidity, setFoundWords]);
 
   return {
     selectedCells,
