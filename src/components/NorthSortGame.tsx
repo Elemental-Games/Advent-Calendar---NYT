@@ -33,10 +33,16 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       setRemainingAttempts(savedState.remainingAttempts || 4);
       if (savedState.showCongrats) {
         setShowCongrats(true);
-        onComplete?.();
+        // If all groups are completed, show them
+        if (savedState.completedGroups?.length === groups.length) {
+          console.log('Loading completed state:', savedState);
+          setCompletedGroups(groups.map(g => g.category));
+          setGameOver(true);
+          onComplete?.();
+        }
       }
     }
-  }, [day, onComplete]);
+  }, [day, onComplete, groups]);
 
   // Save state whenever it changes
   useEffect(() => {
@@ -134,6 +140,25 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       }
     }
   };
+
+  // If the game is completed, show all completed groups
+  if (gameOver && completedGroups.length === groups.length) {
+    return (
+      <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
+        <NorthSortHeader remainingAttempts={remainingAttempts} />
+        <div className="space-y-6 mt-4">
+          {groups.map((group) => (
+            <CompletedGroup
+              key={group.category}
+              category={group.category}
+              color={group.color}
+              words={group.words}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
