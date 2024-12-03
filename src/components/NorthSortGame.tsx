@@ -40,6 +40,14 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     )
   );
 
+  // Show all groups if game is completed
+  useEffect(() => {
+    if (completedGroups.length === groups.length) {
+      console.log('Game completed, showing all groups');
+      setGameOver(true);
+    }
+  }, [completedGroups.length, groups.length, setGameOver]);
+
   const handleWordClick = (word: string) => {
     if (gameOver) return;
     
@@ -91,8 +99,9 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     }
   };
 
-  // Always show completed groups when game is over
-  if (gameOver) {
+  // Always show completed groups when game is over or all groups are found
+  if (gameOver || completedGroups.length === groups.length) {
+    console.log('Rendering completed state with all groups');
     return (
       <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
         <NorthSortHeader remainingAttempts={remainingAttempts} />
