@@ -66,13 +66,25 @@ export function useCrosswordInput(answers: Record<string, string>) {
     const newValidatedCells: Record<string, boolean> = {};
     let incorrectCount = 0;
     let allCorrect = true;
+    let totalChecked = 0;
 
-    grid.forEach((row, rowIndex) => {
-      row.forEach((correctValue, colIndex) => {
-        if (!isValidCell(rowIndex, colIndex)) return;
-        
+    // Iterate through all cells in the grid
+    for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
+      for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
+        // Skip invalid cells (spaces in the grid)
+        if (!isValidCell(rowIndex, colIndex)) {
+          console.log(`Skipping invalid cell at ${rowIndex},${colIndex}`);
+          continue;
+        }
+
+        totalChecked++;
+        const correctValue = grid[rowIndex][colIndex];
         const clueNumber = getClueNumber(rowIndex, colIndex);
-        if (!clueNumber) return;
+        
+        if (!clueNumber) {
+          console.log(`No clue number for cell at ${rowIndex},${colIndex}`);
+          continue;
+        }
 
         const { acrossPos } = calculatePosition(rowIndex, colIndex, isValidCell);
         const acrossKey = `a${clueNumber}`;
@@ -82,11 +94,23 @@ export function useCrosswordInput(answers: Record<string, string>) {
         const isCorrect = userValue.toUpperCase() === correctValue.toUpperCase();
         newValidatedCells[cellKey] = isCorrect;
         
+        console.log(`Validating cell ${rowIndex},${colIndex}:`, {
+          userValue,
+          correctValue,
+          isCorrect
+        });
+
         if (!isCorrect) {
           incorrectCount++;
           allCorrect = false;
         }
-      });
+      }
+    }
+
+    console.log(`Validation complete:`, {
+      totalCellsChecked: totalChecked,
+      incorrectCount,
+      allCorrect
     });
 
     setValidatedCells(newValidatedCells);
