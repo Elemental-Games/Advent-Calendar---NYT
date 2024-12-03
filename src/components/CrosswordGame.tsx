@@ -177,6 +177,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
         elapsedTime={elapsedTime}
+        day={day}
       />
 
       <IncorrectDialog

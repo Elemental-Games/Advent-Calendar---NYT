@@ -6,25 +6,26 @@ interface CompletionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   elapsedTime: number;
+  day: number;
 }
 
-export function CompletionDialog({ open, onOpenChange, elapsedTime }: CompletionDialogProps) {
+export function CompletionDialog({ open, onOpenChange, elapsedTime, day }: CompletionDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md w-[90vw] mx-auto">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold text-green-700">
+          <DialogTitle className="text-center text-2xl font-bold text-blue-700">
             Congratulations! 🎄❄️
           </DialogTitle>
         </DialogHeader>
         <div className="text-center space-y-4">
           <p className="text-lg">
-            You completed the Mini FrostWord in {formatTime(elapsedTime)}! 🎅
+            You completed Day {day} in {formatTime(elapsedTime)}! 🎅
           </p>
           <p className="text-gray-600">
             Come back tomorrow for a new Christmas-themed challenge! ✨
           </p>
-          <Button onClick={() => onOpenChange(false)} className="bg-green-600 hover:bg-green-700">
+          <Button onClick={() => onOpenChange(false)} className="bg-blue-600 hover:bg-blue-700">
             Close
           </Button>
         </div>
