@@ -10,11 +10,12 @@ import { useCrosswordCellInput } from "@/hooks/useCrosswordCellInput";
 import { useClueManagement } from "@/hooks/useClueManagement";
 import { usePuzzleState } from "@/hooks/usePuzzleState";
 import { formatTime } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import type { CrosswordGameProps } from "./crossword/types";
 
 export function CrosswordGame({ across, down, answers, onComplete, day }: CrosswordGameProps) {
   const puzzleId = `crossword_${day}`;
-  const { puzzleState, savePuzzleState } = usePuzzleState(puzzleId);
+  const { puzzleState, savePuzzleState, resetPuzzle } = usePuzzleState(puzzleId);
 
   const {
     showStartDialog,
@@ -104,6 +105,13 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
     }
   };
 
+  const handleReset = () => {
+    resetPuzzle();
+    setGuesses({});
+    setSelectedCell(null);
+    window.location.reload();
+  };
+
   const currentClue = getCurrentClue();
 
   if (puzzleState.completed) {
@@ -112,6 +120,13 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         <div className="text-center space-y-4 mb-8">
           <h2 className="text-2xl font-bold text-green-600">Puzzle Completed!</h2>
           <p className="text-lg">Time: {formatTime(puzzleState.completionTime)}</p>
+          <Button 
+            onClick={handleReset}
+            variant="outline"
+            className="text-red-600 border-red-600 hover:bg-red-50"
+          >
+            Reset Puzzle
+          </Button>
         </div>
 
         <CrosswordLayout
