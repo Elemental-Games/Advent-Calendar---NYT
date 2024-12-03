@@ -34,30 +34,13 @@ export function GarlandGame({
   const [completionTime, setCompletionTime] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleWordFound = (foundWords: string[]) => {
-    const newWord = foundWords[foundWords.length - 1];
-    console.log('Word found:', newWord);
-    const wordIndex = words.indexOf(newWord);
-    setFoundWordsWithIndex(prev => [...prev, { word: newWord, index: wordIndex }]);
-    
-    if (newWord.toLowerCase() === themeWord.toLowerCase()) {
-      toast.success("You found the theme word!");
-    } else {
-      toast.success(`Found word: ${newWord}!`);
-    }
-
-    if (foundWordsWithIndex.length + 1 === words.length) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      setCompletionTime(elapsedTime);
-      setShowCompletionDialog(true);
-      onComplete?.();
-    }
-  };
-
   const { selectedCells, currentWord, handleCellMouseDown, handleCellMouseEnter, handleMouseUp } = 
-    useWordSelection(words, foundWordsWithIndex.map(fw => fw.word), handleWordFound, themeWord);
+    useWordSelection(
+      words, 
+      foundWordsWithIndex.map(fw => fw.word),
+      setFoundWordsWithIndex,
+      themeWord
+    );
 
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
 
@@ -73,6 +56,17 @@ export function GarlandGame({
       }
     };
   }, [isStarted]);
+
+  useEffect(() => {
+    if (foundWordsWithIndex.length === words.length) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      setCompletionTime(elapsedTime);
+      setShowCompletionDialog(true);
+      onComplete?.();
+    }
+  }, [foundWordsWithIndex, words.length, elapsedTime, onComplete]);
 
   const handleStartGame = () => {
     setIsStarted(true);

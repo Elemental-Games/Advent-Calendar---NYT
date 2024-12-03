@@ -1,41 +1,15 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
-// Word position mappings
-const WORD_POSITIONS = {
-  'santa': [71, 72, 73, 82, 81],
-  'cookies': [86, 85, 84, 75, 76, 65, 66],
-  'sleigh': [11, 12, 13, 23, 22, 21],
-  'mistletoe': [31, 32, 41, 42, 43, 52, 51, 61, 62],
-  'frost': [15, 16, 26, 25, 35],
-  'rudolph': [36, 46, 56, 45, 55, 54, 64],
-  'christmas': [83, 74, 63, 53, 44, 33, 34, 24, 14]
-};
-
-// Convert grid position (row, col) to position number
-const getPositionNumber = (row: number, col: number): number => {
-  return (row + 1) * 10 + (col + 1);
-};
-
-// Convert position number to grid position
-const getGridPosition = (pos: number): [number, number] => {
-  const row = Math.floor(pos / 10) - 1;
-  const col = (pos % 10) - 1;
-  return [row, col];
-};
-
 export function useWordSelection(
   words: string[],
   foundWords: string[],
-  setFoundWords: (words: string[]) => void,
-  themeWord: string,
-  onComplete?: () => void
+  setFoundWords: (words: Array<{word: string, index: number}>) => void,
+  themeWord: string
 ) {
   const [selectedCells, setSelectedCells] = useState<number[]>([]);
   const [currentWord, setCurrentWord] = useState<string>('');
   const [isDragging, setIsDragging] = useState(false);
-
-  const isWordFound = (word: string) => foundWords.includes(word);
 
   const getCurrentWord = (cells: number[]): string => {
     return cells.map(cell => {
@@ -46,11 +20,24 @@ export function useWordSelection(
   };
 
   const handleCellMouseDown = useCallback((rowIndex: number, colIndex: number) => {
-    console.log('Mouse down on cell:', rowIndex, colIndex);
-    setIsDragging(true);
-    setSelectedCells([rowIndex * 6 + colIndex]);
-    setCurrentWord(getCurrentWord([rowIndex * 6 + colIndex]));
-  }, []);
+    const cellIndex = rowIndex * 6 + colIndex;
+    const word = getCurrentWord([cellIndex]);
+    
+    // Check if the cell is part of an already found word
+    const isPartOfFoundWord = foundWords.some(foundWord => {
+      const wordPositions = WORD_POSITIONS[foundWord.toLowerCase()];
+      if (!wordPositions) return false;
+      
+      const pos = getPositionNumber(rowIndex, colIndex);
+      return wordPositions.includes(pos);
+    });
+
+    if (!isPartOfFoundWord) {
+      setIsDragging(true);
+      setSelectedCells([cellIndex]);
+      setCurrentWord(word);
+    }
+  }, [foundWords]);
 
   const handleCellMouseEnter = useCallback((rowIndex: number, colIndex: number) => {
     if (!isDragging) return;
@@ -58,6 +45,17 @@ export function useWordSelection(
     const newCell = rowIndex * 6 + colIndex;
     const lastCell = selectedCells[selectedCells.length - 1];
     
+    // Check if the cell is part of an already found word
+    const isPartOfFoundWord = foundWords.some(foundWord => {
+      const wordPositions = WORD_POSITIONS[foundWord.toLowerCase()];
+      if (!wordPositions) return false;
+      
+      const pos = getPositionNumber(rowIndex, colIndex);
+      return wordPositions.includes(pos);
+    });
+
+    if (isPartOfFoundWord) return;
+
     if (selectedCells.includes(newCell)) {
       const index = selectedCells.indexOf(newCell);
       const newSelectedCells = selectedCells.slice(0, index + 1);
@@ -75,7 +73,7 @@ export function useWordSelection(
       setSelectedCells(newSelectedCells);
       setCurrentWord(getCurrentWord(newSelectedCells));
     }
-  }, [isDragging, selectedCells]);
+  }, [isDragging, selectedCells, foundWords]);
 
   const checkWordValidity = useCallback(() => {
     if (!isDragging || currentWord.length < 3) return false;
@@ -86,55 +84,39 @@ export function useWordSelection(
       return getPositionNumber(row, col);
     });
 
-    console.log('Checking word:', currentWord, 'positions:', selectedPositions);
-    console.log('Already found words:', foundWords);
+    const wordEntry = Object.entries(WORD_POSITIONS).find(([word, positions]) => 
+      selectedPositions.length === positions.length &&
+      selectedPositions.every((pos, index) => pos === positions[index])
+    );
 
-    const isValidWord = Object.entries(WORD_POSITIONS).some(([validWord, positions]) => {
-      if (selectedPositions.length === positions.length) {
-        const matches = selectedPositions.every((pos, index) => pos === positions[index]);
-        return matches && !foundWords.includes(validWord.toUpperCase());
-      }
-      return false;
-    });
+    if (wordEntry && !foundWords.includes(wordEntry[0])) {
+      return { valid: true, word: wordEntry[0], index: words.indexOf(wordEntry[0]) };
+    }
 
-    return isValidWord;
-  }, [isDragging, currentWord, selectedCells, foundWords]);
+    return { valid: false };
+  }, [isDragging, currentWord, selectedCells, foundWords, words]);
 
   const handleMouseUp = useCallback(() => {
     if (!isDragging) return;
     
     setIsDragging(false);
-    const word = currentWord;
     
-    if (word.length < 3) {
+    if (currentWord.length < 3) {
       setSelectedCells([]);
       setCurrentWord('');
       return;
     }
 
-    if (checkWordValidity()) {
-      const newFoundWords = [...foundWords, word];
-      setFoundWords(newFoundWords);
-      
-      if (word.toLowerCase() === themeWord.toLowerCase()) {
-        toast.success("Congratulations! You found the theme word!");
-      } else {
-        toast.success(`Found word: ${word}!`);
-      }
-
-      if (newFoundWords.length === words.length) {
-        setTimeout(() => {
-          toast.success('Congratulations! You found all the words!');
-          onComplete?.();
-        }, 500);
-      }
-    } else if (word.length >= 3) {
+    const result = checkWordValidity();
+    if (result.valid && typeof result.index === 'number') {
+      setFoundWords([...foundWords.map(w => typeof w === 'string' ? { word: w, index: words.indexOf(w) } : w), { word: result.word, index: result.index }]);
+    } else if (currentWord.length >= 3) {
       toast.error("That's not a valid word pattern!");
     }
     
     setSelectedCells([]);
     setCurrentWord('');
-  }, [isDragging, currentWord, words, foundWords, themeWord, onComplete, checkWordValidity, setFoundWords]);
+  }, [isDragging, currentWord, words, foundWords, setFoundWords, checkWordValidity]);
 
   return {
     selectedCells,
@@ -145,7 +127,6 @@ export function useWordSelection(
   };
 }
 
-// Define the grid as a constant since it's static
 const grid = [
   ['S', 'L', 'E', 'S', 'F', 'R'],
   ['H', 'G', 'I', 'A', 'S', 'O'],
@@ -156,3 +137,17 @@ const grid = [
   ['S', 'A', 'N', 'H', 'K', 'I'],
   ['A', 'T', 'C', 'O', 'O', 'C'],
 ];
+
+const WORD_POSITIONS = {
+  'santa': [71, 72, 73, 82, 81],
+  'cookies': [86, 85, 84, 75, 76, 65, 66],
+  'sleigh': [11, 12, 13, 23, 22, 21],
+  'mistletoe': [31, 32, 41, 42, 43, 52, 51, 61, 62],
+  'frost': [15, 16, 26, 25, 35],
+  'rudolph': [36, 46, 56, 45, 55, 54, 64],
+  'christmas': [83, 74, 63, 53, 44, 33, 34, 24, 14]
+};
+
+const getPositionNumber = (row: number, col: number): number => {
+  return (row + 1) * 10 + (col + 1);
+};
