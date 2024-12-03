@@ -11,6 +11,13 @@ interface WordleGameProps {
   onComplete?: () => void;
 }
 
+interface WordleState {
+  guesses: string[];
+  completed: boolean;
+  isWinner: boolean;
+  completionTime: number;
+}
+
 export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState("");
@@ -23,6 +30,31 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
 
   const WORD_LENGTH = 5;
   const MAX_GUESSES = 6;
+
+  // Load saved state on mount
+  useEffect(() => {
+    const savedState = localStorage.getItem('wordle_state');
+    if (savedState) {
+      const state: WordleState = JSON.parse(savedState);
+      setGuesses(state.guesses);
+      setGameOver(state.completed);
+      setIsWinner(state.isWinner);
+      setElapsedTime(state.completionTime);
+    }
+  }, []);
+
+  // Save state when game is completed
+  useEffect(() => {
+    if (gameOver) {
+      const state: WordleState = {
+        guesses,
+        completed: true,
+        isWinner,
+        completionTime: elapsedTime
+      };
+      localStorage.setItem('wordle_state', JSON.stringify(state));
+    }
+  }, [gameOver, guesses, isWinner, elapsedTime]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -114,7 +146,6 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           <WordleInput 
             currentGuess={currentGuess}
             onInput={handleInput}
-            disabled={gameOver}
           />
         </div>
 
@@ -146,10 +177,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-lg">
-              You've completed Day 1 in {formatTime(elapsedTime)}!
+              You've completed Day 1 in {formatTime(elapsedTime)}! ⭐
             </p>
             <p className="text-gray-600">
-              Come back tomorrow for a new Christmas-themed challenge.
+              Come back tomorrow for a new Christmas-themed challenge! ✨
             </p>
           </div>
         </DialogContent>
