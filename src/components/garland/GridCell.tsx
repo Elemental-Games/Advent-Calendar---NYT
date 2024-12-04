@@ -1,8 +1,6 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useGridCellStyles } from '@/hooks/useGridCellStyles';
-import { useGridCellTouch } from '@/hooks/useGridCellTouch';
 
 interface GridCellProps {
   letter: string;
@@ -27,14 +25,77 @@ export const GridCell = memo(function GridCell({
   onMouseUp,
   position,
 }: GridCellProps) {
-  const { getBaseStyles } = useGridCellStyles();
-  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useGridCellTouch({
-    isFound,
-    position,
-    onMouseDown,
-    onMouseEnter,
-    onMouseUp
-  });
+  const [isDragging, setIsDragging] = useState(false);
+  const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);
+
+  const getBaseStyles = useCallback(() => {
+    if (isFound && isThemeWord) {
+      return 'bg-green-500 text-white border-2 border-red-500';
+    }
+    
+    if (isFound) {
+      const baseStyle = 'text-white border-2 border-black';
+      switch(foundWordIndex) {
+        case 0: return `bg-red-500 ${baseStyle}`;
+        case 1: return `bg-blue-500 ${baseStyle}`;
+        case 2: return `bg-yellow-500 ${baseStyle}`;
+        case 3: return `bg-purple-500 ${baseStyle}`;
+        case 4: return `bg-indigo-500 ${baseStyle}`;
+        case 5: return `bg-orange-500 ${baseStyle}`;
+        default: return `bg-green-500 ${baseStyle}`;
+      }
+    }
+
+    if (isSelected) {
+      return 'bg-orange-500 text-white border-2 border-black';
+    }
+
+    return cn(
+      'bg-white text-gray-900 border-2 border-gray-200',
+      'hover:text-white active:text-white',
+      'hover:bg-blue-500'
+    );
+  }, [isFound, isThemeWord, isSelected, foundWordIndex]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isFound) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const touch = e.touches[0];
+    setTouchStartPos({ x: touch.clientX, y: touch.clientY });
+    setIsDragging(true);
+    onMouseDown();
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || isFound) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
+    
+    if (element?.dataset?.cellIndex) {
+      const targetIndex = parseInt(element.dataset.cellIndex);
+      if (targetIndex !== position) {
+        onMouseEnter();
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (isFound) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsDragging(false);
+    setTouchStartPos(null);
+    onMouseUp();
+  };
 
   return (
     <motion.div
@@ -50,7 +111,7 @@ export const GridCell = memo(function GridCell({
           "flex items-center justify-center",
           "transition-all duration-200 shadow-lg",
           "touch-none select-none",
-          getBaseStyles(isFound, isThemeWord, isSelected, foundWordIndex)
+          getBaseStyles()
         )}
         style={{ touchAction: 'none' }}
         onMouseDown={!isFound ? onMouseDown : undefined}
