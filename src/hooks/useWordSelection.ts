@@ -26,6 +26,15 @@ const getPositionNumber = (row: number, col: number): number => {
   return (row + 1) * 10 + (col + 1);
 };
 
+const isAdjacent = (cell1: number, cell2: number): boolean => {
+  const row1 = Math.floor(cell1 / 6);
+  const col1 = cell1 % 6;
+  const row2 = Math.floor(cell2 / 6);
+  const col2 = cell2 % 6;
+  
+  return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
+};
+
 export function useWordSelection(
   words: string[],
   foundWords: Array<{word: string, index: number}>,
@@ -38,25 +47,12 @@ export function useWordSelection(
   console.log('useWordSelection - Initial render with words:', words);
   console.log('useWordSelection - Found words:', foundWords);
 
-  const isAdjacent = (existingCell: number, newCell: number) => {
-    const existingRow = Math.floor(existingCell / 6);
-    const existingCol = existingCell % 6;
-    const newRow = Math.floor(newCell / 6);
-    const newCol = newCell % 6;
-    
-    const isAdjacent = Math.abs(existingRow - newRow) <= 1 && Math.abs(existingCol - newCol) <= 1;
-    console.log(`Checking adjacency: (${existingRow},${existingCol}) to (${newRow},${newCol}) = ${isAdjacent}`);
-    return isAdjacent;
-  };
-
   const handleCellClick = useCallback((rowIndex: number, colIndex: number) => {
     console.log(`Cell clicked at (${rowIndex},${colIndex})`);
-    
     const cellIndex = rowIndex * 6 + colIndex;
-    console.log('Current selected cells:', selectedCells);
 
     setSelectedCells(prev => {
-      // If this is the first cell
+      // If this is the first cell or no cells are selected
       if (prev.length === 0) {
         console.log('First cell selected');
         const newWord = grid[rowIndex][colIndex];
@@ -64,24 +60,24 @@ export function useWordSelection(
         return [cellIndex];
       }
 
-      // If clicking the last selected cell, remove it
-      if (cellIndex === prev[prev.length - 1]) {
-        console.log('Removing last selected cell');
-        const newCells = prev.slice(0, -1);
-        const newWord = newCells.map(cell => {
-          const r = Math.floor(cell / 6);
-          const c = cell % 6;
-          return grid[r][c];
-        }).join('');
-        setCurrentWord(newWord);
-        return newCells;
-      }
-
-      // If clicking a previously selected cell, trim back to that point
-      const existingIndex = prev.indexOf(cellIndex);
-      if (existingIndex !== -1) {
+      // If clicking an already selected cell
+      if (prev.includes(cellIndex)) {
+        // If it's the last cell in the selection, remove it
+        if (cellIndex === prev[prev.length - 1]) {
+          console.log('Removing last selected cell');
+          const newCells = prev.slice(0, -1);
+          const newWord = newCells.map(cell => {
+            const r = Math.floor(cell / 6);
+            const c = cell % 6;
+            return grid[r][c];
+          }).join('');
+          setCurrentWord(newWord);
+          return newCells;
+        }
+        // If it's in the middle of the selection, trim back to that point
+        const index = prev.indexOf(cellIndex);
         console.log('Trimming back to previously selected cell');
-        const newCells = prev.slice(0, existingIndex + 1);
+        const newCells = prev.slice(0, index + 1);
         const newWord = newCells.map(cell => {
           const r = Math.floor(cell / 6);
           const c = cell % 6;
@@ -107,7 +103,7 @@ export function useWordSelection(
       console.log('Cell not adjacent, keeping current selection');
       return prev;
     });
-  }, [selectedCells]);
+  }, []);
 
   const handleSubmit = useCallback(() => {
     console.log('Submitting word:', currentWord);

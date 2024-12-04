@@ -37,9 +37,7 @@ export function GameGrid({
                 isFound={found}
                 foundWordIndex={wordIndex}
                 isThemeWord={isThemeWordCell}
-                onMouseDown={() => onCellClick(rowIndex, colIndex)}
-                onMouseEnter={() => onCellClick(rowIndex, colIndex)}
-                onMouseUp={() => onCellClick(rowIndex, colIndex)}
+                onCellClick={() => onCellClick(rowIndex, colIndex)}
                 position={cellIndex}
               />
             );

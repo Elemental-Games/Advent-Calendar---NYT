@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
-import { useTouchHandling } from '@/hooks/useTouchHandling';
 import { useCellStyles } from '@/hooks/useCellStyles';
 
 interface GridCellProps {
@@ -9,9 +8,7 @@ interface GridCellProps {
   isFound: boolean;
   foundWordIndex: number;
   isThemeWord: boolean;
-  onMouseDown: () => void;
-  onMouseEnter: () => void;
-  onMouseUp: () => void;
+  onCellClick: () => void;
   position: number;
 }
 
@@ -21,23 +18,9 @@ export const GridCell = memo(function GridCell({
   isFound,
   foundWordIndex,
   isThemeWord,
-  onMouseDown,
-  onMouseEnter,
-  onMouseUp,
+  onCellClick,
   position,
 }: GridCellProps) {
-  const {
-    handleTouchStart,
-    handleTouchMove,
-    handleTouchEnd
-  } = useTouchHandling({
-    isFound,
-    position,
-    onMouseDown,
-    onMouseEnter,
-    onMouseUp
-  });
-
   const baseStyles = useCellStyles({
     isFound,
     isThemeWord,
@@ -50,7 +33,6 @@ export const GridCell = memo(function GridCell({
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
       className="touch-none select-none"
-      style={{ touchAction: 'none' }}
     >
       <button
         data-cell-index={position}
@@ -59,14 +41,7 @@ export const GridCell = memo(function GridCell({
           transition-all duration-200 shadow-lg
           touch-none select-none
           ${baseStyles}`}
-        style={{ touchAction: 'none' }}
-        onMouseDown={!isFound ? onMouseDown : undefined}
-        onMouseEnter={!isFound ? onMouseEnter : undefined}
-        onMouseUp={!isFound ? onMouseUp : undefined}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchEnd}
+        onClick={!isFound ? onCellClick : undefined}
       >
         {letter}
       </button>
