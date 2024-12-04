@@ -25,7 +25,7 @@ export function GameGrid({
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-2">
           {row.map((letter, colIndex) => {
-            const { found, wordIndex, isThemeWord: isThemeWordCell } = isLetterInFoundWord(rowIndex, colIndex);
+            const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
             const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
             const cellIndex = rowIndex * 6 + colIndex;
             
@@ -36,8 +36,10 @@ export function GameGrid({
                 isSelected={isSelected}
                 isFound={found}
                 foundWordIndex={wordIndex}
-                isThemeWord={isThemeWordCell}
-                onCellClick={() => onCellClick(rowIndex, colIndex)}
+                isThemeWord={isThemeWord}
+                onMouseDown={() => onCellClick(rowIndex, colIndex)}
+                onMouseEnter={() => onCellClick(rowIndex, colIndex)}
+                onMouseUp={() => onCellClick(rowIndex, colIndex)}
                 position={cellIndex}
               />
             );
