@@ -122,6 +122,7 @@ export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
       <WordleInput 
         currentGuess={currentGuess}
         onInput={setCurrentGuess}
+        isGameOver={isGameOver}
       />
       <WordleKeyboard
         onKeyPress={handleKeyPress}
