@@ -1,5 +1,6 @@
 import React from 'react';
 import { GridCell } from './GridCell';
+import { ConnectionLines } from './ConnectionLines';
 
 interface GameGridProps {
   grid: string[][];
@@ -31,9 +32,9 @@ export function GameGrid({
   };
 
   return (
-    <div className="grid gap-2 relative select-none">
+    <div className="grid gap-1 md:gap-2 relative select-none max-w-[360px] mx-auto">
       {grid.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex gap-2">
+        <div key={rowIndex} className="flex gap-1 md:gap-2 justify-center">
           {row.map((letter, colIndex) => {
             const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
             const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
@@ -54,6 +55,7 @@ export function GameGrid({
           })}
         </div>
       ))}
+      <ConnectionLines selectedCells={selectedCells} gridWidth={6} />
     </div>
   );
 }

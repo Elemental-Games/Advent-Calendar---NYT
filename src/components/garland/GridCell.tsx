@@ -24,19 +24,18 @@ export const GridCell = memo(function GridCell({
   console.log(`GridCell rendering - letter: ${letter}, isFound: ${isFound}, foundWordIndex: ${foundWordIndex}`);
 
   const getBaseStyles = () => {
-    // Found words get green fill and red border
     if (isFound) {
       return cn(
-        'bg-green-500',      // Green background
-        'text-white',        // White text for better contrast
-        'border-2',          // Border width
-        'border-red-500',    // Red border
-        'cursor-not-allowed',// Not clickable cursor
-        'pointer-events-none'// Disable all pointer interactions
+        'bg-green-500',
+        'text-red-500 font-bold',
+        'border-2',
+        'border-red-500',
+        'cursor-not-allowed',
+        'pointer-events-none',
+        'opacity-90'
       );
     }
 
-    // Selected state - only if not found
     if (isSelected && !isFound) {
       const colors = [
         'bg-red-500',
@@ -49,7 +48,6 @@ export const GridCell = memo(function GridCell({
       return `${selectedColor} text-white border-2 border-black`;
     }
 
-    // Default state with hover - only if not found
     const hoverColors = [
       'hover:bg-red-500',
       'hover:bg-blue-500',
@@ -60,10 +58,12 @@ export const GridCell = memo(function GridCell({
     const hoverColor = hoverColors[position % hoverColors.length];
     
     return cn(
-      'bg-white text-gray-900 border-2 border-gray-200',
+      'bg-white text-gray-900',
+      'border-2 border-gray-200',
       'hover:text-white active:text-white',
       hoverColor,
-      'cursor-pointer'
+      'cursor-pointer',
+      'active:scale-95 transition-transform'
     );
   };
 
@@ -72,19 +72,20 @@ export const GridCell = memo(function GridCell({
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
       className="touch-none select-none"
-      style={{ touchAction: 'none' }}
     >
       <button
         data-cell-index={position}
         data-letter={letter}
         className={cn(
-          "w-10 h-10 rounded-full font-bold text-lg",
+          "w-8 h-8 md:w-10 md:h-10",
+          "rounded-full font-bold",
+          "text-base md:text-lg",
           "flex items-center justify-center",
-          "transition-all duration-200 shadow-lg",
+          "transition-all duration-200",
+          "shadow-md hover:shadow-lg",
           "touch-none select-none",
           getBaseStyles()
         )}
-        style={{ touchAction: 'none' }}
         onClick={!isFound ? onClick : undefined}
         disabled={isFound}
         aria-disabled={isFound}
