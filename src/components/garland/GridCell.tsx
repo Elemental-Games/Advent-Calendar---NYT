@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useTouchHandling } from '@/hooks/useTouchHandling';
 
 interface GridCellProps {
   letter: string;
@@ -25,29 +26,29 @@ export const GridCell = memo(function GridCell({
   onMouseUp,
   position,
 }: GridCellProps) {
-  console.log(`GridCell rendering - letter: ${letter}, isFound: ${isFound}, foundWordIndex: ${foundWordIndex}`);
+  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useTouchHandling({
+    isFound,
+    position,
+    onMouseDown,
+    onMouseEnter,
+    onMouseUp
+  });
 
   const getBaseStyles = () => {
+    // Found letters get a darker appearance
     if (isFound) {
-      const foundColors = [
-        'bg-red-500',
-        'bg-blue-500',
-        'bg-green-500',
-        'bg-yellow-500',
-        'bg-purple-500'
-      ];
-      const foundColor = foundColors[foundWordIndex % foundColors.length];
       return cn(
-        foundColor,
-        'text-white font-bold',
+        'bg-slate-700',      // Dark background
+        'text-slate-300',    // Light gray text for subtle contrast
         'border-2',
-        'border-white',
+        'border-slate-600',  // Slightly lighter border
         'cursor-not-allowed',
         'pointer-events-none',
         'opacity-90'
       );
     }
 
+    // Selected state - only if not found
     if (isSelected && !isFound) {
       const colors = [
         'bg-red-500',
@@ -60,23 +61,25 @@ export const GridCell = memo(function GridCell({
       return `${selectedColor} text-white border-2 border-black`;
     }
 
-    const hoverColors = [
-      'hover:bg-red-500',
-      'hover:bg-blue-500',
-      'hover:bg-green-500',
-      'hover:bg-yellow-500',
-      'hover:bg-purple-500'
-    ];
-    const hoverColor = hoverColors[position % hoverColors.length];
-    
-    return cn(
-      'bg-white text-gray-900',
-      'border-2 border-gray-200',
-      'hover:text-white active:text-white',
-      hoverColor,
-      'cursor-pointer',
-      'active:scale-95 transition-transform'
-    );
+    // Default state with hover - only if not found
+    if (!isFound) {
+      const hoverColors = [
+        'hover:bg-red-500',
+        'hover:bg-blue-500',
+        'hover:bg-green-500',
+        'hover:bg-yellow-500',
+        'hover:bg-purple-500'
+      ];
+      const hoverColor = hoverColors[position % hoverColors.length];
+      
+      return cn(
+        'bg-white text-gray-900 border-2 border-gray-200',
+        'hover:text-white active:text-white',
+        hoverColor
+      );
+    }
+
+    return ''; // Fallback empty string for TypeScript
   };
 
   return (
@@ -84,6 +87,7 @@ export const GridCell = memo(function GridCell({
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
       className="touch-none select-none"
+      style={{ touchAction: 'none' }}
     >
       <button
         data-cell-index={position}
@@ -98,6 +102,7 @@ export const GridCell = memo(function GridCell({
           "touch-none select-none",
           getBaseStyles()
         )}
+        style={{ touchAction: 'none' }}
         onClick={!isFound ? onMouseDown : undefined}
         disabled={isFound}
         aria-disabled={isFound}
