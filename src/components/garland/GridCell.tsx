@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -26,9 +26,8 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const [isDragging, setIsDragging] = useState(false);
-  const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);
 
-  const getBaseStyles = useCallback(() => {
+  const getBaseStyles = () => {
     if (isFound && isThemeWord) {
       return 'bg-green-500 text-white border-2 border-red-500';
     }
@@ -55,7 +54,7 @@ export const GridCell = memo(function GridCell({
       'hover:text-white active:text-white',
       'hover:bg-blue-500'
     );
-  }, [isFound, isThemeWord, isSelected, foundWordIndex]);
+  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (isFound) return;
@@ -63,8 +62,6 @@ export const GridCell = memo(function GridCell({
     e.preventDefault();
     e.stopPropagation();
     
-    const touch = e.touches[0];
-    setTouchStartPos({ x: touch.clientX, y: touch.clientY });
     setIsDragging(true);
     onMouseDown();
   };
@@ -76,10 +73,19 @@ export const GridCell = memo(function GridCell({
     e.stopPropagation();
 
     const touch = e.touches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
+    // Get all elements at the touch point
+    const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
     
-    if (element?.dataset?.cellIndex) {
-      const targetIndex = parseInt(element.dataset.cellIndex);
+    // Find the first button element with a cell-index
+    const targetElement = elements.find(el => 
+      el instanceof HTMLElement && 
+      el.tagName.toLowerCase() === 'button' && 
+      el.dataset.cellIndex !== undefined
+    ) as HTMLElement | undefined;
+    
+    if (targetElement?.dataset?.cellIndex) {
+      const targetIndex = parseInt(targetElement.dataset.cellIndex);
+      console.log('Touch move target index:', targetIndex, 'current position:', position);
       if (targetIndex !== position) {
         onMouseEnter();
       }
@@ -93,7 +99,6 @@ export const GridCell = memo(function GridCell({
     e.stopPropagation();
     
     setIsDragging(false);
-    setTouchStartPos(null);
     onMouseUp();
   };
 
