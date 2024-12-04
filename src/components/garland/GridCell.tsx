@@ -37,9 +37,16 @@ export const GridCell = memo(function GridCell({
   });
 
   const getBaseStyles = () => {
-    // All found words (including theme word) get green fill and red border
+    // All found words get green fill and red border
     if (isFound) {
-      return 'bg-green-500 text-red-500 border-2 border-red-500 cursor-not-allowed';
+      return cn(
+        'bg-green-500',      // Green background
+        'text-white',        // White text
+        'border-2',         // 2px border
+        'border-red-500',   // Red border
+        'cursor-not-allowed', // Not clickable cursor
+        'opacity-90'        // Slightly transparent to distinguish from selection
+      );
     }
 
     // Selected state

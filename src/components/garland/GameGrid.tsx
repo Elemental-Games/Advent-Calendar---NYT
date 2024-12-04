@@ -20,7 +20,7 @@ export function GameGrid({
 }: GameGridProps) {
   console.log('GameGrid rendering with selectedCells:', selectedCells);
   
-  const handleMouseDown = (rowIndex: number, colIndex: number) => {
+  const handleCellClick = (rowIndex: number, colIndex: number) => {
     console.log('Cell clicked at:', rowIndex, colIndex);
     onCellClick(rowIndex, colIndex);
   };
@@ -42,7 +42,7 @@ export function GameGrid({
                 isFound={found}
                 foundWordIndex={wordIndex}
                 isThemeWord={isThemeWord}
-                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                onMouseDown={() => handleCellClick(rowIndex, colIndex)}
                 onMouseEnter={() => {}}
                 onMouseUp={() => {}}
                 position={cellIndex}
