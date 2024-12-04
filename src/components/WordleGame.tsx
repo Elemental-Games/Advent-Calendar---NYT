@@ -3,6 +3,7 @@ import { WordleBoard } from './wordle/WordleBoard';
 import { WordleInput } from './wordle/WordleInput';
 import { WordleKeyboard } from './wordle/WordleKeyboard';
 import { WordleCompletionDialog } from './wordle/WordleCompletionDialog';
+import { Button } from './ui/button';
 import { toast } from 'sonner';
 
 interface WordleGameProps {
@@ -93,8 +94,16 @@ export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
     }
   };
 
-  // We'll remove the window keydown event listener since WordleInput handles keyboard events
-  // This prevents double input registration
+  const handleReset = () => {
+    console.log('Resetting Kringle puzzle for day:', day);
+    localStorage.removeItem(`kringle_${day}`);
+    setGuesses([]);
+    setCurrentGuess('');
+    setIsGameOver(false);
+    setActiveCell(0);
+    setShowCompletionDialog(false);
+    toast.success('Puzzle reset successfully!');
+  };
 
   return (
     <div className="flex flex-col items-center space-y-8 p-4">
@@ -118,6 +127,15 @@ export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
         onEnter={handleEnter}
         usedLetters={usedLetters}
       />
+      {isGameOver && (
+        <Button 
+          onClick={handleReset}
+          variant="outline"
+          className="mt-4 text-red-600 border-red-600 hover:bg-red-50"
+        >
+          Reset Puzzle
+        </Button>
+      )}
       <WordleCompletionDialog
         open={showCompletionDialog}
         onOpenChange={setShowCompletionDialog}
