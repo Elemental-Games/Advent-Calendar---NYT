@@ -22,7 +22,12 @@ export function GameGrid({
   
   const handleCellClick = (rowIndex: number, colIndex: number) => {
     console.log('Cell clicked at:', rowIndex, colIndex);
-    onCellClick(rowIndex, colIndex);
+    const { found } = isLetterInFoundWord(rowIndex, colIndex);
+    if (!found) {
+      onCellClick(rowIndex, colIndex);
+    } else {
+      console.log('Ignoring click on found letter');
+    }
   };
 
   return (
@@ -42,9 +47,7 @@ export function GameGrid({
                 isFound={found}
                 foundWordIndex={wordIndex}
                 isThemeWord={isThemeWord}
-                onMouseDown={() => handleCellClick(rowIndex, colIndex)}
-                onMouseEnter={() => {}}
-                onMouseUp={() => {}}
+                onClick={() => handleCellClick(rowIndex, colIndex)}
                 position={cellIndex}
               />
             );

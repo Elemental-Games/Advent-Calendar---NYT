@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useTouchHandling } from '@/hooks/useTouchHandling';
 
 interface GridCellProps {
   letter: string;
@@ -9,9 +8,7 @@ interface GridCellProps {
   isFound: boolean;
   foundWordIndex: number;
   isThemeWord: boolean;
-  onMouseDown: () => void;
-  onMouseEnter: () => void;
-  onMouseUp: () => void;
+  onClick: () => void;
   position: number;
 }
 
@@ -21,36 +18,26 @@ export const GridCell = memo(function GridCell({
   isFound,
   foundWordIndex,
   isThemeWord,
-  onMouseDown,
-  onMouseEnter,
-  onMouseUp,
+  onClick,
   position,
 }: GridCellProps) {
   console.log(`GridCell rendering - letter: ${letter}, isFound: ${isFound}, foundWordIndex: ${foundWordIndex}`);
-  
-  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useTouchHandling({
-    isFound,
-    position,
-    onMouseDown,
-    onMouseEnter,
-    onMouseUp
-  });
 
   const getBaseStyles = () => {
-    // All found words get green fill and red border
+    // Found words get green fill and red border
     if (isFound) {
       return cn(
         'bg-green-500',      // Green background
-        'text-white',        // White text
-        'border-2',         // 2px border
-        'border-red-500',   // Red border
-        'cursor-not-allowed', // Not clickable cursor
-        'opacity-90'        // Slightly transparent to distinguish from selection
+        'text-white',        // White text for better contrast
+        'border-2',          // Border width
+        'border-red-500',    // Red border
+        'cursor-not-allowed',// Not clickable cursor
+        'pointer-events-none'// Disable all pointer interactions
       );
     }
 
-    // Selected state
-    if (isSelected) {
+    // Selected state - only if not found
+    if (isSelected && !isFound) {
       const colors = [
         'bg-red-500',
         'bg-blue-500',
@@ -62,7 +49,7 @@ export const GridCell = memo(function GridCell({
       return `${selectedColor} text-white border-2 border-black`;
     }
 
-    // Default state with hover
+    // Default state with hover - only if not found
     const hoverColors = [
       'hover:bg-red-500',
       'hover:bg-blue-500',
@@ -75,7 +62,8 @@ export const GridCell = memo(function GridCell({
     return cn(
       'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
-      hoverColor
+      hoverColor,
+      'cursor-pointer'
     );
   };
 
@@ -97,8 +85,9 @@ export const GridCell = memo(function GridCell({
           getBaseStyles()
         )}
         style={{ touchAction: 'none' }}
-        onClick={!isFound ? onMouseDown : undefined}
+        onClick={!isFound ? onClick : undefined}
         disabled={isFound}
+        aria-disabled={isFound}
       >
         {letter}
       </button>
