@@ -15,21 +15,8 @@ export function useCellStyles({
   foundWordIndex
 }: CellStylesProps) {
   const baseStyles = useMemo(() => {
-    if (isFound && isThemeWord) {
-      return 'bg-green-500 text-white border-2 border-red-500';
-    }
-    
     if (isFound) {
-      const baseStyle = 'text-white border-2 border-black';
-      switch(foundWordIndex) {
-        case 0: return `bg-red-500 ${baseStyle}`;
-        case 1: return `bg-blue-500 ${baseStyle}`;
-        case 2: return `bg-yellow-500 ${baseStyle}`;
-        case 3: return `bg-purple-500 ${baseStyle}`;
-        case 4: return `bg-indigo-500 ${baseStyle}`;
-        case 5: return `bg-orange-500 ${baseStyle}`;
-        default: return `bg-green-500 ${baseStyle}`;
-      }
+      return 'bg-green-500 text-red-500 border-2 border-red-500';
     }
 
     if (isSelected) {
