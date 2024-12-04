@@ -93,22 +93,8 @@ export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (isGameOver) return;
-      
-      if (e.key === 'Enter') {
-        handleEnter();
-      } else if (e.key === 'Backspace') {
-        handleBackspace();
-      } else if (/^[A-Za-z]$/.test(e.key)) {
-        handleKeyPress(e.key.toUpperCase());
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentGuess, guesses, isGameOver]);
+  // We'll remove the window keydown event listener since WordleInput handles keyboard events
+  // This prevents double input registration
 
   return (
     <div className="flex flex-col items-center space-y-8 p-4">
@@ -123,6 +109,8 @@ export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
         currentGuess={currentGuess}
         onInput={setCurrentGuess}
         isGameOver={isGameOver}
+        onEnter={handleEnter}
+        onBackspace={handleBackspace}
       />
       <WordleKeyboard
         onKeyPress={handleKeyPress}
