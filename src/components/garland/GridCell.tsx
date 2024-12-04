@@ -39,7 +39,7 @@ export const GridCell = memo(function GridCell({
   const getBaseStyles = () => {
     // All found words (including theme word) get green fill and red border
     if (isFound) {
-      return 'bg-green-500 text-white border-2 border-red-500 cursor-not-allowed';
+      return 'bg-green-500 text-red-500 border-2 border-red-500 cursor-not-allowed';
     }
 
     // Selected state
@@ -90,13 +90,8 @@ export const GridCell = memo(function GridCell({
           getBaseStyles()
         )}
         style={{ touchAction: 'none' }}
-        onMouseDown={!isFound ? onMouseDown : undefined}
-        onMouseEnter={!isFound ? onMouseEnter : undefined}
-        onMouseUp={!isFound ? onMouseUp : undefined}
-        onTouchStart={!isFound ? handleTouchStart : undefined}
-        onTouchMove={!isFound ? handleTouchMove : undefined}
-        onTouchEnd={!isFound ? handleTouchEnd : undefined}
-        onTouchCancel={!isFound ? handleTouchEnd : undefined}
+        onClick={!isFound ? onMouseDown : undefined}
+        disabled={isFound}
       >
         {letter}
       </button>

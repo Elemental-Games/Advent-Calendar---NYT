@@ -20,6 +20,11 @@ export function GameGrid({
 }: GameGridProps) {
   console.log('GameGrid rendering with selectedCells:', selectedCells);
   
+  const handleMouseDown = (rowIndex: number, colIndex: number) => {
+    console.log('Cell clicked at:', rowIndex, colIndex);
+    onCellClick(rowIndex, colIndex);
+  };
+
   return (
     <div className="grid gap-2 relative select-none">
       {grid.map((row, rowIndex) => (
@@ -37,9 +42,9 @@ export function GameGrid({
                 isFound={found}
                 foundWordIndex={wordIndex}
                 isThemeWord={isThemeWord}
-                onMouseDown={() => onCellClick(rowIndex, colIndex)}
-                onMouseEnter={() => onCellClick(rowIndex, colIndex)}
-                onMouseUp={() => onCellClick(rowIndex, colIndex)}
+                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                onMouseEnter={() => {}}
+                onMouseUp={() => {}}
                 position={cellIndex}
               />
             );
