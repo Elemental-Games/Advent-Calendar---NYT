@@ -29,10 +29,16 @@ export function GameGrid({
   handleMouseUp,
   isLetterInFoundWord
 }: GameGridProps) {
+  const preventScroll = (e: React.TouchEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <div 
       className="grid gap-2 relative touch-none select-none"
       style={{ touchAction: 'none' }}
+      onTouchStart={preventScroll}
+      onTouchMove={preventScroll}
       onMouseUp={handleMouseUp}
       onTouchEnd={handleMouseUp}
       onTouchCancel={handleMouseUp}
@@ -40,7 +46,7 @@ export function GameGrid({
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-2">
           {row.map((letter, colIndex) => {
-            const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
+            const { found, wordIndex, isThemeWord: isThemeWordCell } = isLetterInFoundWord(rowIndex, colIndex);
             const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
             const cellIndex = rowIndex * 6 + colIndex;
             
@@ -51,7 +57,7 @@ export function GameGrid({
                 isSelected={isSelected}
                 isFound={found}
                 foundWordIndex={wordIndex}
-                isThemeWord={isThemeWord}
+                isThemeWord={isThemeWordCell}
                 onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                 onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
                 onMouseUp={handleMouseUp}

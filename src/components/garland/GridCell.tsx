@@ -12,6 +12,7 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { generateUniqueColors } from '@/lib/garland-constants';
 
 interface GridCellProps {
   letter: string;
@@ -57,14 +58,27 @@ export const GridCell = memo(function GridCell({
     }
 
     if (isSelected) {
-      return 'bg-blue-500 text-white border-2 border-black';
+      const colors = generateUniqueColors();
+      const selectedColor = colors[position]?.replace('hover:', '') || 'bg-orange-500';
+      return `${selectedColor} text-white border-2 border-black`;
     }
 
+    const colors = generateUniqueColors();
+    const hoverColor = colors[position] || 'hover:bg-blue-500';
     return cn(
       'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
-      'hover:bg-blue-500'
+      hoverColor
     );
+  };
+
+  const findTargetCell = (touch: Touch): HTMLElement | null => {
+    const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+    const targetCell = elements.find(el => 
+      el instanceof HTMLElement && 
+      el.hasAttribute('data-cell-index')
+    ) as HTMLElement | null;
+    return targetCell;
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -78,12 +92,15 @@ export const GridCell = memo(function GridCell({
     if (isFound) return;
     e.preventDefault();
     e.stopPropagation();
-
-    const touch = e.touches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
     
-    if (element?.dataset?.cellIndex && element !== e.currentTarget) {
-      onMouseEnter();
+    const touch = e.touches[0];
+    const targetCell = findTargetCell(touch);
+    
+    if (targetCell) {
+      const targetIndex = parseInt(targetCell.getAttribute('data-cell-index') || '-1');
+      if (targetIndex !== position && targetIndex !== -1) {
+        onMouseEnter();
+      }
     }
   };
 
@@ -110,7 +127,7 @@ export const GridCell = memo(function GridCell({
           "touch-none select-none",
           getBaseStyles()
         )}
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: 'none', WebkitTouchCallout: 'none' }}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
         onMouseUp={!isFound ? onMouseUp : undefined}
