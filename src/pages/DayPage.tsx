@@ -10,7 +10,11 @@ const DayPage = () => {
   const { day } = useParams();
   const navigate = useNavigate();
   const dayNumber = Number(day);
+  console.log('DayPage rendering with day:', dayNumber);
+  
   const dayInfo = generateCalendarData().find(d => d.day === dayNumber);
+  console.log('Day info:', dayInfo);
+  
   const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
@@ -33,10 +37,7 @@ const DayPage = () => {
       markDayIncomplete(dayNumber);
       setIsCompleted(false);
       
-      // Clear FrostWord puzzle state
       localStorage.removeItem(`crossword_${dayNumber}`);
-      
-      // Clear NorthSort puzzle state
       localStorage.removeItem(`northsort_${dayNumber}`);
       
       toast.info("Day reset! Try again!");
@@ -45,6 +46,7 @@ const DayPage = () => {
   };
 
   if (!dayInfo) {
+    console.log('Day not found');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -55,6 +57,8 @@ const DayPage = () => {
     );
   }
 
+  console.log('Rendering puzzle with type:', dayInfo.puzzleType);
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4">
       <div className="max-w-4xl mx-auto">

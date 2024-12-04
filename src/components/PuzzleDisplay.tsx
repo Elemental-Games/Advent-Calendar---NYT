@@ -1,5 +1,5 @@
 import React from 'react';
-import { PuzzleContent, formatPuzzleTitle } from '@/lib/date-utils';
+import { PuzzleContent } from '@/lib/date-utils';
 import { WordleGame } from './WordleGame';
 import { CrosswordGame } from './CrosswordGame';
 import { NorthSortGame } from './NorthSortGame';
@@ -13,10 +13,14 @@ interface PuzzleDisplayProps {
 }
 
 export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayProps) {
+  console.log('PuzzleDisplay rendering with type:', type);
+  console.log('Content:', content);
+
   const renderPuzzle = () => {
     switch (type) {
       case "kringle":
         const wordleContent = content as { word: string };
+        console.log('Rendering WordleGame with word:', wordleContent.word);
         return (
           <div className="p-4">
             <WordleGame solution={wordleContent.word} onComplete={onComplete} />
@@ -29,6 +33,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
           down: Record<string, string>;
           answers: Record<string, string>;
         };
+        console.log('Rendering CrosswordGame');
         return (
           <div className="p-4">
             <CrosswordGame 
@@ -45,6 +50,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         const northsortContent = content as { 
           groups: Array<{ category: string; color: string; words: string[] }> 
         };
+        console.log('Rendering NorthSortGame');
         return (
           <div className="p-4">
             <NorthSortGame 
@@ -57,6 +63,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
       
       case "garland":
         const garlandContent = content as { words: string[]; themeWord: string };
+        console.log('Rendering GarlandGame with words:', garlandContent.words);
         return (
           <div className="p-4">
             <GarlandGame 
@@ -68,6 +75,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         );
       
       default:
+        console.log('Unknown puzzle type:', type);
         return <div>Puzzle type not implemented</div>;
     }
   };
