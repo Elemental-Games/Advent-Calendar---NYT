@@ -43,13 +43,13 @@ export interface DayInfo {
   puzzleContent?: PuzzleContent;
 }
 
-const UNLOCK_HOUR = 7;
+const UNLOCK_HOUR = 19; // 7:30 PM
 const UNLOCK_MINUTE = 30;
 const UNLOCK_TIMEZONE = "America/New_York";
 
 export function createUnlockDate(day: number): Date {
-  // Special case for days 4 and 5 - make them available now
-  if (day === 4 || day === 5) {
+  // Special case for day 4 only - make it available now
+  if (day === 4) {
     const now = new Date();
     now.setMinutes(now.getMinutes() - 1); // Set to 1 minute ago
     return now;
