@@ -37,6 +37,7 @@ export function GarlandGame({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const { debugLogs, addLog } = useDebugLogs();
+  const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
 
   const { 
     selectedCells, 
@@ -52,19 +53,19 @@ export function GarlandGame({
   );
 
   const handleCellMouseDown = (rowIndex: number, colIndex: number) => {
-    console.log('Touch Start:', rowIndex, colIndex); // Added console.log
+    console.log('Touch Start:', rowIndex, colIndex);
     addLog(`Touch Start: ${rowIndex},${colIndex}`);
     baseHandleCellMouseDown(rowIndex, colIndex);
   };
 
   const handleCellMouseEnter = (rowIndex: number, colIndex: number) => {
-    console.log('Touch Move:', rowIndex, colIndex); // Added console.log
+    console.log('Touch Move:', rowIndex, colIndex);
     addLog(`Touch Move: ${rowIndex},${colIndex}`);
     baseHandleCellMouseEnter(rowIndex, colIndex);
   };
 
   const handleMouseUp = () => {
-    console.log('Touch End:', currentWord); // Added console.log
+    console.log('Touch End:', currentWord);
     addLog(`Touch End: ${currentWord}`);
     baseHandleMouseUp();
   };
