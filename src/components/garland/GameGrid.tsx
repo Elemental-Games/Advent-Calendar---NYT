@@ -1,3 +1,10 @@
+/**
+ * GameGrid Component
+ * Displays the main game grid of letters where players can select words.
+ * Handles mouse and touch interactions for word selection.
+ * Manages the visual state of cells (selected, found, theme word).
+ * Integrates with ConnectionLines for selection visualization.
+ */
 import React from 'react';
 import { GridCell } from './GridCell';
 
@@ -9,11 +16,7 @@ interface GameGridProps {
   handleCellMouseDown: (rowIndex: number, colIndex: number) => void;
   handleCellMouseEnter: (rowIndex: number, colIndex: number) => void;
   handleMouseUp: () => void;
-  isLetterInFoundWord: (rowIndex: number, colIndex: number) => { 
-    found: boolean; 
-    wordIndex: number; 
-    isThemeWord: boolean 
-  };
+  isLetterInFoundWord: (rowIndex: number, colIndex: number) => { found: boolean; wordIndex: number; isThemeWord: boolean };
 }
 
 export function GameGrid({
@@ -26,14 +29,19 @@ export function GameGrid({
   handleMouseUp,
   isLetterInFoundWord
 }: GameGridProps) {
+  const preventScroll = (e: React.TouchEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <div 
       className="grid gap-2 relative touch-none select-none"
       style={{ touchAction: 'none' }}
+      onTouchStart={preventScroll}
+      onTouchMove={preventScroll}
       onMouseUp={handleMouseUp}
       onTouchEnd={handleMouseUp}
       onTouchCancel={handleMouseUp}
-      onContextMenu={e => e.preventDefault()}
     >
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-2">
@@ -53,6 +61,7 @@ export function GameGrid({
                 onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                 onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
                 onMouseUp={handleMouseUp}
+                selectionIndex={selectedCells.indexOf(cellIndex)}
                 position={cellIndex}
               />
             );
