@@ -55,7 +55,8 @@ export function createUnlockDate(day: number): Date {
     return now;
   }
   
-  const date = new Date(2024, 11, day, UNLOCK_HOUR, UNLOCK_MINUTE);
+  const currentYear = new Date().getFullYear();
+  const date = new Date(currentYear, 11, day, UNLOCK_HOUR, UNLOCK_MINUTE);
   return fromZonedTime(date, UNLOCK_TIMEZONE);
 }
 
