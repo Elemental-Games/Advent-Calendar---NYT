@@ -72,7 +72,7 @@ export const GridCell = memo(function GridCell({
     );
   };
 
-  const findCellFromTouch = (touch: Touch): HTMLElement | null => {
+  const findCellFromTouch = (touch: { clientX: number; clientY: number }): HTMLElement | null => {
     const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
     return elements.find(el => 
       el instanceof HTMLElement && 
@@ -100,8 +100,6 @@ export const GridCell = memo(function GridCell({
       const currentIndex = `${Math.floor(position / 10)}-${position % 10}`;
       
       if (targetIndex && targetIndex !== currentIndex) {
-        // Find the corresponding props for this cell
-        const [row, col] = targetIndex.split('-').map(Number);
         const cellProps = targetCell.closest('[data-cell-props]')?.getAttribute('data-cell-props');
         
         if (cellProps) {
@@ -121,7 +119,6 @@ export const GridCell = memo(function GridCell({
     onMouseUp();
   };
 
-  // Serialize minimal props needed for touch handling
   const cellProps = JSON.stringify({
     isFound,
     position
