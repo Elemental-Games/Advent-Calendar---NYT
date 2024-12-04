@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 interface WordleInputProps {
   currentGuess: string;
   isGameOver: boolean;
-  onInput?: (value: string) => void;
+  onInput: (value: string) => void;
   onEnter?: () => void;
   onBackspace?: () => void;
 }
@@ -21,18 +21,15 @@ export function WordleInput({ currentGuess, isGameOver, onInput, onEnter, onBack
         onBackspace?.();
       } else if (/^[A-Za-z]$/.test(e.key)) {
         const value = e.key.toUpperCase();
-        onInput?.(prev => {
-          if (prev.length < 5) {
-            return prev + value;
-          }
-          return prev;
-        });
+        if (currentGuess.length < 5) {
+          onInput(currentGuess + value);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isGameOver, onInput, onEnter, onBackspace]);
+  }, [isGameOver, onInput, onEnter, onBackspace, currentGuess]);
 
   useEffect(() => {
     // Focus input when component mounts
