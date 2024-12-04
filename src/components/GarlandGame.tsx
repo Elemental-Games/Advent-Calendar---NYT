@@ -52,21 +52,22 @@ export function GarlandGame({
   );
 
   const handleCellMouseDown = (rowIndex: number, colIndex: number) => {
+    console.log('Touch Start:', rowIndex, colIndex); // Added console.log
     addLog(`Touch Start: ${rowIndex},${colIndex}`);
     baseHandleCellMouseDown(rowIndex, colIndex);
   };
 
   const handleCellMouseEnter = (rowIndex: number, colIndex: number) => {
+    console.log('Touch Move:', rowIndex, colIndex); // Added console.log
     addLog(`Touch Move: ${rowIndex},${colIndex}`);
     baseHandleCellMouseEnter(rowIndex, colIndex);
   };
 
   const handleMouseUp = () => {
+    console.log('Touch End:', currentWord); // Added console.log
     addLog(`Touch End: ${currentWord}`);
     baseHandleMouseUp();
   };
-
-  const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
 
   useEffect(() => {
     if (isStarted) {
@@ -165,7 +166,11 @@ export function GarlandGame({
         </DialogContent>
       </Dialog>
 
-      {process.env.NODE_ENV === 'development' && <DebugPanel logs={debugLogs} />}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="relative z-50">
+          <DebugPanel logs={debugLogs} />
+        </div>
+      )}
     </div>
   );
 }
