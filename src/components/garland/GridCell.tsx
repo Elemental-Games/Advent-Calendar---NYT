@@ -72,33 +72,44 @@ export const GridCell = memo(function GridCell({
     );
   };
 
+  const findCellFromTouch = (touch: Touch): HTMLElement | null => {
+    const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+    return elements.find(el => 
+      el instanceof HTMLElement && 
+      el.hasAttribute('data-cell-index')
+    ) as HTMLElement | null;
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
     if (isFound) return;
     e.preventDefault();
-    console.log('Touch start on cell:', position);
+    e.stopPropagation();
     onMouseDown();
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (isFound) return;
     e.preventDefault();
+    e.stopPropagation();
     
     const touch = e.touches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    const targetCell = findCellFromTouch(touch);
     
-    if (element?.tagName === 'BUTTON') {
-      const cellIndex = element.getAttribute('data-cell-index');
-      const currentCellIndex = `${Math.floor(position / 10)}-${position % 10}`;
+    if (targetCell) {
+      const targetIndex = targetCell.getAttribute('data-cell-index');
+      const currentIndex = `${Math.floor(position / 10)}-${position % 10}`;
       
-      console.log('Touch move - Current cell:', currentCellIndex, 'Target cell:', cellIndex);
-      
-      if (cellIndex && cellIndex !== currentCellIndex) {
-        const event = new MouseEvent('mouseenter', {
-          bubbles: true,
-          cancelable: true,
-          view: window
-        });
-        element.dispatchEvent(event);
+      if (targetIndex && targetIndex !== currentIndex) {
+        // Find the corresponding props for this cell
+        const [row, col] = targetIndex.split('-').map(Number);
+        const cellProps = targetCell.closest('[data-cell-props]')?.getAttribute('data-cell-props');
+        
+        if (cellProps) {
+          const props = JSON.parse(cellProps);
+          if (!props.isFound) {
+            onMouseEnter();
+          }
+        }
       }
     }
   };
@@ -106,18 +117,26 @@ export const GridCell = memo(function GridCell({
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (isFound) return;
     e.preventDefault();
-    console.log('Touch end on cell:', position);
+    e.stopPropagation();
     onMouseUp();
   };
+
+  // Serialize minimal props needed for touch handling
+  const cellProps = JSON.stringify({
+    isFound,
+    position
+  });
 
   return (
     <motion.div
       whileHover={{ scale: isFound ? 1 : 1.05 }}
       whileTap={{ scale: isFound ? 1 : 0.95 }}
       className="touch-none select-none"
+      style={{ touchAction: 'none' }}
     >
       <button
         data-cell-index={`${Math.floor(position / 10)}-${position % 10}`}
+        data-cell-props={cellProps}
         className={cn(
           "w-10 h-10 rounded-full font-bold text-lg",
           "flex items-center justify-center",
@@ -125,6 +144,7 @@ export const GridCell = memo(function GridCell({
           "touch-none select-none",
           getBaseStyles()
         )}
+        style={{ touchAction: 'none' }}
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
         onMouseUp={!isFound ? onMouseUp : undefined}
