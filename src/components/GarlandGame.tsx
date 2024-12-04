@@ -21,6 +21,16 @@ interface GarlandGameProps {
   onComplete?: () => void;
 }
 
+function DebugPanel({ logs }: { logs: string[] }) {
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-black/80 text-white p-4 h-32 overflow-auto text-xs z-50">
+      {logs.map((log, i) => (
+        <div key={i}>{log}</div>
+      ))}
+    </div>
+  );
+}
+
 export function GarlandGame({ 
   words = ['santa', 'sleigh', 'cookies', 'mistletoe', 'frost', 'rudolph'],
   themeWord = 'christmas',
@@ -32,15 +42,41 @@ export function GarlandGame({
   const [isStarted, setIsStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completionTime, setCompletionTime] = useState<number | null>(null);
+  const [debugLogs, setDebugLogs] = useState<string[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { selectedCells, currentWord, handleCellMouseDown, handleCellMouseEnter, handleMouseUp } = 
-    useWordSelection(
-      words, 
-      foundWordsWithIndex,
-      setFoundWordsWithIndex,
-      themeWord
-    );
+  const addLog = (message: string) => {
+    console.log(message); // Also log to console for development
+    setDebugLogs(prev => [...prev.slice(-19), message]);
+  };
+
+  const { 
+    selectedCells, 
+    currentWord, 
+    handleCellMouseDown: baseHandleCellMouseDown, 
+    handleCellMouseEnter: baseHandleCellMouseEnter, 
+    handleMouseUp: baseHandleMouseUp 
+  } = useWordSelection(
+    words, 
+    foundWordsWithIndex,
+    setFoundWordsWithIndex,
+    themeWord
+  );
+
+  const handleCellMouseDown = (rowIndex: number, colIndex: number) => {
+    addLog(`Touch Start: ${rowIndex},${colIndex}`);
+    baseHandleCellMouseDown(rowIndex, colIndex);
+  };
+
+  const handleCellMouseEnter = (rowIndex: number, colIndex: number) => {
+    addLog(`Touch Move: ${rowIndex},${colIndex}`);
+    baseHandleCellMouseEnter(rowIndex, colIndex);
+  };
+
+  const handleMouseUp = () => {
+    addLog(`Touch End: ${currentWord}`);
+    baseHandleMouseUp();
+  };
 
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
 
@@ -140,6 +176,8 @@ export function GarlandGame({
           </div>
         </DialogContent>
       </Dialog>
+
+      {process.env.NODE_ENV === 'development' && <DebugPanel logs={debugLogs} />}
     </div>
   );
 }
