@@ -26,6 +26,15 @@ const getPositionNumber = (row: number, col: number): number => {
   return (row + 1) * 10 + (col + 1);
 };
 
+const isAdjacent = (cell1: number, cell2: number) => {
+  const row1 = Math.floor(cell1 / 6);
+  const col1 = cell1 % 6;
+  const row2 = Math.floor(cell2 / 6);
+  const col2 = cell2 % 6;
+  
+  return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
+};
+
 export function useWordSelection(
   words: string[],
   foundWords: Array<{word: string, index: number}>,
@@ -34,15 +43,6 @@ export function useWordSelection(
 ) {
   const [selectedCells, setSelectedCells] = useState<number[]>([]);
   const [currentWord, setCurrentWord] = useState<string>('');
-  const [isDragging, setIsDragging] = useState(false);
-
-  const getCurrentWord = (cells: number[]): string => {
-    return cells.map(cell => {
-      const row = Math.floor(cell / 6);
-      const col = cell % 6;
-      return grid[row][col];
-    }).join('');
-  };
 
   const isCellInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
     const cellPos = getPositionNumber(rowIndex, colIndex);
@@ -52,52 +52,53 @@ export function useWordSelection(
     });
   }, [foundWords]);
 
-  const handleCellMouseDown = useCallback((rowIndex: number, colIndex: number) => {
+  const handleCellClick = useCallback((rowIndex: number, colIndex: number) => {
     if (isCellInFoundWord(rowIndex, colIndex)) return;
     
     const cellIndex = rowIndex * 6 + colIndex;
-    setIsDragging(true);
-    setSelectedCells([cellIndex]);
-    setCurrentWord(getCurrentWord([cellIndex]));
+    console.log('Cell clicked:', cellIndex);
+
+    setSelectedCells(prev => {
+      // If cell is already selected and it's the last one, remove it
+      if (prev[prev.length - 1] === cellIndex) {
+        const newCells = prev.slice(0, -1);
+        setCurrentWord(getCurrentWord(newCells));
+        return newCells;
+      }
+      
+      // If cell is already selected somewhere else, trim the selection up to that point
+      const existingIndex = prev.indexOf(cellIndex);
+      if (existingIndex !== -1) {
+        const newCells = prev.slice(0, existingIndex + 1);
+        setCurrentWord(getCurrentWord(newCells));
+        return newCells;
+      }
+
+      // If no cells are selected or the clicked cell is adjacent to the last selected cell
+      if (prev.length === 0 || isAdjacent(prev[prev.length - 1], cellIndex)) {
+        const newCells = [...prev, cellIndex];
+        setCurrentWord(getCurrentWord(newCells));
+        return newCells;
+      }
+
+      // If clicked cell is not adjacent, start a new selection
+      const newCells = [cellIndex];
+      setCurrentWord(getCurrentWord(newCells));
+      return newCells;
+    });
   }, [isCellInFoundWord]);
 
-  const handleCellMouseEnter = useCallback((rowIndex: number, colIndex: number) => {
-    if (!isDragging || isCellInFoundWord(rowIndex, colIndex)) return;
+  const getCurrentWord = (cells: number[]): string => {
+    return cells.map(cell => {
+      const row = Math.floor(cell / 6);
+      const col = cell % 6;
+      return grid[row][col];
+    }).join('');
+  };
 
-    const newCell = rowIndex * 6 + colIndex;
-    const lastCell = selectedCells[selectedCells.length - 1];
-    
-    if (selectedCells.includes(newCell)) {
-      const index = selectedCells.indexOf(newCell);
-      setSelectedCells(prev => {
-        const newCells = prev.slice(0, index + 1);
-        setCurrentWord(getCurrentWord(newCells));
-        return newCells;
-      });
-      return;
-    }
-
-    const lastRow = Math.floor(lastCell / 6);
-    const lastCol = lastCell % 6;
-    const isAdjacent = Math.abs(rowIndex - lastRow) <= 1 && Math.abs(colIndex - lastCol) <= 1;
-    
-    if (isAdjacent) {
-      setSelectedCells(prev => {
-        const newCells = [...prev, newCell];
-        setCurrentWord(getCurrentWord(newCells));
-        return newCells;
-      });
-    }
-  }, [isDragging, selectedCells, isCellInFoundWord]);
-
-  const handleMouseUp = useCallback(() => {
-    if (!isDragging) return;
-    
-    setIsDragging(false);
-    
+  const handleSubmit = useCallback(() => {
     if (currentWord.length < 3) {
-      setSelectedCells([]);
-      setCurrentWord('');
+      toast.error("Word must be at least 3 letters long!");
       return;
     }
 
@@ -122,19 +123,18 @@ export function useWordSelection(
       } else {
         toast.success(`Found word: ${word}!`);
       }
-    } else if (currentWord.length >= 3) {
+    } else {
       toast.error("That's not a valid word pattern!");
     }
     
     setSelectedCells([]);
     setCurrentWord('');
-  }, [isDragging, currentWord, selectedCells, words, foundWords, setFoundWords, themeWord]);
+  }, [currentWord, selectedCells, words, foundWords, setFoundWords, themeWord]);
 
   return {
     selectedCells,
     currentWord,
-    handleCellMouseDown,
-    handleCellMouseEnter,
-    handleMouseUp
+    handleCellClick,
+    handleSubmit
   };
 }
