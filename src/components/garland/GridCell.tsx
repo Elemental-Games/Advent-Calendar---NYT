@@ -72,8 +72,8 @@ export const GridCell = memo(function GridCell({
     );
   };
 
-  const findTargetCell = (touch: Touch): HTMLElement | null => {
-    const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
+  const findTargetCell = (clientX: number, clientY: number): HTMLElement | null => {
+    const elements = document.elementsFromPoint(clientX, clientY);
     const targetCell = elements.find(el => 
       el instanceof HTMLElement && 
       el.hasAttribute('data-cell-index')
@@ -94,7 +94,7 @@ export const GridCell = memo(function GridCell({
     e.stopPropagation();
     
     const touch = e.touches[0];
-    const targetCell = findTargetCell(touch);
+    const targetCell = findTargetCell(touch.clientX, touch.clientY);
     
     if (targetCell) {
       const targetIndex = parseInt(targetCell.getAttribute('data-cell-index') || '-1');
