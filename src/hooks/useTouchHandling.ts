@@ -18,7 +18,7 @@ export function useTouchHandling({
   const [isDragging, setIsDragging] = useState(false);
   const [lastPosition, setLastPosition] = useState<number | null>(null);
 
-  const findCellFromTouch = (touch: Touch): number | null => {
+  const findCellFromTouch = (touch: React.Touch): number | null => {
     const x = touch.clientX;
     const y = touch.clientY;
     
