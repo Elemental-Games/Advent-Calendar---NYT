@@ -40,31 +40,35 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const getBaseStyles = () => {
-    if (isThemeWord && isFound) {
-      return 'bg-green-500 text-white border-2 border-red-500 cursor-not-allowed opacity-75';
+    // Theme word should only get special styling when it's found
+    if (isFound && isThemeWord) {
+      return 'bg-green-500 text-white border-2 border-red-500';
     }
     
+    // Other found words get different colors based on their index
     if (isFound) {
-      const baseStyle = 'text-white border-2 border-red-500 cursor-not-allowed opacity-75';
+      const baseStyle = 'text-white border-2 border-black';
       switch(foundWordIndex) {
-        case 0: return `bg-green-500 ${baseStyle}`;
-        case 1: return `bg-green-500 ${baseStyle}`;
-        case 2: return `bg-green-500 ${baseStyle}`;
-        case 3: return `bg-green-500 ${baseStyle}`;
-        case 4: return `bg-green-500 ${baseStyle}`;
-        case 5: return `bg-green-500 ${baseStyle}`;
-        case 6: return `bg-green-500 ${baseStyle}`;
+        case 0: return `bg-red-500 ${baseStyle}`;
+        case 1: return `bg-blue-500 ${baseStyle}`;
+        case 2: return `bg-yellow-500 ${baseStyle}`;
+        case 3: return `bg-purple-500 ${baseStyle}`;
+        case 4: return `bg-indigo-500 ${baseStyle}`;
+        case 5: return `bg-orange-500 ${baseStyle}`;
         default: return `bg-green-500 ${baseStyle}`;
       }
     }
 
-    const colors = generateUniqueColors();
-    const hoverColor = colors[position] || 'hover:bg-blue-500';
-
+    // Currently selected cells
     if (isSelected) {
-      return `${hoverColor.replace('hover:', '')} text-white border-2 border-black`;
+      const colors = generateUniqueColors();
+      const selectedColor = colors[position]?.replace('hover:', '') || 'bg-blue-500';
+      return `${selectedColor} text-white border-2 border-black`;
     }
 
+    // Default state (not found, not selected)
+    const colors = generateUniqueColors();
+    const hoverColor = colors[position] || 'hover:bg-blue-500';
     return cn(
       'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
@@ -118,9 +122,9 @@ export const GridCell = memo(function GridCell({
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
         onMouseUp={!isFound ? onMouseUp : undefined}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onTouchStart={!isFound ? handleTouchStart : undefined}
+        onTouchMove={!isFound ? handleTouchMove : undefined}
+        onTouchEnd={!isFound ? handleTouchEnd : undefined}
       >
         {letter}
       </button>
