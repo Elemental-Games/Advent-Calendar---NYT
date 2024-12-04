@@ -14,7 +14,8 @@ export function WordleBoard({ guesses, currentGuess, activeCell, solution, isWin
   const MAX_GUESSES = 6;
 
   const getLetterStyle = (letter: string, index: number, guess: string) => {
-    if (!letter) return "bg-transparent border-red-200";
+    // If there's no letter, or no guess (which happens after reset), return base style
+    if (!letter || !guess) return "bg-transparent border-red-200";
     
     if (guess[index] === solution[index]) {
       return "bg-green-700 text-white border-red-800";
@@ -33,12 +34,13 @@ export function WordleBoard({ guesses, currentGuess, activeCell, solution, isWin
   };
 
   const handleCellClick = () => {
-    // Focus the hidden input when any cell is clicked
     const hiddenInput = document.querySelector('input[type="text"]') as HTMLInputElement;
     if (hiddenInput) {
       hiddenInput.focus();
     }
   };
+
+  console.log('WordleBoard rendering with guesses:', guesses);
 
   return (
     <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
