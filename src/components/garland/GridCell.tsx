@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { generateUniqueColors, FOUND_WORD_STYLES } from '@/lib/garland-constants';
 import { useTouchHandling } from '@/hooks/useTouchHandling';
 
 interface GridCellProps {
@@ -38,21 +37,34 @@ export const GridCell = memo(function GridCell({
   });
 
   const getBaseStyles = () => {
-    // Found word styling (both theme word and regular found words now use the same green/red theme)
+    // All found words (including theme word) get green fill and red border
     if (isFound) {
-      return FOUND_WORD_STYLES.default;
+      return 'bg-green-500 text-white border-2 border-red-500 cursor-not-allowed';
     }
 
-    // Selected state - use the same color as hover but without the hover: prefix
+    // Selected state
     if (isSelected) {
-      const colors = generateUniqueColors();
-      const selectedColor = colors[position]?.replace('hover:', '') || 'bg-[#ea384c]';
+      const colors = [
+        'bg-red-500',
+        'bg-blue-500',
+        'bg-green-500',
+        'bg-yellow-500',
+        'bg-purple-500'
+      ];
+      const selectedColor = colors[position % colors.length];
       return `${selectedColor} text-white border-2 border-black`;
     }
 
     // Default state with hover
-    const colors = generateUniqueColors();
-    const hoverColor = colors[position] || 'hover:bg-[#ea384c]';
+    const hoverColors = [
+      'hover:bg-red-500',
+      'hover:bg-blue-500',
+      'hover:bg-green-500',
+      'hover:bg-yellow-500',
+      'hover:bg-purple-500'
+    ];
+    const hoverColor = hoverColors[position % hoverColors.length];
+    
     return cn(
       'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
@@ -81,11 +93,10 @@ export const GridCell = memo(function GridCell({
         onMouseDown={!isFound ? onMouseDown : undefined}
         onMouseEnter={!isFound ? onMouseEnter : undefined}
         onMouseUp={!isFound ? onMouseUp : undefined}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchEnd}
-        disabled={isFound}
+        onTouchStart={!isFound ? handleTouchStart : undefined}
+        onTouchMove={!isFound ? handleTouchMove : undefined}
+        onTouchEnd={!isFound ? handleTouchEnd : undefined}
+        onTouchCancel={!isFound ? handleTouchEnd : undefined}
       >
         {letter}
       </button>
