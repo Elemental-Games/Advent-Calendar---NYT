@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { generateUniqueColors } from '@/lib/garland-constants';
+import { generateUniqueColors, FOUND_WORD_STYLES } from '@/lib/garland-constants';
 import { useTouchHandling } from '@/hooks/useTouchHandling';
 
 interface GridCellProps {
@@ -10,7 +10,9 @@ interface GridCellProps {
   isFound: boolean;
   foundWordIndex: number;
   isThemeWord: boolean;
-  onCellClick: () => void;
+  onMouseDown: () => void;
+  onMouseEnter: () => void;
+  onMouseUp: () => void;
   position: number;
 }
 
@@ -20,7 +22,9 @@ export const GridCell = memo(function GridCell({
   isFound,
   foundWordIndex,
   isThemeWord,
-  onCellClick,
+  onMouseDown,
+  onMouseEnter,
+  onMouseUp,
   position,
 }: GridCellProps) {
   console.log(`GridCell rendering - letter: ${letter}, isFound: ${isFound}, foundWordIndex: ${foundWordIndex}`);
@@ -28,43 +32,27 @@ export const GridCell = memo(function GridCell({
   const { handleTouchStart, handleTouchMove, handleTouchEnd } = useTouchHandling({
     isFound,
     position,
-    onMouseDown: onCellClick,
-    onMouseEnter: onCellClick,
-    onMouseUp: onCellClick
+    onMouseDown,
+    onMouseEnter,
+    onMouseUp
   });
 
   const getBaseStyles = () => {
-    // Theme word styling takes precedence
-    if (isFound && isThemeWord) {
-      return 'bg-green-500 text-white border-2 border-red-500';
-    }
-    
-    // Found word styling
+    // Found word styling (both theme word and regular found words now use the same green/red theme)
     if (isFound) {
-      const baseStyle = 'text-white border-2 border-black';
-      const colors = {
-        0: 'bg-red-500',
-        1: 'bg-blue-500',
-        2: 'bg-yellow-500',
-        3: 'bg-purple-500',
-        4: 'bg-indigo-500',
-        5: 'bg-pink-500',
-        6: 'bg-teal-500',
-        7: 'bg-orange-500'
-      };
-      return `${colors[foundWordIndex % 8] || 'bg-green-500'} ${baseStyle}`;
+      return FOUND_WORD_STYLES.default;
     }
 
-    // Selected state - use the same color as hover
+    // Selected state - use the same color as hover but without the hover: prefix
     if (isSelected) {
       const colors = generateUniqueColors();
-      const selectedColor = colors[position]?.replace('hover:', '') || 'bg-blue-500';
+      const selectedColor = colors[position]?.replace('hover:', '') || 'bg-[#ea384c]';
       return `${selectedColor} text-white border-2 border-black`;
     }
 
     // Default state with hover
     const colors = generateUniqueColors();
-    const hoverColor = colors[position] || 'hover:bg-blue-500';
+    const hoverColor = colors[position] || 'hover:bg-[#ea384c]';
     return cn(
       'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
@@ -90,7 +78,9 @@ export const GridCell = memo(function GridCell({
           getBaseStyles()
         )}
         style={{ touchAction: 'none' }}
-        onClick={!isFound ? onCellClick : undefined}
+        onMouseDown={!isFound ? onMouseDown : undefined}
+        onMouseEnter={!isFound ? onMouseEnter : undefined}
+        onMouseUp={!isFound ? onMouseUp : undefined}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

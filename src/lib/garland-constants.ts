@@ -6,15 +6,15 @@
  * - Color generation for different positions
  * Used across all Garland game components for consistent styling and behavior.
  */
+
+// Using specific color codes for better consistency
 export const CHRISTMAS_COLORS = [
-  'hover:bg-red-500',    // Red
-  'hover:bg-blue-500',   // Blue
-  'hover:bg-yellow-500', // Yellow
-  'hover:bg-purple-500', // Purple
-  'hover:bg-indigo-500', // Indigo
-  'hover:bg-pink-500',   // Pink
-  'hover:bg-teal-500',   // Teal
-  'hover:bg-orange-500', // Orange
+  'hover:bg-[#ea384c]',  // Red
+  'hover:bg-[#0EA5E9]',  // Blue
+  'hover:bg-[#22c55e]',  // Green
+  'hover:bg-[#eab308]',  // Yellow
+  'hover:bg-[#ea384c]',  // Red again
+  'hover:bg-[#8B5CF6]',  // Purple
 ] as const;
 
 export const GRID_CELL_SIZE = 40; // pixels
@@ -30,4 +30,10 @@ export const generateUniqueColors = () => {
   }
   
   return colorMap;
+};
+
+// Found word styles
+export const FOUND_WORD_STYLES = {
+  default: 'bg-green-500 text-red-500 border-2 border-red-500',
+  themeWord: 'bg-green-500 text-red-500 border-2 border-red-500'
 };
