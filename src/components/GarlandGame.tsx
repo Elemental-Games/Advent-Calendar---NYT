@@ -13,7 +13,6 @@ import { useGameTimer } from '@/hooks/useGameTimer';
 import { GameHeader } from './garland/GameHeader';
 import { FoundWordsList } from './garland/FoundWordsList';
 import { GameGrid } from './garland/GameGrid';
-import { DebugPanel } from './garland/DebugPanel';
 import { GameDialogs } from './garland/GameDialogs';
 
 interface GarlandGameProps {
@@ -32,7 +31,7 @@ export function GarlandGame({
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
 
-  const { debugLogs, addLog } = useDebugLogs();
+  const { addLog } = useDebugLogs();
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
   const { elapsedTime, completionTime, completeGame } = useGameTimer(isStarted, onComplete);
 
@@ -93,12 +92,6 @@ export function GarlandGame({
         handleStartGame={handleStartGame}
         completionTime={completionTime}
       />
-
-      {process.env.NODE_ENV === 'development' && (
-        <div className="relative z-50">
-          <DebugPanel logs={debugLogs} />
-        </div>
-      )}
     </div>
   );
 }
