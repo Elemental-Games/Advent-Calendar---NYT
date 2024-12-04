@@ -48,8 +48,8 @@ const UNLOCK_MINUTE = 30;
 const UNLOCK_TIMEZONE = "America/New_York";
 
 export function createUnlockDate(day: number): Date {
-  // Special case for day 4 only - make it available now
-  if (day === 4) {
+  // Special case for day 4 and 5 only - make them available now
+  if (day === 4 || day === 5) {
     const now = new Date();
     now.setMinutes(now.getMinutes() - 1); // Set to 1 minute ago
     return now;
