@@ -6,7 +6,6 @@
  */
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { generateUniqueColors } from '@/lib/garland-constants';
 import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
 import { useWordSelection } from '@/hooks/useWordSelection';
 import { useDebugLogs } from '@/hooks/useDebugLogs';
