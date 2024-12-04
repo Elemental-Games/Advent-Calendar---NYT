@@ -15,6 +15,7 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
   const [guesses, setGuesses] = useState<string[]>([]);
   const [currentGuess, setCurrentGuess] = useState('');
   const [isGameOver, setIsGameOver] = useState(false);
+  const [activeCell, setActiveCell] = useState(0);
 
   const usedLetters = {
     correct: [] as string[],
@@ -39,12 +40,14 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     if (isGameOver) return;
     if (currentGuess.length < 5) {
       setCurrentGuess(prev => prev + key);
+      setActiveCell(prev => Math.min(prev + 1, 4));
     }
   };
 
   const handleBackspace = () => {
     if (isGameOver) return;
     setCurrentGuess(prev => prev.slice(0, -1));
+    setActiveCell(prev => Math.max(prev - 1, 0));
   };
 
   const handleEnter = () => {
@@ -57,8 +60,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     const newGuesses = [...guesses, currentGuess.toUpperCase()];
     setGuesses(newGuesses);
     setCurrentGuess('');
+    setActiveCell(0);
 
-    if (currentGuess.toUpperCase() === solution) {
+    const isWinner = currentGuess.toUpperCase() === solution;
+    if (isWinner) {
       setIsGameOver(true);
       onComplete?.();
       toast.success('Congratulations! You won!');
@@ -91,10 +96,13 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         guesses={guesses} 
         currentGuess={currentGuess} 
         solution={solution}
+        activeCell={activeCell}
+        isWinner={isGameOver && currentGuess.toUpperCase() === solution}
       />
       <WordleInput 
         currentGuess={currentGuess}
         isGameOver={isGameOver}
+        onInput={setCurrentGuess}
       />
       <WordleKeyboard
         onKeyPress={handleKeyPress}

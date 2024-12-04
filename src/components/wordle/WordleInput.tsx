@@ -2,16 +2,19 @@ import { useEffect, useRef } from "react";
 
 interface WordleInputProps {
   currentGuess: string;
-  onInput: (value: string) => void;
+  isGameOver: boolean;
+  onInput?: (value: string) => void;
 }
 
-export function WordleInput({ currentGuess, onInput }: WordleInputProps) {
+export function WordleInput({ currentGuess, isGameOver, onInput }: WordleInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Focus input when component mounts
-    inputRef.current?.focus();
-  }, []);
+    if (!isGameOver) {
+      inputRef.current?.focus();
+    }
+  }, [isGameOver]);
 
   return (
     <input
@@ -22,12 +25,13 @@ export function WordleInput({ currentGuess, onInput }: WordleInputProps) {
       onChange={(e) => {
         const value = e.target.value.toUpperCase();
         if (/^[A-Z]*$/.test(value)) {
-          onInput(value);
+          onInput?.(value);
         }
       }}
       autoComplete="off"
       autoCapitalize="off"
       spellCheck="false"
+      disabled={isGameOver}
     />
   );
 }
