@@ -18,21 +18,18 @@ export function useTouchHandling({
   const [isDragging, setIsDragging] = useState(false);
   const [lastProcessedPosition, setLastProcessedPosition] = useState<number | null>(null);
 
-  const findTargetCell = useCallback((x: number, y: number) => {
-    console.log('Finding target cell at:', x, y);
+  const findTargetCell = useCallback((x: number, y: number): number | null => {
+    console.log('Finding target cell at coordinates:', x, y);
     const elements = document.elementsFromPoint(x, y);
     
-    const targetElement = elements.find(el => 
-      el instanceof HTMLElement && 
-      el.tagName.toLowerCase() === 'button' && 
-      el.dataset.cellIndex !== undefined
-    ) as HTMLElement | undefined;
-
-    if (targetElement?.dataset?.cellIndex) {
-      const targetIndex = parseInt(targetElement.dataset.cellIndex);
-      console.log('Found target cell:', targetIndex);
-      return targetIndex;
+    for (const element of elements) {
+      if (element instanceof HTMLElement && element.dataset.cellIndex) {
+        const targetIndex = parseInt(element.dataset.cellIndex);
+        console.log('Found target cell with index:', targetIndex);
+        return targetIndex;
+      }
     }
+    console.log('No target cell found at coordinates');
     return null;
   }, []);
 
@@ -58,7 +55,7 @@ export function useTouchHandling({
     const targetIndex = findTargetCell(touch.clientX, touch.clientY);
     
     if (targetIndex !== null && targetIndex !== lastProcessedPosition) {
-      console.log('Moving from position', lastProcessedPosition, 'to', targetIndex);
+      console.log('Processing touch move from', lastProcessedPosition, 'to', targetIndex);
       setLastProcessedPosition(targetIndex);
       onMouseEnter();
     }
@@ -77,7 +74,6 @@ export function useTouchHandling({
   }, [isFound, position, onMouseUp]);
 
   return {
-    isDragging,
     handleTouchStart,
     handleTouchMove,
     handleTouchEnd
