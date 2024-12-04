@@ -6,9 +6,7 @@ interface GameGridProps {
   selectedCells: number[];
   foundWordsWithIndex: Array<{word: string, index: number}>;
   themeWord: string;
-  handleCellMouseDown: (rowIndex: number, colIndex: number) => void;
-  handleCellMouseEnter: (rowIndex: number, colIndex: number) => void;
-  handleMouseUp: () => void;
+  onCellClick: (rowIndex: number, colIndex: number) => void;
   isLetterInFoundWord: (rowIndex: number, colIndex: number) => { found: boolean; wordIndex: number; isThemeWord: boolean };
 }
 
@@ -17,20 +15,13 @@ export function GameGrid({
   selectedCells,
   foundWordsWithIndex,
   themeWord,
-  handleCellMouseDown,
-  handleCellMouseEnter,
-  handleMouseUp,
+  onCellClick,
   isLetterInFoundWord
 }: GameGridProps) {
+  console.log('GameGrid rendering with selectedCells:', selectedCells);
+  
   return (
-    <div 
-      className="grid gap-2 relative touch-none select-none"
-      style={{ touchAction: 'none' }}
-      onMouseUp={handleMouseUp}
-      onTouchEnd={handleMouseUp}
-      onTouchCancel={handleMouseUp}
-      onContextMenu={e => e.preventDefault()}
-    >
+    <div className="grid gap-2 relative select-none">
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-2">
           {row.map((letter, colIndex) => {
@@ -46,9 +37,7 @@ export function GameGrid({
                 isFound={found}
                 foundWordIndex={wordIndex}
                 isThemeWord={isThemeWordCell}
-                onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-                onMouseUp={handleMouseUp}
+                onClick={() => onCellClick(rowIndex, colIndex)}
                 position={cellIndex}
               />
             );

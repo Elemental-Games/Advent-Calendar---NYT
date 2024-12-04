@@ -1,20 +1,19 @@
 /**
  * GarlandGame Component
  * A word-finding puzzle game where players search for Christmas-themed words in a grid.
- * Players can drag across letters to form words, with special handling for the theme word.
+ * Players can click letters to form words, with special handling for the theme word.
  * The game tracks found words, completion state, and elapsed time.
  */
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
 import { useWordSelection } from '@/hooks/useWordSelection';
-import { useDebugLogs } from '@/hooks/useDebugLogs';
 import { useGameTimer } from '@/hooks/useGameTimer';
 import { GameHeader } from './garland/GameHeader';
 import { FoundWordsList } from './garland/FoundWordsList';
 import { GameGrid } from './garland/GameGrid';
-import { DebugPanel } from './garland/DebugPanel';
 import { GameDialogs } from './garland/GameDialogs';
+import { Button } from './ui/button';
 
 interface GarlandGameProps {
   words?: string[];
@@ -27,21 +26,20 @@ export function GarlandGame({
   themeWord = 'christmas',
   onComplete 
 }: GarlandGameProps) {
+  console.log('GarlandGame rendering with words:', words);
+  
   const [foundWordsWithIndex, setFoundWordsWithIndex] = useState<Array<{word: string, index: number}>>([]);
   const [showStartDialog, setShowStartDialog] = useState(true);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
 
-  const { debugLogs, addLog } = useDebugLogs();
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
   const { elapsedTime, completionTime, completeGame } = useGameTimer(isStarted, onComplete);
-
   const { 
     selectedCells, 
-    currentWord, 
-    handleCellMouseDown: baseHandleCellMouseDown, 
-    handleCellMouseEnter: baseHandleCellMouseEnter, 
-    handleMouseUp: baseHandleMouseUp 
+    currentWord,
+    handleCellClick,
+    handleSubmit
   } = useWordSelection(
     words, 
     foundWordsWithIndex,
@@ -49,32 +47,16 @@ export function GarlandGame({
     themeWord
   );
 
-  const handleCellMouseDown = (rowIndex: number, colIndex: number) => {
-    console.log('Touch Start:', rowIndex, colIndex);
-    addLog(`Touch Start: ${rowIndex},${colIndex}`);
-    baseHandleCellMouseDown(rowIndex, colIndex);
-  };
-
-  const handleCellMouseEnter = (rowIndex: number, colIndex: number) => {
-    console.log('Touch Move:', rowIndex, colIndex);
-    addLog(`Touch Move: ${rowIndex},${colIndex}`);
-    baseHandleCellMouseEnter(rowIndex, colIndex);
-  };
-
-  const handleMouseUp = () => {
-    console.log('Touch End:', currentWord);
-    addLog(`Touch End: ${currentWord}`);
-    baseHandleMouseUp();
-  };
-
   useEffect(() => {
     if (foundWordsWithIndex.length === words.length) {
+      console.log('All words found, completing game');
       completeGame();
       setShowCompletionDialog(true);
     }
   }, [foundWordsWithIndex.length, words.length, completeGame]);
 
   const handleStartGame = () => {
+    console.log('Starting game');
     setIsStarted(true);
     setShowStartDialog(false);
   };
@@ -97,11 +79,22 @@ export function GarlandGame({
         selectedCells={selectedCells}
         foundWordsWithIndex={foundWordsWithIndex}
         themeWord={themeWord}
-        handleCellMouseDown={handleCellMouseDown}
-        handleCellMouseEnter={handleCellMouseEnter}
-        handleMouseUp={handleMouseUp}
+        onCellClick={handleCellClick}
         isLetterInFoundWord={isLetterInFoundWord}
       />
+
+      <div className="flex flex-col items-center gap-4">
+        <div className="text-lg font-semibold">
+          Current word: {currentWord}
+        </div>
+        <Button 
+          onClick={handleSubmit}
+          disabled={currentWord.length < 3}
+          className="w-32"
+        >
+          Submit
+        </Button>
+      </div>
 
       <FoundWordsList foundWords={foundWordsWithIndex} />
 
@@ -113,12 +106,6 @@ export function GarlandGame({
         handleStartGame={handleStartGame}
         completionTime={completionTime}
       />
-
-      {process.env.NODE_ENV === 'development' && (
-        <div className="relative z-50">
-          <DebugPanel logs={debugLogs} />
-        </div>
-      )}
     </div>
   );
 }
