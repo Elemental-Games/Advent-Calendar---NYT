@@ -32,6 +32,7 @@ export function GarlandGame({
   const [showStartDialog, setShowStartDialog] = useState(true);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
   const { elapsedTime, completionTime, completeGame } = useGameTimer(isStarted, onComplete);
@@ -47,18 +48,28 @@ export function GarlandGame({
     themeWord
   );
 
+  // Handle game completion
   useEffect(() => {
-    if (foundWordsWithIndex.length === words.length) {
+    if (foundWordsWithIndex.length === words.length && !isCompleted) {
       console.log('All words found, completing game');
+      setIsCompleted(true);
       completeGame();
-      setShowCompletionDialog(true);
+      // Add slight delay before showing completion dialog
+      setTimeout(() => {
+        setShowCompletionDialog(true);
+      }, 500);
     }
-  }, [foundWordsWithIndex.length, words.length, completeGame]);
+  }, [foundWordsWithIndex.length, words.length, completeGame, isCompleted]);
 
   const handleStartGame = () => {
     console.log('Starting game');
     setIsStarted(true);
     setShowStartDialog(false);
+  };
+
+  const handleCompletionDialogClose = () => {
+    console.log('Closing completion dialog');
+    setShowCompletionDialog(false);
   };
 
   return (
@@ -89,7 +100,7 @@ export function GarlandGame({
         </div>
         <Button 
           onClick={handleSubmit}
-          disabled={currentWord.length < 3}
+          disabled={currentWord.length < 3 || isCompleted}
           className="w-32"
         >
           Submit
@@ -102,7 +113,7 @@ export function GarlandGame({
         showStartDialog={showStartDialog}
         setShowStartDialog={setShowStartDialog}
         showCompletionDialog={showCompletionDialog}
-        setShowCompletionDialog={setShowCompletionDialog}
+        setShowCompletionDialog={handleCompletionDialogClose}
         handleStartGame={handleStartGame}
         completionTime={completionTime}
       />

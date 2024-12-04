@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
+import { formatTime } from '@/lib/utils';
 
 interface GameDialogsProps {
   showStartDialog: boolean;
@@ -39,7 +40,10 @@ export function GameDialogs({
         </DialogContent>
       </Dialog>
 
-      <Dialog open={showCompletionDialog} onOpenChange={setShowCompletionDialog}>
+      <Dialog 
+        open={showCompletionDialog} 
+        onOpenChange={setShowCompletionDialog}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl font-bold text-green-700">
@@ -51,11 +55,17 @@ export function GameDialogs({
               You completed the puzzle in:
             </p>
             <p className="text-4xl font-bold text-green-600 font-mono">
-              {completionTime !== null ? `${Math.floor(completionTime / 60)}:${(completionTime % 60).toString().padStart(2, '0')}` : '0:00'}
+              {completionTime !== null ? formatTime(completionTime) : '0:00'}
             </p>
             <p className="text-gray-600">
               Well done! Come back tomorrow for a new challenge.
             </p>
+            <Button 
+              onClick={() => setShowCompletionDialog(false)}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              Close
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
