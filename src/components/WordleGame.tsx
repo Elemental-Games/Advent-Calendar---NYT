@@ -2,19 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { WordleBoard } from './wordle/WordleBoard';
 import { WordleInput } from './wordle/WordleInput';
 import { WordleKeyboard } from './wordle/WordleKeyboard';
+import { WordleCompletionDialog } from './wordle/WordleCompletionDialog';
 import { toast } from 'sonner';
 
 interface WordleGameProps {
   solution: string;
   onComplete?: () => void;
+  day: number;
 }
 
-export function WordleGame({ solution, onComplete }: WordleGameProps) {
+export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
   console.log('WordleGame rendering with solution:', solution);
   
-  const [guesses, setGuesses] = useState<string[]>([]);
+  const [guesses, setGuesses] = useState<string[]>(() => {
+    const saved = localStorage.getItem(`kringle_${day}`);
+    return saved ? JSON.parse(saved).guesses : [];
+  });
   const [currentGuess, setCurrentGuess] = useState('');
-  const [isGameOver, setIsGameOver] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(() => {
+    const saved = localStorage.getItem(`kringle_${day}`);
+    return saved ? JSON.parse(saved).isGameOver : false;
+  });
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [activeCell, setActiveCell] = useState(0);
 
   const usedLetters = {
@@ -50,6 +59,13 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     setActiveCell(prev => Math.max(prev - 1, 0));
   };
 
+  const saveGameState = (newGuesses: string[], newIsGameOver: boolean) => {
+    localStorage.setItem(`kringle_${day}`, JSON.stringify({
+      guesses: newGuesses,
+      isGameOver: newIsGameOver
+    }));
+  };
+
   const handleEnter = () => {
     if (isGameOver) return;
     if (currentGuess.length !== 5) {
@@ -65,11 +81,15 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
     const isWinner = currentGuess.toUpperCase() === solution;
     if (isWinner) {
       setIsGameOver(true);
+      saveGameState(newGuesses, true);
       onComplete?.();
-      toast.success('Congratulations! You won!');
+      setShowCompletionDialog(true);
     } else if (newGuesses.length >= 6) {
       setIsGameOver(true);
+      saveGameState(newGuesses, true);
       toast.error(`Game Over! The word was ${solution}`);
+    } else {
+      saveGameState(newGuesses, false);
     }
   };
 
@@ -97,11 +117,10 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         currentGuess={currentGuess} 
         solution={solution}
         activeCell={activeCell}
-        isWinner={isGameOver && currentGuess.toUpperCase() === solution}
+        isWinner={isGameOver && guesses[guesses.length - 1] === solution}
       />
       <WordleInput 
         currentGuess={currentGuess}
-        isGameOver={isGameOver}
         onInput={setCurrentGuess}
       />
       <WordleKeyboard
@@ -109,6 +128,11 @@ export function WordleGame({ solution, onComplete }: WordleGameProps) {
         onBackspace={handleBackspace}
         onEnter={handleEnter}
         usedLetters={usedLetters}
+      />
+      <WordleCompletionDialog
+        open={showCompletionDialog}
+        onOpenChange={setShowCompletionDialog}
+        day={day}
       />
     </div>
   );

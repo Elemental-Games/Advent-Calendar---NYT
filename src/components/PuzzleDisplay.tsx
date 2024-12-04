@@ -23,7 +23,11 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         console.log('Rendering WordleGame with word:', wordleContent.word);
         return (
           <div className="p-4">
-            <WordleGame solution={wordleContent.word} onComplete={onComplete} />
+            <WordleGame 
+              solution={wordleContent.word} 
+              onComplete={onComplete} 
+              day={day}
+            />
           </div>
         );
       
