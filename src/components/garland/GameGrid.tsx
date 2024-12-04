@@ -31,8 +31,8 @@ export function GameGrid({
 }: GameGridProps) {
   return (
     <div 
-      className="grid gap-2 relative touch-none"
-      onMouseLeave={handleMouseUp}
+      className="grid gap-2 relative touch-none select-none"
+      style={{ touchAction: 'none' }}
       onMouseUp={handleMouseUp}
       onTouchEnd={handleMouseUp}
       onTouchCancel={handleMouseUp}
@@ -42,7 +42,7 @@ export function GameGrid({
           {row.map((letter, colIndex) => {
             const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
             const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
-            const position = (rowIndex + 1) * 10 + (colIndex + 1);
+            const cellIndex = rowIndex * 6 + colIndex;
             
             return (
               <GridCell
@@ -55,8 +55,8 @@ export function GameGrid({
                 onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                 onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
                 onMouseUp={handleMouseUp}
-                selectionIndex={selectedCells.indexOf(rowIndex * 6 + colIndex)}
-                position={position}
+                selectionIndex={selectedCells.indexOf(cellIndex)}
+                position={cellIndex}
               />
             );
           })}

@@ -12,7 +12,6 @@
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { generateUniqueColors } from '@/lib/garland-constants';
 
 interface GridCellProps {
   letter: string;
@@ -58,26 +57,14 @@ export const GridCell = memo(function GridCell({
     }
 
     if (isSelected) {
-      const colors = generateUniqueColors();
-      const selectedColor = colors[position]?.replace('hover:', '') || 'bg-blue-500';
-      return `${selectedColor} text-white border-2 border-black`;
+      return 'bg-blue-500 text-white border-2 border-black';
     }
 
-    const colors = generateUniqueColors();
-    const hoverColor = colors[position] || 'hover:bg-blue-500';
     return cn(
       'bg-white text-gray-900 border-2 border-gray-200',
       'hover:text-white active:text-white',
-      hoverColor
+      'hover:bg-blue-500'
     );
-  };
-
-  const findCellFromTouch = (touch: { clientX: number; clientY: number }): HTMLElement | null => {
-    const elements = document.elementsFromPoint(touch.clientX, touch.clientY);
-    return elements.find(el => 
-      el instanceof HTMLElement && 
-      el.hasAttribute('data-cell-index')
-    ) as HTMLElement | null;
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -91,24 +78,12 @@ export const GridCell = memo(function GridCell({
     if (isFound) return;
     e.preventDefault();
     e.stopPropagation();
-    
+
     const touch = e.touches[0];
-    const targetCell = findCellFromTouch(touch);
+    const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement;
     
-    if (targetCell) {
-      const targetIndex = targetCell.getAttribute('data-cell-index');
-      const currentIndex = `${Math.floor(position / 10)}-${position % 10}`;
-      
-      if (targetIndex && targetIndex !== currentIndex) {
-        const cellProps = targetCell.closest('[data-cell-props]')?.getAttribute('data-cell-props');
-        
-        if (cellProps) {
-          const props = JSON.parse(cellProps);
-          if (!props.isFound) {
-            onMouseEnter();
-          }
-        }
-      }
+    if (element?.dataset?.cellIndex && element !== e.currentTarget) {
+      onMouseEnter();
     }
   };
 
@@ -119,11 +94,6 @@ export const GridCell = memo(function GridCell({
     onMouseUp();
   };
 
-  const cellProps = JSON.stringify({
-    isFound,
-    position
-  });
-
   return (
     <motion.div
       whileHover={{ scale: isFound ? 1 : 1.05 }}
@@ -132,8 +102,7 @@ export const GridCell = memo(function GridCell({
       style={{ touchAction: 'none' }}
     >
       <button
-        data-cell-index={`${Math.floor(position / 10)}-${position % 10}`}
-        data-cell-props={cellProps}
+        data-cell-index={position}
         className={cn(
           "w-10 h-10 rounded-full font-bold text-lg",
           "flex items-center justify-center",

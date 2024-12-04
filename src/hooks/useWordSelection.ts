@@ -1,144 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
-interface WordValidityResult {
-  valid: boolean;
-  word?: string;
-  index?: number;
-}
-
-export function useWordSelection(
-  words: string[],
-  foundWords: string[],
-  setFoundWords: (words: Array<{word: string, index: number}>) => void,
-  themeWord: string
-) {
-  const [selectedCells, setSelectedCells] = useState<number[]>([]);
-  const [currentWord, setCurrentWord] = useState<string>('');
-  const [isDragging, setIsDragging] = useState(false);
-
-  const getCurrentWord = (cells: number[]): string => {
-    return cells.map(cell => {
-      const row = Math.floor(cell / 6);
-      const col = cell % 6;
-      return grid[row][col];
-    }).join('');
-  };
-
-  const handleCellMouseDown = useCallback((rowIndex: number, colIndex: number) => {
-    const cellIndex = rowIndex * 6 + colIndex;
-    const word = getCurrentWord([cellIndex]);
-    
-    // Check if the cell is part of an already found word
-    const isPartOfFoundWord = foundWords.some(foundWord => {
-      const wordPositions = WORD_POSITIONS[foundWord.toLowerCase()];
-      if (!wordPositions) return false;
-      
-      const pos = getPositionNumber(rowIndex, colIndex);
-      return wordPositions.includes(pos);
-    });
-
-    if (!isPartOfFoundWord) {
-      setIsDragging(true);
-      setSelectedCells([cellIndex]);
-      setCurrentWord(word);
-    }
-  }, [foundWords]);
-
-  const handleCellMouseEnter = useCallback((rowIndex: number, colIndex: number) => {
-    if (!isDragging) return;
-
-    const newCell = rowIndex * 6 + colIndex;
-    const lastCell = selectedCells[selectedCells.length - 1];
-    
-    // Check if the cell is part of an already found word
-    const isPartOfFoundWord = foundWords.some(foundWord => {
-      const wordPositions = WORD_POSITIONS[foundWord.toLowerCase()];
-      if (!wordPositions) return false;
-      
-      const pos = getPositionNumber(rowIndex, colIndex);
-      return wordPositions.includes(pos);
-    });
-
-    if (isPartOfFoundWord) return;
-
-    if (selectedCells.includes(newCell)) {
-      const index = selectedCells.indexOf(newCell);
-      const newSelectedCells = selectedCells.slice(0, index + 1);
-      setSelectedCells(newSelectedCells);
-      setCurrentWord(getCurrentWord(newSelectedCells));
-      return;
-    }
-
-    const lastRow = Math.floor(lastCell / 6);
-    const lastCol = lastCell % 6;
-    const isAdjacent = Math.abs(rowIndex - lastRow) <= 1 && Math.abs(colIndex - lastCol) <= 1;
-    
-    if (isAdjacent) {
-      const newSelectedCells = [...selectedCells, newCell];
-      setSelectedCells(newSelectedCells);
-      setCurrentWord(getCurrentWord(newSelectedCells));
-    }
-  }, [isDragging, selectedCells, foundWords]);
-
-  const checkWordValidity = useCallback((): WordValidityResult => {
-    if (!isDragging || currentWord.length < 3) {
-      return { valid: false };
-    }
-    
-    const selectedPositions = selectedCells.map(cell => {
-      const row = Math.floor(cell / 6);
-      const col = cell % 6;
-      return getPositionNumber(row, col);
-    });
-
-    const wordEntry = Object.entries(WORD_POSITIONS).find(([word, positions]) => 
-      selectedPositions.length === positions.length &&
-      selectedPositions.every((pos, index) => pos === positions[index])
-    );
-
-    if (wordEntry && !foundWords.includes(wordEntry[0])) {
-      return { 
-        valid: true, 
-        word: wordEntry[0], 
-        index: words.indexOf(wordEntry[0]) 
-      };
-    }
-
-    return { valid: false };
-  }, [isDragging, currentWord, selectedCells, foundWords, words]);
-
-  const handleMouseUp = useCallback(() => {
-    if (!isDragging) return;
-    
-    setIsDragging(false);
-    
-    if (currentWord.length < 3) {
-      setSelectedCells([]);
-      setCurrentWord('');
-      return;
-    }
-
-    const result = checkWordValidity();
-    if (result.valid && typeof result.index === 'number' && result.word) {
-      setFoundWords([...foundWords.map(w => typeof w === 'string' ? { word: w, index: words.indexOf(w) } : w), { word: result.word, index: result.index }]);
-    } else if (currentWord.length >= 3) {
-      toast.error("That's not a valid word pattern!");
-    }
-    
-    setSelectedCells([]);
-    setCurrentWord('');
-  }, [isDragging, currentWord, words, foundWords, setFoundWords, checkWordValidity]);
-
-  return {
-    selectedCells,
-    currentWord,
-    handleCellMouseDown,
-    handleCellMouseEnter,
-    handleMouseUp
-  };
-}
-
 const grid = [
   ['S', 'L', 'E', 'S', 'F', 'R'],
   ['H', 'G', 'I', 'A', 'S', 'O'],
@@ -163,3 +25,116 @@ const WORD_POSITIONS = {
 const getPositionNumber = (row: number, col: number): number => {
   return (row + 1) * 10 + (col + 1);
 };
+
+export function useWordSelection(
+  words: string[],
+  foundWords: Array<{word: string, index: number}>,
+  setFoundWords: (words: Array<{word: string, index: number}>) => void,
+  themeWord: string
+) {
+  const [selectedCells, setSelectedCells] = useState<number[]>([]);
+  const [currentWord, setCurrentWord] = useState<string>('');
+  const [isDragging, setIsDragging] = useState(false);
+
+  const getCurrentWord = (cells: number[]): string => {
+    return cells.map(cell => {
+      const row = Math.floor(cell / 6);
+      const col = cell % 6;
+      return grid[row][col];
+    }).join('');
+  };
+
+  const isCellInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
+    const cellPos = getPositionNumber(rowIndex, colIndex);
+    return foundWords.some(({word}) => {
+      const wordPositions = WORD_POSITIONS[word.toLowerCase()];
+      return wordPositions?.includes(cellPos);
+    });
+  }, [foundWords]);
+
+  const handleCellMouseDown = useCallback((rowIndex: number, colIndex: number) => {
+    if (isCellInFoundWord(rowIndex, colIndex)) return;
+    
+    const cellIndex = rowIndex * 6 + colIndex;
+    setIsDragging(true);
+    setSelectedCells([cellIndex]);
+    setCurrentWord(getCurrentWord([cellIndex]));
+  }, [isCellInFoundWord]);
+
+  const handleCellMouseEnter = useCallback((rowIndex: number, colIndex: number) => {
+    if (!isDragging || isCellInFoundWord(rowIndex, colIndex)) return;
+
+    const newCell = rowIndex * 6 + colIndex;
+    const lastCell = selectedCells[selectedCells.length - 1];
+    
+    if (selectedCells.includes(newCell)) {
+      const index = selectedCells.indexOf(newCell);
+      setSelectedCells(prev => {
+        const newCells = prev.slice(0, index + 1);
+        setCurrentWord(getCurrentWord(newCells));
+        return newCells;
+      });
+      return;
+    }
+
+    const lastRow = Math.floor(lastCell / 6);
+    const lastCol = lastCell % 6;
+    const isAdjacent = Math.abs(rowIndex - lastRow) <= 1 && Math.abs(colIndex - lastCol) <= 1;
+    
+    if (isAdjacent) {
+      setSelectedCells(prev => {
+        const newCells = [...prev, newCell];
+        setCurrentWord(getCurrentWord(newCells));
+        return newCells;
+      });
+    }
+  }, [isDragging, selectedCells, isCellInFoundWord]);
+
+  const handleMouseUp = useCallback(() => {
+    if (!isDragging) return;
+    
+    setIsDragging(false);
+    
+    if (currentWord.length < 3) {
+      setSelectedCells([]);
+      setCurrentWord('');
+      return;
+    }
+
+    const selectedPositions = selectedCells.map(cell => {
+      const row = Math.floor(cell / 6);
+      const col = cell % 6;
+      return getPositionNumber(row, col);
+    });
+
+    const wordEntry = Object.entries(WORD_POSITIONS).find(([word, positions]) => 
+      selectedPositions.length === positions.length &&
+      selectedPositions.every((pos, index) => pos === positions[index])
+    );
+
+    if (wordEntry && !foundWords.some(fw => fw.word.toLowerCase() === wordEntry[0].toLowerCase())) {
+      const [word] = wordEntry;
+      const wordIndex = words.indexOf(word);
+      setFoundWords([...foundWords, { word, index: wordIndex }]);
+      
+      if (word.toLowerCase() === themeWord.toLowerCase()) {
+        toast.success("You found the theme word!");
+      } else {
+        toast.success(`Found word: ${word}!`);
+      }
+    } else if (currentWord.length >= 3) {
+      toast.error("That's not a valid word pattern!");
+    }
+    
+    setSelectedCells([]);
+    setCurrentWord('');
+  }, [isDragging, currentWord, selectedCells, words, foundWords, setFoundWords, themeWord]);
+
+  return {
+    selectedCells,
+    currentWord,
+    handleCellMouseDown,
+    handleCellMouseEnter,
+    handleMouseUp
+  };
+}
