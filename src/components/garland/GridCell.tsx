@@ -21,6 +21,8 @@ export const GridCell = memo(function GridCell({
   onCellClick,
   position,
 }: GridCellProps) {
+  console.log(`GridCell rendering - letter: ${letter}, isFound: ${isFound}, foundWordIndex: ${foundWordIndex}`);
+  
   const baseStyles = useCellStyles({
     isFound,
     isThemeWord,
@@ -41,7 +43,8 @@ export const GridCell = memo(function GridCell({
           transition-all duration-200 shadow-lg
           touch-none select-none
           ${baseStyles}`}
-        onClick={!isFound ? onCellClick : undefined}
+        onClick={onCellClick}
+        disabled={isFound}
       >
         {letter}
       </button>
