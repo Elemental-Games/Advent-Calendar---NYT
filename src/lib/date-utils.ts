@@ -176,6 +176,9 @@ const puzzleData: { [key: number]: PuzzleContent } = {
   4: {
     words: ["SANTA", "SLEIGH", "RUDOLPH", "PRESENTS", "COOKIES", "STOCKINGS", "MISTLETOE"],
     themeWord: "CHRISTMAS"
+  },
+  5: {
+    word: "QUILT"
   }
 };
 
