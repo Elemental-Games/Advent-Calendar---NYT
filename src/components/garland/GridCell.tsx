@@ -8,7 +8,9 @@ interface GridCellProps {
   isFound: boolean;
   foundWordIndex: number;
   isThemeWord: boolean;
-  onClick: () => void;
+  onMouseDown: () => void;
+  onMouseEnter: () => void;
+  onMouseUp: () => void;
   position: number;
 }
 
@@ -18,18 +20,28 @@ export const GridCell = memo(function GridCell({
   isFound,
   foundWordIndex,
   isThemeWord,
-  onClick,
+  onMouseDown,
+  onMouseEnter,
+  onMouseUp,
   position,
 }: GridCellProps) {
   console.log(`GridCell rendering - letter: ${letter}, isFound: ${isFound}, foundWordIndex: ${foundWordIndex}`);
 
   const getBaseStyles = () => {
     if (isFound) {
-      return cn(
+      const foundColors = [
+        'bg-red-500',
+        'bg-blue-500',
         'bg-green-500',
-        'text-red-500 font-bold',
+        'bg-yellow-500',
+        'bg-purple-500'
+      ];
+      const foundColor = foundColors[foundWordIndex % foundColors.length];
+      return cn(
+        foundColor,
+        'text-white font-bold',
         'border-2',
-        'border-red-500',
+        'border-white',
         'cursor-not-allowed',
         'pointer-events-none',
         'opacity-90'
@@ -86,7 +98,7 @@ export const GridCell = memo(function GridCell({
           "touch-none select-none",
           getBaseStyles()
         )}
-        onClick={!isFound ? onClick : undefined}
+        onClick={!isFound ? onMouseDown : undefined}
         disabled={isFound}
         aria-disabled={isFound}
       >

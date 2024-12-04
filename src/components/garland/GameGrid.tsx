@@ -1,6 +1,5 @@
 import React from 'react';
 import { GridCell } from './GridCell';
-import { ConnectionLines } from './ConnectionLines';
 
 interface GameGridProps {
   grid: string[][];
@@ -21,13 +20,10 @@ export function GameGrid({
 }: GameGridProps) {
   console.log('GameGrid rendering with selectedCells:', selectedCells);
   
-  const handleCellClick = (rowIndex: number, colIndex: number) => {
-    console.log('Cell clicked at:', rowIndex, colIndex);
+  const handleClick = (rowIndex: number, colIndex: number) => {
     const { found } = isLetterInFoundWord(rowIndex, colIndex);
     if (!found) {
       onCellClick(rowIndex, colIndex);
-    } else {
-      console.log('Ignoring click on found letter');
     }
   };
 
@@ -48,14 +44,15 @@ export function GameGrid({
                 isFound={found}
                 foundWordIndex={wordIndex}
                 isThemeWord={isThemeWord}
-                onClick={() => handleCellClick(rowIndex, colIndex)}
+                onMouseDown={() => handleClick(rowIndex, colIndex)}
+                onMouseEnter={() => {}}
+                onMouseUp={() => {}}
                 position={cellIndex}
               />
             );
           })}
         </div>
       ))}
-      <ConnectionLines selectedCells={selectedCells} gridWidth={6} />
     </div>
   );
 }
