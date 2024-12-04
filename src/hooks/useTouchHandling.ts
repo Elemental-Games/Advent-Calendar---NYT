@@ -16,6 +16,7 @@ export function useTouchHandling({
   onMouseUp
 }: TouchHandlingProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const [lastProcessedPosition, setLastProcessedPosition] = useState<number | null>(null);
 
   const findTargetCell = useCallback((x: number, y: number) => {
     console.log('Finding target cell at:', x, y);
@@ -43,6 +44,7 @@ export function useTouchHandling({
     e.stopPropagation();
     
     setIsDragging(true);
+    setLastProcessedPosition(position);
     onMouseDown();
   }, [isFound, position, onMouseDown]);
 
@@ -55,11 +57,12 @@ export function useTouchHandling({
     const touch = e.touches[0];
     const targetIndex = findTargetCell(touch.clientX, touch.clientY);
     
-    if (targetIndex !== null && targetIndex !== position) {
-      console.log('Moving from position', position, 'to', targetIndex);
+    if (targetIndex !== null && targetIndex !== lastProcessedPosition) {
+      console.log('Moving from position', lastProcessedPosition, 'to', targetIndex);
+      setLastProcessedPosition(targetIndex);
       onMouseEnter();
     }
-  }, [isDragging, isFound, position, findTargetCell, onMouseEnter]);
+  }, [isDragging, isFound, lastProcessedPosition, findTargetCell, onMouseEnter]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
     if (isFound) return;
@@ -69,6 +72,7 @@ export function useTouchHandling({
     e.stopPropagation();
     
     setIsDragging(false);
+    setLastProcessedPosition(null);
     onMouseUp();
   }, [isFound, position, onMouseUp]);
 
