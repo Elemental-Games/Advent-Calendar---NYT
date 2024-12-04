@@ -9,26 +9,18 @@ import { toast } from 'sonner';
 import { generateUniqueColors } from '@/lib/garland-constants';
 import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
 import { useWordSelection } from '@/hooks/useWordSelection';
+import { useDebugLogs } from '@/hooks/useDebugLogs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { GameHeader } from './garland/GameHeader';
 import { FoundWordsList } from './garland/FoundWordsList';
 import { GameGrid } from './garland/GameGrid';
+import { DebugPanel } from './garland/DebugPanel';
 
 interface GarlandGameProps {
   words?: string[];
   themeWord?: string;
   onComplete?: () => void;
-}
-
-function DebugPanel({ logs }: { logs: string[] }) {
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-black/80 text-white p-4 h-32 overflow-auto text-xs z-50">
-      {logs.map((log, i) => (
-        <div key={i}>{log}</div>
-      ))}
-    </div>
-  );
 }
 
 export function GarlandGame({ 
@@ -42,13 +34,9 @@ export function GarlandGame({
   const [isStarted, setIsStarted] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [completionTime, setCompletionTime] = useState<number | null>(null);
-  const [debugLogs, setDebugLogs] = useState<string[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const addLog = (message: string) => {
-    console.log(message); // Also log to console for development
-    setDebugLogs(prev => [...prev.slice(-19), message]);
-  };
+  const { debugLogs, addLog } = useDebugLogs();
 
   const { 
     selectedCells, 
