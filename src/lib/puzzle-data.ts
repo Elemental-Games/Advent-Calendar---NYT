@@ -74,6 +74,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   5: {
     word: "QUILT"
   },
+
   6: {
     across: {
       "1": "Douglass ___",
