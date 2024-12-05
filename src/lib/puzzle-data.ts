@@ -73,5 +73,44 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   },
   5: {
     word: "QUILT"
+  },
+  6: {
+    across: {
+      "1": "Douglass ___",
+      "4": "Your boss, maybe spelled different tho lol",
+      "5": "2 weddings this day...(also goes with 1 down)",
+      "6": "testing of a metal or ore/to determine ingredients",
+      "7": "dogs are better pets than these"
+    },
+    down: {
+      "1": "2 weddings this day...(also goes with 5 across)",
+      "2": "these people lived in Machu Picchu and had their own civilization thing (lost city)",
+      "3": "I don't think this is a word, but it's the name of a horse I've never heard of. I know you'll get this somehow",
+      "4": "My dream job",
+      "5": "I almost bought this Cyber Monday but I'm cheap"
+    },
+    answers: {
+      "a1": "FIR",
+      "a4": "NINA",
+      "a5": "MARCH",
+      "a6": "ASSAY",
+      "a7": "CATS",
+      "d1": "FIRST",
+      "d2": "INCAS",
+      "d3": "RAHY",
+      "d4": "NASA",
+      "d5": "MAC"
+    },
+    size: {
+      rows: 5,
+      cols: 5
+    },
+    grid: [
+      [" ", " ", "F", "I", "R"],
+      [" ", "N", "I", "N", "A"],
+      ["M", "A", "R", "C", "H"],
+      ["A", "S", "S", "A", "Y"],
+      ["C", "A", "T", "S", " "]
+    ]
   }
 };
