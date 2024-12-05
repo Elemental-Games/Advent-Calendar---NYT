@@ -1,8 +1,27 @@
 import { differenceInMilliseconds } from "date-fns";
 import { fromZonedTime } from "date-fns-tz";
-import { DayInfo } from './puzzle-types';
 import { puzzleData } from './puzzle-data';
 import { getPuzzleType } from './puzzle-utils';
+import type { PuzzleType } from './puzzle-types';
+
+// Export the DayInfo interface
+export interface DayInfo {
+  day: number;
+  puzzleType: PuzzleType;
+  unlockTime: Date;
+  puzzleContent?: PuzzleContent;
+}
+
+// Export the PuzzleContent type
+export type PuzzleContent = {
+  word?: string;
+  across?: Record<string, string>;
+  down?: Record<string, string>;
+  answers?: Record<string, string>;
+  groups?: Array<{ category: string; color: string; words: string[] }>;
+  words?: string[];
+  themeWord?: string;
+};
 
 const UNLOCK_HOUR = 7; // 7:30 AM
 const UNLOCK_MINUTE = 30;
