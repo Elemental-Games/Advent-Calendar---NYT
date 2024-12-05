@@ -11,11 +11,27 @@ import { useClueManagement } from "@/hooks/useClueManagement";
 import { usePuzzleState } from "@/hooks/usePuzzleState";
 import { formatTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { puzzleData } from "@/lib/puzzle-data";
 import type { CrosswordGameProps } from "./crossword/types";
 
 export function CrosswordGame({ across, down, answers, onComplete, day }: CrosswordGameProps) {
+  console.log(`Initializing CrosswordGame for day ${day}`);
+  
   const puzzleId = `crossword_${day}`;
   const { puzzleState, savePuzzleState, resetPuzzle } = usePuzzleState(puzzleId);
+
+  // Get the puzzle data for the current day
+  const currentPuzzle = puzzleData[day];
+  console.log('Current puzzle data:', currentPuzzle);
+  
+  const puzzleGrid = currentPuzzle.grid || [
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "],
+    [" ", " ", " ", " ", " "]
+  ];
+  console.log('Using puzzle grid:', puzzleGrid);
 
   const {
     showStartDialog,
@@ -37,13 +53,13 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
   } = useCrosswordGame(answers);
 
   const {
-    GRID,
+    grid,
     cellRefs,
     isValidCell,
     getClueNumber,
     findNextCell,
     findPreviousCell
-  } = useCrosswordGrid();
+  } = useCrosswordGrid(puzzleGrid);
 
   const {
     guesses,
@@ -88,7 +104,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
   };
 
   const handleSubmit = () => {
-    const { allCorrect, incorrectCount } = validateSubmission(GRID, isValidCell, getClueNumber);
+    const { allCorrect, incorrectCount } = validateSubmission(grid, isValidCell, getClueNumber);
     console.log('Submission validation result:', { allCorrect, incorrectCount });
 
     if (allCorrect) {
@@ -97,11 +113,10 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         completionTime: elapsedTime,
         guesses
       });
-      // Add delay before showing congratulations
       setTimeout(() => {
         setShowCompletionDialog(true);
         onComplete?.();
-      }, 2000); // 2 second delay
+      }, 2000);
     } else {
       setIncorrectCount(incorrectCount);
       setShowIncorrectDialog(true);
@@ -109,6 +124,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
   };
 
   const handleReset = () => {
+    console.log('Resetting puzzle');
     resetPuzzle();
     setGuesses({});
     setSelectedCell(null);
@@ -134,7 +150,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
 
         <CrosswordLayout
           elapsedTime={puzzleState.completionTime}
-          grid={GRID}
+          grid={grid}
           guesses={puzzleState.guesses || {}}
           showDown={showDown}
           selectedCell={null}
@@ -160,7 +176,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
     <>
       <CrosswordLayout
         elapsedTime={elapsedTime}
-        grid={GRID}
+        grid={grid}
         guesses={guesses}
         showDown={showDown}
         selectedCell={selectedCell}

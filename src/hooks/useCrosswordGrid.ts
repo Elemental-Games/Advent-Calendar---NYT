@@ -7,79 +7,116 @@
 import { useRef } from "react";
 import type { CellPosition } from "@/components/crossword/types";
 
-export const GRID = [
-  ["P", "E", "N", "D", " "],
-  ["O", "W", "I", "E", " "],
-  ["S", "A", "N", "T", "A"],
-  ["E", "N", "J", "O", "Y"],
-  [" ", " ", "A", "X", "E"]
-];
-
-export function useCrosswordGrid() {
+export function useCrosswordGrid(puzzleGrid: string[][]) {
+  console.log('Initializing crossword grid with puzzle:', puzzleGrid);
+  
   const cellRefs = useRef<(HTMLInputElement | null)[][]>(
     Array(5).fill(null).map(() => Array(5).fill(null))
   );
 
   const isValidCell = (row: number, col: number) => {
-    if (row < 0 || row >= 5 || col < 0 || col >= 5) return false;
-    return GRID[row][col] !== " ";
+    if (row < 0 || row >= 5 || col < 0 || col >= 5) {
+      console.log(`Invalid cell coordinates: row=${row}, col=${col}`);
+      return false;
+    }
+    const isValid = puzzleGrid[row][col] !== " ";
+    console.log(`Checking cell validity at [${row},${col}]: ${isValid}`);
+    return isValid;
   };
 
   const getClueNumber = (rowIndex: number, colIndex: number) => {
-    if (!isValidCell(rowIndex, colIndex)) return "";
+    console.log(`Getting clue number for cell [${rowIndex},${colIndex}]`);
+    
+    if (!isValidCell(rowIndex, colIndex)) {
+      console.log('Cell is not valid, returning empty clue number');
+      return "";
+    }
 
-    // Only return numbers for cells that begin words
-    const clueMap: Record<string, string> = {
-      "0-0": "1", // Start of 1 across and 1 down
-      "0-1": "2", // Start of 2 down
-      "0-2": "3", // Start of 3 down
-      "0-3": "4", // Start of 4 down
-      "1-0": "5", // Start of 5 across
-      "2-0": "6", // Start of 6 across
-      "2-4": "7", // Start of 7 down
-      "3-0": "8", // Start of 8 across
-      "4-2": "9", // Start of 9 across (AXE)
-    };
+    const startsAcross = isValidCell(rowIndex, colIndex) && 
+      (colIndex === 0 || !isValidCell(rowIndex, colIndex - 1));
+    const startsDown = isValidCell(rowIndex, colIndex) && 
+      (rowIndex === 0 || !isValidCell(rowIndex - 1, colIndex));
 
-    return clueMap[`${rowIndex}-${colIndex}`] || "";
+    console.log(`Cell starts: across=${startsAcross}, down=${startsDown}`);
+
+    if (!startsAcross && !startsDown) {
+      console.log('Cell does not start any words');
+      return "";
+    }
+
+    let clueNumber = 1;
+    for (let row = 0; row < 5; row++) {
+      for (let col = 0; col < 5; col++) {
+        if (row === rowIndex && col === colIndex) {
+          console.log(`Found clue number: ${clueNumber}`);
+          return clueNumber.toString();
+        }
+        
+        const cellStartsAcross = isValidCell(row, col) && 
+          (col === 0 || !isValidCell(row, col - 1));
+        const cellStartsDown = isValidCell(row, col) && 
+          (row === 0 || !isValidCell(row - 1, col));
+        
+        if (cellStartsAcross || cellStartsDown) clueNumber++;
+      }
+    }
+    return clueNumber.toString();
   };
 
-  const findNextCell = (currentRow: number, currentCol: number, showDown: boolean): CellPosition | null => {
+  const findNextCell = (
+    currentRow: number,
+    currentCol: number,
+    showDown: boolean
+  ): CellPosition | null => {
+    console.log(`Finding next cell from [${currentRow},${currentCol}], moving ${showDown ? 'down' : 'right'}`);
+    
     if (showDown) {
       for (let row = currentRow + 1; row < 5; row++) {
         if (isValidCell(row, currentCol)) {
+          console.log(`Found next cell: [${row},${currentCol}]`);
           return { row, col: currentCol };
         }
       }
     } else {
       for (let col = currentCol + 1; col < 5; col++) {
         if (isValidCell(currentRow, col)) {
+          console.log(`Found next cell: [${currentRow},${col}]`);
           return { row: currentRow, col };
         }
       }
     }
+    console.log('No next cell found');
     return null;
   };
 
-  const findPreviousCell = (currentRow: number, currentCol: number, showDown: boolean): CellPosition | null => {
+  const findPreviousCell = (
+    currentRow: number,
+    currentCol: number,
+    showDown: boolean
+  ): CellPosition | null => {
+    console.log(`Finding previous cell from [${currentRow},${currentCol}], moving ${showDown ? 'up' : 'left'}`);
+    
     if (showDown) {
       for (let row = currentRow - 1; row >= 0; row--) {
         if (isValidCell(row, currentCol)) {
+          console.log(`Found previous cell: [${row},${currentCol}]`);
           return { row, col: currentCol };
         }
       }
     } else {
       for (let col = currentCol - 1; col >= 0; col--) {
         if (isValidCell(currentRow, col)) {
+          console.log(`Found previous cell: [${currentRow},${col}]`);
           return { row: currentRow, col };
         }
       }
     }
+    console.log('No previous cell found');
     return null;
   };
 
   return {
-    GRID,
+    grid: puzzleGrid,
     cellRefs,
     isValidCell,
     getClueNumber,
