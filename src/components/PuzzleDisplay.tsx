@@ -15,6 +15,7 @@ interface PuzzleDisplayProps {
 export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayProps) {
   console.log('PuzzleDisplay rendering with type:', type);
   console.log('Content:', content);
+  console.log('Day:', day);
 
   const renderPuzzle = () => {
     switch (type) {
@@ -32,11 +33,17 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         );
       
       case "frostword":
+        console.log('Initializing FrostWord puzzle for day:', day);
         const crosswordContent = content as { 
           across: Record<string, string>;
           down: Record<string, string>;
           answers: Record<string, string>;
         };
+        console.log('FrostWord content:', {
+          across: crosswordContent.across,
+          down: crosswordContent.down,
+          answers: crosswordContent.answers
+        });
         console.log('Rendering CrosswordGame');
         return (
           <div className="p-4">

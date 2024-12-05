@@ -1,5 +1,7 @@
 import { PuzzleContent } from './puzzle-types';
 
+console.log('Loading puzzle data configuration');
+
 export const puzzleData: { [key: number]: PuzzleContent } = {
   1: {
     word: "SNOWY"
@@ -74,7 +76,6 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   5: {
     word: "QUILT"
   },
-
   6: {
     across: {
       "1": "Douglass ___",
@@ -115,3 +116,5 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     ]
   }
 };
+
+console.log('Puzzle data loaded successfully');
