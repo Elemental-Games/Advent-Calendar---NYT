@@ -76,6 +76,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   5: {
     word: "QUILT"
   },
+  
   6: {
     across: {
       "1": "Douglass ___",
@@ -108,8 +109,8 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       cols: 5
     },
     grid: [
-      ["F", "I", "R", " ", " "],
-      [" ", "N", "I", "N", "A"],
+      ["F", "I", "R", "S", "T"],
+      [" ", " ", "A", " ", "S"],
       ["M", "A", "R", "C", "H"],
       ["A", "S", "S", "A", "Y"],
       ["C", "A", "T", "S", " "]
