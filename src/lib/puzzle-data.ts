@@ -107,7 +107,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       cols: 5
     },
     grid: [
-      [" ", " ", "F", "I", "R"],
+      ["F", "I", "R", " ", " "],
       [" ", "N", "I", "N", "A"],
       ["M", "A", "R", "C", "H"],
       ["A", "S", "S", "A", "Y"],
