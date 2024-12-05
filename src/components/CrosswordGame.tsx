@@ -13,6 +13,7 @@ import { formatTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { puzzleData } from "@/lib/puzzle-data";
 import type { CrosswordGameProps } from "./crossword/types";
+import type { CrosswordPuzzle } from "@/lib/puzzle-types";
 
 export function CrosswordGame({ across, down, answers, onComplete, day }: CrosswordGameProps) {
   console.log(`Initializing CrosswordGame for day ${day}`);
@@ -23,6 +24,16 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
   // Get the puzzle data for the current day
   const currentPuzzle = puzzleData[day];
   console.log('Current puzzle data:', currentPuzzle);
+
+  // Type guard to ensure we're working with a CrosswordPuzzle
+  const isCrosswordPuzzle = (puzzle: any): puzzle is CrosswordPuzzle => {
+    return puzzle && 'across' in puzzle && 'down' in puzzle;
+  };
+
+  if (!isCrosswordPuzzle(currentPuzzle)) {
+    console.error('Invalid puzzle type for CrosswordGame');
+    return null;
+  }
   
   const puzzleGrid = currentPuzzle.grid || [
     [" ", " ", " ", " ", " "],
