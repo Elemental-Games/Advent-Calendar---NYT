@@ -116,6 +116,32 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       ["C", "A", "T", "S", " "]
     ]
   }
+  
+  7: {
+    type: "northsort",
+    groups: [
+      {
+        category: "Coffee Flavors",
+        color: "rgb(234 179 8)", // Yellow
+        words: ["HAZELNUT", "FRENCH VANILLA", "CARAMEL", "PEPPERMINT"]
+      },
+      {
+        category: "Christmas Tree Types",
+        color: "rgb(34 197 94)", // Green
+        words: ["FIR", "SPRUCE", "CYPRESS", "PINE"]
+      },
+      {
+        category: "Christmas Movies",
+        color: "rgb(59 130 246)", // Blue
+        words: ["ELF", "JACK FROST", "KRANKS", "GRINCH"]
+      },
+      {
+        category: "Baking Snacks",
+        color: "rgb(239 68 68)", // Red
+        words: ["COOKIES", "BROWNIES", "CAKES", "BISCUITS"]
+      }
+    ]
+  }
 };
 
 console.log('Puzzle data loaded successfully');

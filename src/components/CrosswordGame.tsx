@@ -1,67 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CrosswordLayout } from "./crossword/CrosswordLayout";
 import { StartDialog } from "./crossword/dialogs/StartDialog";
 import { CompletionDialog } from "./crossword/dialogs/CompletionDialog";
 import { IncorrectDialog } from "./crossword/dialogs/IncorrectDialog";
-import { useCrosswordGame } from "@/hooks/useCrosswordGame";
 import { useCrosswordGrid } from "@/hooks/useCrosswordGrid";
 import { useCrosswordInput } from "@/hooks/useCrosswordInput";
 import { useCrosswordCellInput } from "@/hooks/useCrosswordCellInput";
 import { useClueManagement } from "@/hooks/useClueManagement";
-import { usePuzzleState } from "@/hooks/usePuzzleState";
-import { formatTime } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { puzzleData } from "@/lib/puzzle-data";
+import { useGameState } from "./crossword/GameStateProvider";
+import { GameControls } from "./crossword/GameControls";
 import type { CrosswordGameProps } from "./crossword/types";
 import type { CrosswordPuzzle } from "@/lib/puzzle-types";
 
 export function CrosswordGame({ across, down, answers, onComplete, day }: CrosswordGameProps) {
   console.log(`Initializing CrosswordGame for day ${day}`);
   
-  const puzzleId = `crossword_${day}`;
-  const { puzzleState, savePuzzleState, resetPuzzle } = usePuzzleState(puzzleId);
-
+  const gameState = useGameState(day, answers, onComplete);
+  
   // Get the puzzle data for the current day
   const currentPuzzle = puzzleData[day];
   console.log('Current puzzle data:', currentPuzzle);
 
   // Type guard to ensure we're working with a CrosswordPuzzle
   const isCrosswordPuzzle = (puzzle: any): puzzle is CrosswordPuzzle => {
-    return puzzle && 'across' in puzzle && 'down' in puzzle;
+    return puzzle && puzzle.type === 'frostword';
   };
 
   if (!isCrosswordPuzzle(currentPuzzle)) {
     console.error('Invalid puzzle type for CrosswordGame');
     return null;
   }
-  
-  const puzzleGrid = currentPuzzle.grid || [
-    [" ", " ", " ", " ", " "],
-    [" ", " ", " ", " ", " "],
-    [" ", " ", " ", " ", " "],
-    [" ", " ", " ", " ", " "],
-    [" ", " ", " ", " ", " "]
-  ];
-  console.log('Using puzzle grid:', puzzleGrid);
 
-  const {
-    showStartDialog,
-    setShowStartDialog,
-    isStarted,
-    elapsedTime,
-    selectedCell,
-    setSelectedCell,
-    showDown,
-    setShowDown,
-    handleStartGame,
-    showCompletionDialog,
-    setShowCompletionDialog,
-    showIncorrectDialog,
-    setShowIncorrectDialog,
-    incorrectCount,
-    setIncorrectCount,
-    timerRef
-  } = useCrosswordGame(answers);
+  const puzzleGrid = currentPuzzle.grid || Array(5).fill(Array(5).fill(" "));
+  console.log('Using puzzle grid:', puzzleGrid);
 
   const {
     grid,
@@ -84,33 +56,46 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
     getClueNumber,
     findNextCell,
     findPreviousCell,
-    setSelectedCell,
+    gameState.setSelectedCell,
     cellRefs,
-    showDown,
+    gameState.showDown,
     guesses,
     setGuesses
   );
 
   const { getCurrentClue } = useClueManagement(
-    selectedCell,
-    showDown,
+    gameState.selectedCell,
+    gameState.showDown,
     across,
     down,
     getClueNumber
   );
 
+  useEffect(() => {
+    if (gameState.isStarted && !gameState.showCompletionDialog && !gameState.puzzleState.completed) {
+      gameState.timerRef.current = setInterval(() => {
+        gameState.setElapsedTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => {
+      if (gameState.timerRef.current) {
+        clearInterval(gameState.timerRef.current);
+      }
+    };
+  }, [gameState.isStarted, gameState.showCompletionDialog, gameState.puzzleState.completed]);
+
   const handleKeyPress = (key: string) => {
-    if (!selectedCell || puzzleState.completed) return;
-    handleInputChange(selectedCell.row, selectedCell.col, key);
+    if (!gameState.selectedCell || gameState.puzzleState.completed) return;
+    handleInputChange(gameState.selectedCell.row, gameState.selectedCell.col, key);
   };
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
-    if (!isValidCell(rowIndex, colIndex) || puzzleState.completed) return;
+    if (!isValidCell(rowIndex, colIndex) || gameState.puzzleState.completed) return;
     
-    if (selectedCell?.row === rowIndex && selectedCell?.col === colIndex) {
-      setShowDown(!showDown);
+    if (gameState.selectedCell?.row === rowIndex && gameState.selectedCell?.col === colIndex) {
+      gameState.setShowDown(!gameState.showDown);
     } else {
-      setSelectedCell({ row: rowIndex, col: colIndex });
+      gameState.setSelectedCell({ row: rowIndex, col: colIndex });
     }
   };
 
@@ -119,78 +104,31 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
     console.log('Submission validation result:', { allCorrect, incorrectCount });
 
     if (allCorrect) {
-      savePuzzleState({
+      gameState.savePuzzleState({
         completed: true,
-        completionTime: elapsedTime,
+        completionTime: gameState.elapsedTime,
         guesses
       });
       setTimeout(() => {
-        setShowCompletionDialog(true);
+        gameState.setShowCompletionDialog(true);
         onComplete?.();
       }, 2000);
     } else {
-      setIncorrectCount(incorrectCount);
-      setShowIncorrectDialog(true);
+      gameState.setIncorrectCount(incorrectCount);
+      gameState.setShowIncorrectDialog(true);
     }
-  };
-
-  const handleReset = () => {
-    console.log('Resetting puzzle');
-    resetPuzzle();
-    setGuesses({});
-    setSelectedCell(null);
-    window.location.reload();
   };
 
   const currentClue = getCurrentClue();
 
-  if (puzzleState.completed) {
-    return (
-      <div className="space-y-4">
-        <div className="text-center space-y-4 mb-8">
-          <h2 className="text-2xl font-bold text-green-600">Puzzle Completed!</h2>
-          <p className="text-lg">Time: {formatTime(puzzleState.completionTime)}</p>
-          <Button 
-            onClick={handleReset}
-            variant="outline"
-            className="text-red-600 border-red-600 hover:bg-red-50"
-          >
-            Reset Puzzle
-          </Button>
-        </div>
-
-        <CrosswordLayout
-          elapsedTime={puzzleState.completionTime}
-          grid={grid}
-          guesses={puzzleState.guesses || {}}
-          showDown={showDown}
-          selectedCell={null}
-          isValidCell={isValidCell}
-          getClueNumber={getClueNumber}
-          handleCellClick={() => {}}
-          handleInputChange={() => {}}
-          cellRefs={cellRefs}
-          validatedCells={{}}
-          currentClue={null}
-          onSubmit={() => {}}
-          onKeyPress={() => {}}
-          onBackspace={() => {}}
-          across={across}
-          down={down}
-          isCompleted={true}
-        />
-      </div>
-    );
-  }
-
   return (
     <>
       <CrosswordLayout
-        elapsedTime={elapsedTime}
+        elapsedTime={gameState.elapsedTime}
         grid={grid}
-        guesses={guesses}
-        showDown={showDown}
-        selectedCell={selectedCell}
+        guesses={gameState.puzzleState.completed ? gameState.puzzleState.guesses || {} : guesses}
+        showDown={gameState.showDown}
+        selectedCell={gameState.selectedCell}
         isValidCell={isValidCell}
         getClueNumber={getClueNumber}
         handleCellClick={handleCellClick}
@@ -200,29 +138,29 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         currentClue={currentClue}
         onSubmit={handleSubmit}
         onKeyPress={handleKeyPress}
-        onBackspace={() => selectedCell && handleBackspace(selectedCell)}
+        onBackspace={() => gameState.selectedCell && handleBackspace(gameState.selectedCell)}
         across={across}
         down={down}
-        isCompleted={false}
+        isCompleted={gameState.puzzleState.completed}
       />
 
       <StartDialog
-        open={showStartDialog}
-        onOpenChange={setShowStartDialog}
-        onStart={handleStartGame}
+        open={gameState.showStartDialog}
+        onOpenChange={gameState.setShowStartDialog}
+        onStart={gameState.handleStartGame}
       />
 
       <CompletionDialog
-        open={showCompletionDialog}
-        onOpenChange={setShowCompletionDialog}
-        elapsedTime={elapsedTime}
+        open={gameState.showCompletionDialog}
+        onOpenChange={gameState.setShowCompletionDialog}
+        elapsedTime={gameState.elapsedTime}
         day={day}
       />
 
       <IncorrectDialog
-        open={showIncorrectDialog}
-        onOpenChange={setShowIncorrectDialog}
-        incorrectCount={incorrectCount}
+        open={gameState.showIncorrectDialog}
+        onOpenChange={gameState.setShowIncorrectDialog}
+        incorrectCount={gameState.incorrectCount}
       />
     </>
   );
