@@ -115,8 +115,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       ["A", "S", "S", "A", "Y"],
       ["C", "A", "T", "S", " "]
     ]
-  }
-  
+  },
   7: {
     type: "northsort",
     groups: [
