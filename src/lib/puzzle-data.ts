@@ -76,8 +76,8 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   5: {
     word: "QUILT"
   },
-  
   6: {
+    type: "frostword",
     across: {
       "1": "Douglass ___",
       "4": "Your boss, maybe spelled different tho lol",
