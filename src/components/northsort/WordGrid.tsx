@@ -12,19 +12,21 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGr
   const arrangedWords = useMemo(() => {
     const customArrangement = [...words];
     
-    const hollyIndex = customArrangement.findIndex(word => word.toLowerCase() === 'holly');
-    const wineIndex = customArrangement.findIndex(word => word.toLowerCase() === 'wine');
-    const cookiesIndex = customArrangement.findIndex(word => word.toLowerCase() === 'cookies');
-    const garlandIndex = customArrangement.findIndex(word => word.toLowerCase() === 'garland');
+    // Find indices of specific words we want to move
+    const hazelnutIndex = customArrangement.findIndex(word => word === 'HAZELNUT');
+    const pineIndex = customArrangement.findIndex(word => word === 'PINE');
+    const grinchIndex = customArrangement.findIndex(word => word === 'GRINCH');
+    const browniesIndex = customArrangement.findIndex(word => word === 'BROWNIES');
     
-    if (hollyIndex !== -1 && wineIndex !== -1) {
-      [customArrangement[hollyIndex], customArrangement[wineIndex]] = 
-      [customArrangement[wineIndex], customArrangement[hollyIndex]];
+    // Swap positions to create a more mixed arrangement
+    if (hazelnutIndex !== -1 && pineIndex !== -1) {
+      [customArrangement[hazelnutIndex], customArrangement[pineIndex]] = 
+      [customArrangement[pineIndex], customArrangement[hazelnutIndex]];
     }
     
-    if (cookiesIndex !== -1 && garlandIndex !== -1) {
-      [customArrangement[cookiesIndex], customArrangement[garlandIndex]] = 
-      [customArrangement[garlandIndex], customArrangement[cookiesIndex]];
+    if (grinchIndex !== -1 && browniesIndex !== -1) {
+      [customArrangement[grinchIndex], customArrangement[browniesIndex]] = 
+      [customArrangement[browniesIndex], customArrangement[grinchIndex]];
     }
     
     return customArrangement;
