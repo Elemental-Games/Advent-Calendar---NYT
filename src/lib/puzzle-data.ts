@@ -122,12 +122,12 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       {
         category: "Coffee Flavors",
         color: "rgb(234 179 8)", // Yellow
-        words: ["HAZELNUT", "CARAMEL", "FRENCH VANILLA", "SPRUCE"]
+        words: ["HAZELNUT", "FRENCH VANILLA", "CARAMEL", "PEPPERMINT"]
       },
       {
         category: "Christmas Tree Types",
         color: "rgb(34 197 94)", // Green
-        words: ["FIR", "CYPRESS", "PINE", "PEPPERMINT"]
+        words: ["FIR", "SPRUCE", "CYPRESS", "PINE"]
       },
       {
         category: "Christmas Movies",
@@ -137,7 +137,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       {
         category: "Baking Snacks",
         color: "rgb(239 68 68)", // Red
-        words: ["BROWNIES", "COOKIES", "CAKES", "BISCUITS"]
+        words: ["COOKIES", "BROWNIES", "CAKES", "BISCUITS"]
       }
     ]
   }
