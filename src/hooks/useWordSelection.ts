@@ -119,19 +119,23 @@ export function useWordSelection(
 
     console.log('Selected positions:', selectedPositions);
 
-    const wordEntry = Object.entries(WORD_POSITIONS).find(([word, positions]) => 
-      selectedPositions.length === positions.length &&
-      selectedPositions.every((pos, index) => pos === positions[index])
-    );
+    const wordEntry = Object.entries(WORD_POSITIONS).find(([word, positions]) => {
+      const positionsMatch = selectedPositions.length === positions.length &&
+        selectedPositions.every((pos, index) => pos === positions[index]);
+      console.log(`Checking word ${word}:`, positionsMatch);
+      return positionsMatch;
+    });
 
     if (wordEntry) {
       const [word] = wordEntry;
       console.log('Found valid word:', word);
       
       if (!foundWords.some(fw => fw.word.toLowerCase() === word.toLowerCase())) {
-        const wordIndex = words.findIndex(w => w.toLowerCase() === word.toLowerCase());
+        const wordIndex = words.findIndex(w => w.toLowerCase() === word.toLowerCase()) || 
+                         (word.toLowerCase() === themeWord.toLowerCase() ? words.length : -1);
+                         
         if (wordIndex !== -1) {
-          setFoundWords([...foundWords, { word: words[wordIndex], index: wordIndex }]);
+          setFoundWords([...foundWords, { word: word.toUpperCase(), index: wordIndex }]);
           
           if (word.toLowerCase() === themeWord.toLowerCase()) {
             toast.success("You found the theme word!");
