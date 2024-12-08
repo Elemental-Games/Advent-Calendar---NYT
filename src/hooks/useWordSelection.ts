@@ -6,10 +6,10 @@ const WORD_POSITIONS = {
   'dark': [43, 33, 23, 24],
   'rich': [46, 36, 35, 34],
   'milky': [53, 54, 55, 45, 44],
-  'sweets': [73, 63, 64, 65, 66, 56],  // Updated positions for SWEETS
+  'sweets': [73, 63, 64, 65, 56, 66],  // Updated positions for SWEETS
   'truffles': [83, 84, 85, 86, 76, 75, 74, 73],
   'fudgey': [31, 41, 51, 61, 71, 81],
-  'chocolate': [11, 21, 22, 32, 42, 52, 62, 72, 82]
+  'chocolate': [11, 21, 22, 32, 42, 52, 62, 72, 82]  // Theme word positions
 };
 
 const getPositionNumber = (row: number, col: number): number => {
