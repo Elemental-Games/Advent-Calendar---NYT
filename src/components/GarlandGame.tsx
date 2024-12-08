@@ -70,14 +70,14 @@ export function GarlandGame({
 
       <GameGrid
         grid={[
-          ['C', 'Y', 'E', 'H', 'S', 'R'],
-          ['H', 'O', 'R', 'K', 'H', 'E'],
-          ['F', 'C', 'A', 'I', 'C', 'H'],
-          ['U', 'O', 'D', 'Y', 'K', 'R'],
-          ['D', 'L', 'M', 'I', 'L', 'T'],
-          ['G', 'A', 'W', 'E', 'E', ' '],
-          ['E', 'T', 'S', 'E', 'L', 'F'],
-          ['Y', 'E', 'T', 'R', 'U', 'F']
+          ['C', 'H', 'O', 'C', 'O', 'L'],
+          ['H', 'E', 'R', 'S', 'H', 'E'],
+          ['Y', 'D', 'A', 'R', 'K', 'A'],
+          ['R', 'I', 'C', 'H', 'M', 'T'],
+          ['F', 'U', 'D', 'G', 'E', 'E'],
+          ['Y', 'S', 'W', 'E', 'E', 'T'],
+          ['S', 'T', 'R', 'U', 'F', 'F'],
+          ['L', 'E', 'S', 'M', 'I', 'L']
         ]}
         selectedCells={selectedCells}
         foundWordsWithIndex={foundWordsWithIndex}
