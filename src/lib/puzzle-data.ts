@@ -143,8 +143,8 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   },
   8: {
     type: "garland",
-    words: ["FUDGE", "CANDY", "COOKIE", "CHOCOLATE", "SWEET", "TOFFEE", "TAFFY"],
-    themeWord: "CHRISTMAS"
+    words: ["HERSHEY", "DARK", "RICH", "MILKY", "SWEETS", "TRUFFLES", "FUDGEY"],
+    themeWord: "CHOCOLATE"
   }
 };
 
