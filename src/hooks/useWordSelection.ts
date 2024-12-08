@@ -44,8 +44,8 @@ export function useWordSelection(
     setSelectedCells(prev => {
       if (prev.length === 0) {
         console.log('First cell selected');
-        const newWord = String.fromCharCode(65 + cellIndex);
-        setCurrentWord(newWord);
+        const letter = getLetterFromGrid(rowIndex, colIndex);
+        setCurrentWord(letter);
         return [cellIndex];
       }
 
@@ -53,20 +53,32 @@ export function useWordSelection(
         if (cellIndex === prev[prev.length - 1]) {
           console.log('Removing last selected cell');
           const newCells = prev.slice(0, -1);
-          setCurrentWord(newCells.map(cell => String.fromCharCode(65 + cell)).join(''));
+          setCurrentWord(newCells.map(cell => {
+            const row = Math.floor(cell / 6);
+            const col = cell % 6;
+            return getLetterFromGrid(row, col);
+          }).join(''));
           return newCells;
         }
         const index = prev.indexOf(cellIndex);
         console.log('Trimming back to previously selected cell');
         const newCells = prev.slice(0, index + 1);
-        setCurrentWord(newCells.map(cell => String.fromCharCode(65 + cell)).join(''));
+        setCurrentWord(newCells.map(cell => {
+          const row = Math.floor(cell / 6);
+          const col = cell % 6;
+          return getLetterFromGrid(row, col);
+        }).join(''));
         return newCells;
       }
 
       if (isAdjacent(prev[prev.length - 1], cellIndex)) {
         console.log('Adding adjacent cell');
         const newCells = [...prev, cellIndex];
-        setCurrentWord(newCells.map(cell => String.fromCharCode(65 + cell)).join(''));
+        setCurrentWord(newCells.map(cell => {
+          const row = Math.floor(cell / 6);
+          const col = cell % 6;
+          return getLetterFromGrid(row, col);
+        }).join(''));
         return newCells;
       }
 
@@ -74,6 +86,20 @@ export function useWordSelection(
       return prev;
     });
   }, []);
+
+  const getLetterFromGrid = (row: number, col: number): string => {
+    const grid = [
+      ['C', 'Y', 'E', 'H', 'S', 'R'],
+      ['H', 'O', 'R', 'K', 'H', 'E'],
+      ['F', 'C', 'A', 'I', 'C', 'H'],
+      ['U', 'O', 'D', 'Y', 'K', 'R'],
+      ['D', 'L', 'M', 'I', 'L', 'T'],
+      ['G', 'A', 'W', 'E', 'E', ' '],
+      ['E', 'T', 'S', 'E', 'L', 'F'],
+      ['Y', 'E', 'T', 'R', 'U', 'F']
+    ];
+    return grid[row][col];
+  };
 
   const handleSubmit = useCallback(() => {
     console.log('Submitting word:', currentWord);
