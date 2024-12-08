@@ -1,9 +1,3 @@
-/**
- * GarlandGame Component
- * A word-finding puzzle game where players search for Christmas-themed words in a grid.
- * Players can click letters to form words, with special handling for the theme word.
- * The game tracks found words, completion state, and elapsed time.
- */
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useFoundWordDisplay } from '@/hooks/useFoundWordDisplay';
@@ -48,7 +42,6 @@ export function GarlandGame({
     themeWord
   );
 
-  // Handle game completion
   useEffect(() => {
     if (foundWordsWithIndex.length === words.length && !isCompleted) {
       console.log('All words found, completing game');

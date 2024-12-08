@@ -1,25 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 
-const grid = [
-  ['S', 'L', 'E', 'S', 'F', 'R'],
-  ['H', 'G', 'I', 'A', 'S', 'O'],
-  ['M', 'I', 'T', 'M', 'T', 'R'],
-  ['S', 'T', 'L', 'S', 'O', 'U'],
-  ['T', 'E', 'I', 'P', 'L', 'D'],
-  ['O', 'E', 'R', 'H', 'E', 'S'],
-  ['S', 'A', 'N', 'H', 'K', 'I'],
-  ['A', 'T', 'C', 'O', 'O', 'C'],
-];
-
 const WORD_POSITIONS = {
-  'santa': [71, 72, 73, 82, 81],
-  'cookies': [86, 85, 84, 75, 76, 65, 66],
-  'sleigh': [11, 12, 13, 23, 22, 21],
-  'mistletoe': [31, 32, 41, 42, 43, 52, 51, 61, 62],
-  'frost': [15, 16, 26, 25, 35],
-  'rudolph': [36, 46, 56, 45, 55, 54, 64],
-  'christmas': [83, 74, 63, 53, 44, 33, 34, 24, 14],
   'hershey': [25, 26, 16, 15, 14, 13, 12],
   'dark': [43, 33, 23, 24],
   'rich': [46, 36, 35, 34],
@@ -60,51 +42,31 @@ export function useWordSelection(
     const cellIndex = rowIndex * 6 + colIndex;
 
     setSelectedCells(prev => {
-      // If this is the first cell or no cells are selected
       if (prev.length === 0) {
         console.log('First cell selected');
-        const newWord = grid[rowIndex][colIndex];
+        const newWord = String.fromCharCode(65 + cellIndex);
         setCurrentWord(newWord);
         return [cellIndex];
       }
 
-      // If clicking an already selected cell
       if (prev.includes(cellIndex)) {
-        // If it's the last cell in the selection, remove it
         if (cellIndex === prev[prev.length - 1]) {
           console.log('Removing last selected cell');
           const newCells = prev.slice(0, -1);
-          const newWord = newCells.map(cell => {
-            const r = Math.floor(cell / 6);
-            const c = cell % 6;
-            return grid[r][c];
-          }).join('');
-          setCurrentWord(newWord);
+          setCurrentWord(newCells.map(cell => String.fromCharCode(65 + cell)).join(''));
           return newCells;
         }
-        // If it's in the middle of the selection, trim back to that point
         const index = prev.indexOf(cellIndex);
         console.log('Trimming back to previously selected cell');
         const newCells = prev.slice(0, index + 1);
-        const newWord = newCells.map(cell => {
-          const r = Math.floor(cell / 6);
-          const c = cell % 6;
-          return grid[r][c];
-        }).join('');
-        setCurrentWord(newWord);
+        setCurrentWord(newCells.map(cell => String.fromCharCode(65 + cell)).join(''));
         return newCells;
       }
 
-      // Check if the new cell is adjacent to the last selected cell
       if (isAdjacent(prev[prev.length - 1], cellIndex)) {
         console.log('Adding adjacent cell');
         const newCells = [...prev, cellIndex];
-        const newWord = newCells.map(cell => {
-          const r = Math.floor(cell / 6);
-          const c = cell % 6;
-          return grid[r][c];
-        }).join('');
-        setCurrentWord(newWord);
+        setCurrentWord(newCells.map(cell => String.fromCharCode(65 + cell)).join(''));
         return newCells;
       }
 
@@ -141,13 +103,15 @@ export function useWordSelection(
       console.log('Found valid word:', word);
       
       if (!foundWords.some(fw => fw.word.toLowerCase() === word.toLowerCase())) {
-        const wordIndex = words.indexOf(word);
-        setFoundWords([...foundWords, { word, index: wordIndex }]);
-        
-        if (word.toLowerCase() === themeWord.toLowerCase()) {
-          toast.success("You found the theme word!");
-        } else {
-          toast.success(`Found word: ${word}!`);
+        const wordIndex = words.findIndex(w => w.toLowerCase() === word.toLowerCase());
+        if (wordIndex !== -1) {
+          setFoundWords([...foundWords, { word: words[wordIndex], index: wordIndex }]);
+          
+          if (word.toLowerCase() === themeWord.toLowerCase()) {
+            toast.success("You found the theme word!");
+          } else {
+            toast.success(`Found word: ${word.toUpperCase()}!`);
+          }
         }
       } else {
         toast.error("You've already found this word!");
