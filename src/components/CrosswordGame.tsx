@@ -59,7 +59,8 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
     guesses,
     setGuesses,
     validatedCells,
-    validateSubmission
+    validateSubmission,
+    resetGuesses  // Add this to the destructuring
   } = useCrosswordInput(answers);
 
   const { handleInputChange, handleBackspace } = useCrosswordCellInput(
@@ -131,6 +132,21 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
     }
   };
 
+  const handleReset = () => {
+    console.log('Resetting puzzle state...');
+    resetGuesses();  // Reset all guesses to empty
+    gameState.setSelectedCell(null);
+    gameState.setShowDown(false);
+    gameState.setElapsedTime(0);
+    gameState.setIsStarted(false);
+    gameState.setShowStartDialog(true);
+    if (gameState.timerRef.current) {
+      clearInterval(gameState.timerRef.current);
+    }
+    localStorage.removeItem(`crossword_${day}`);
+    gameState.resetPuzzle();
+  };
+
   const currentClue = getCurrentClue();
 
   // If the puzzle is completed, use the saved guesses
@@ -154,6 +170,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
         onSubmit={handleSubmit}
         onKeyPress={handleKeyPress}
         onBackspace={() => gameState.selectedCell && handleBackspace(gameState.selectedCell)}
+        onReset={handleReset}  // Add the reset handler
         across={across}
         down={down}
         isCompleted={isCompleted || gameState.puzzleState.completed}
