@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { generateCalendarData } from "@/lib/date-utils";
 import { PuzzleDisplay } from "@/components/PuzzleDisplay";
 import { Button } from "@/components/ui/button";
-import { markDayComplete, markDayIncomplete, isDayCompleted } from "@/lib/game-state";
+import { markDayComplete, markDayIncomplete, isDayCompleted, clearPuzzleState } from "@/lib/game-state";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -36,10 +36,7 @@ const DayPage = () => {
       console.log('Resetting day:', dayNumber);
       markDayIncomplete(dayNumber);
       setIsCompleted(false);
-      
-      localStorage.removeItem(`crossword_${dayNumber}`);
-      localStorage.removeItem(`northsort_${dayNumber}`);
-      
+      clearPuzzleState(dayNumber);
       toast.info("Day reset! Try again!");
       window.location.reload();
     }
@@ -57,8 +54,6 @@ const DayPage = () => {
     );
   }
 
-  console.log('Rendering puzzle with type:', dayInfo.puzzleType);
-  
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4">
       <div className="max-w-4xl mx-auto">
@@ -67,7 +62,7 @@ const DayPage = () => {
             Back to Calendar
           </Button>
           <h1 className="text-2xl font-bold text-red-700">
-            Day {dayInfo.day}
+            {dayInfo.day === 10 ? "FrostWord #3" : `Day ${dayInfo.day}`}
           </h1>
           <div className="flex gap-2">
             <Button 
