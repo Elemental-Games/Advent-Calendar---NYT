@@ -188,6 +188,46 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       [" ", "T", "H", "I", "N"],
       [" ", "H", "I", "N", "D"]
     ]
+  },
+  11: {
+    type: "northsort",
+    groups: [
+      {
+        category: "Snow Sports",
+        color: "rgb(234 179 8)", // Yellow
+        words: ["SLALOM", "SKII", "MOGUL", "LUGE"]
+      },
+      {
+        category: "Things that store things",
+        color: "rgb(34 197 94)", // Green
+        words: ["VAULT", "TANK", "BANK", "BAR"]
+      },
+      {
+        category: "Birds with double meanings",
+        color: "rgb(59 130 246)", // Blue
+        words: ["CRANE", "DUCK", "SWIFT", "SWAN"]
+      },
+      {
+        category: "Words that mean \"to jump\"",
+        color: "rgb(239 68 68)", // Red
+        words: ["SPRING", "RISE", "LEAP", "HOP"]
+      }
+    ]
+  },
+  12: {
+    type: "garland",
+    words: ["PENNE", "GNOCCHI", "FETTUCINE"],
+    themeWord: "PASTA",
+    grid: [
+      ["P", "E", "C", "C", "H", "I"],
+      ["N", "N", "N", "O", "N", "E"],
+      ["E", "G", "U", "C", "I", "S"],
+      ["E", "T", "T", "A", "P", "E"],
+      ["F", "S", "T", "T", "Y", "Z"],
+      ["P", "A", "I", "T", "I", "I"],
+      ["L", "A", "S", "A", "N", "R"],
+      ["A", "N", "G", "I", "T", "O"]
+    ]
   }
 };
 
