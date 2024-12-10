@@ -42,8 +42,16 @@ const DayPage = () => {
     }
   };
 
+  const handlePuzzleReset = () => {
+    if (dayNumber) {
+      console.log('Resetting puzzle state for day:', dayNumber);
+      clearPuzzleState(dayNumber);
+      toast.info("Puzzle reset! Try again!");
+      window.location.reload();
+    }
+  };
+
   if (!dayInfo) {
-    console.log('Day not found');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -65,6 +73,15 @@ const DayPage = () => {
             {dayInfo.day === 10 ? "FrostWord #3" : `Day ${dayInfo.day}`}
           </h1>
           <div className="flex gap-2">
+            {dayNumber === 10 && (
+              <Button 
+                onClick={handlePuzzleReset}
+                variant="outline"
+                className="text-orange-600 border-orange-600 hover:bg-orange-50"
+              >
+                Reset Puzzle
+              </Button>
+            )}
             <Button 
               onClick={handleReset}
               variant="outline"
