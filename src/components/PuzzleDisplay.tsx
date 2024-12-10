@@ -4,6 +4,7 @@ import { WordleGame } from './WordleGame';
 import { CrosswordGame } from './CrosswordGame';
 import { NorthSortGame } from './NorthSortGame';
 import { GarlandGame } from './GarlandGame';
+import { getPuzzleState } from '@/lib/game-state';
 
 interface PuzzleDisplayProps {
   type: "kringle" | "frostword" | "northsort" | "garland";
@@ -16,6 +17,10 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
   console.log('PuzzleDisplay rendering with type:', type);
   console.log('Content:', content);
   console.log('Day:', day);
+
+  // Get the current puzzle state to check completion
+  const puzzleState = getPuzzleState(day);
+  console.log('Current puzzle state:', puzzleState);
 
   const renderPuzzle = () => {
     switch (type) {
@@ -53,6 +58,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
               answers={crosswordContent.answers}
               onComplete={onComplete}
               day={day}
+              isCompleted={puzzleState?.completed || false}
             />
           </div>
         );
