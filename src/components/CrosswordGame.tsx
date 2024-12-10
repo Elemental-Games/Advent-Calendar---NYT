@@ -35,6 +35,17 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
   const puzzleGrid = currentPuzzle.grid || Array(5).fill(Array(5).fill(" "));
   console.log('Using puzzle grid:', puzzleGrid);
 
+  // Initialize game as started if it's already completed
+  useEffect(() => {
+    if (isCompleted || gameState.puzzleState.completed) {
+      gameState.setShowStartDialog(false);
+      gameState.setIsStarted(true);
+      if (gameState.puzzleState.completionTime) {
+        gameState.setElapsedTime(gameState.puzzleState.completionTime);
+      }
+    }
+  }, [isCompleted, gameState.puzzleState.completed]);
+
   const {
     grid,
     cellRefs,
@@ -72,6 +83,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
   );
 
   useEffect(() => {
+    // Only start timer if game is started and not completed
     if (gameState.isStarted && !gameState.showCompletionDialog && !gameState.puzzleState.completed) {
       gameState.timerRef.current = setInterval(() => {
         gameState.setElapsedTime(prev => prev + 1);
@@ -121,12 +133,15 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
 
   const currentClue = getCurrentClue();
 
+  // If the puzzle is completed, use the saved guesses
+  const displayGuesses = gameState.puzzleState.completed ? gameState.puzzleState.guesses || {} : guesses;
+
   return (
     <>
       <CrosswordLayout
         elapsedTime={gameState.elapsedTime}
         grid={grid}
-        guesses={gameState.puzzleState.completed ? gameState.puzzleState.guesses || {} : guesses}
+        guesses={displayGuesses}
         showDown={gameState.showDown}
         selectedCell={gameState.selectedCell}
         isValidCell={isValidCell}
@@ -145,7 +160,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
       />
 
       <StartDialog
-        open={gameState.showStartDialog}
+        open={gameState.showStartDialog && !isCompleted && !gameState.puzzleState.completed}
         onOpenChange={gameState.setShowStartDialog}
         onStart={gameState.handleStartGame}
       />
