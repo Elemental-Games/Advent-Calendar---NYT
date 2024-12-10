@@ -2,18 +2,39 @@ import { CrosswordPuzzle } from '../puzzle-types';
 
 export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
   1: {
-    word: "SNOWY"
+    type: "frostword",
+    across: {},
+    down: {},
+    size: { rows: 5, cols: 5 },
+    answers: {},
+    grid: []
   },
   5: {
-    word: "QUILT"
+    type: "frostword",
+    across: {},
+    down: {},
+    size: { rows: 5, cols: 5 },
+    answers: {},
+    grid: []
   },
   9: {
-    word: "MUMMY"
+    type: "frostword",
+    across: {},
+    down: {},
+    size: { rows: 5, cols: 5 },
+    answers: {},
+    grid: []
   },
   13: {
-    word: "OCEAN"
+    type: "frostword",
+    across: {},
+    down: {},
+    size: { rows: 5, cols: 5 },
+    answers: {},
+    grid: []
   },
   14: {
+    type: "frostword",
     across: {
       "1": "Color of a Heart",
       "4": "I want to do this for every dog",
@@ -28,6 +49,7 @@ export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
       "5": "Machu Picchu location",
       "6": "Christmas ____"
     },
+    size: { rows: 5, cols: 5 },
     answers: {
       "a1": "RED",
       "a4": "ADOPT",
@@ -39,10 +61,6 @@ export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
       "d3": "DONOR",
       "d5": "PERU",
       "d6": "TREE"
-    },
-    size: {
-      rows: 5,
-      cols: 5
     },
     grid: [
       ["R", "E", "D", " ", " "],
