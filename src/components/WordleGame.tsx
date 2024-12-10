@@ -15,6 +15,12 @@ interface WordleGameProps {
 export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
   console.log('WordleGame rendering with solution:', solution);
   
+  // Early return if no solution is provided
+  if (!solution) {
+    console.error('No solution provided to WordleGame');
+    return <div>Error: Invalid puzzle configuration</div>;
+  }
+
   const [guesses, setGuesses] = useState<string[]>(() => {
     const saved = localStorage.getItem(`kringle_${day}`);
     return saved ? JSON.parse(saved).guesses : [];
@@ -33,7 +39,7 @@ export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
     absent: [] as string[]
   };
 
-  // Calculate used letters
+  // Calculate used letters only if solution exists
   guesses.forEach(guess => {
     guess.split('').forEach((letter, i) => {
       if (solution[i] === letter) {

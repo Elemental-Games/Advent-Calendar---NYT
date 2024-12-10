@@ -25,43 +25,39 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
   const renderPuzzle = () => {
     switch (type) {
       case "kringle":
-        const wordleContent = content as { word: string };
-        console.log('Rendering WordleGame with word:', wordleContent.word);
-        return (
-          <div className="p-4">
-            <WordleGame 
-              solution={wordleContent.word} 
-              onComplete={onComplete} 
-              day={day}
-            />
-          </div>
-        );
+        if ('word' in content) {
+          console.log('Rendering WordleGame with word:', content.word);
+          return (
+            <div className="p-4">
+              <WordleGame 
+                solution={content.word} 
+                onComplete={onComplete} 
+                day={day}
+              />
+            </div>
+          );
+        }
+        console.error('Invalid content for Kringle puzzle');
+        return <div>Error: Invalid puzzle configuration</div>;
       
       case "frostword":
-        console.log('Initializing FrostWord puzzle for day:', day);
-        const crosswordContent = content as { 
-          across: Record<string, string>;
-          down: Record<string, string>;
-          answers: Record<string, string>;
-        };
-        console.log('FrostWord content:', {
-          across: crosswordContent.across,
-          down: crosswordContent.down,
-          answers: crosswordContent.answers
-        });
-        console.log('Rendering CrosswordGame');
-        return (
-          <div className="p-4">
-            <CrosswordGame 
-              across={crosswordContent.across}
-              down={crosswordContent.down}
-              answers={crosswordContent.answers}
-              onComplete={onComplete}
-              day={day}
-              isCompleted={puzzleState?.completed || false}
-            />
-          </div>
-        );
+        if ('across' in content && 'down' in content && 'answers' in content) {
+          console.log('Initializing FrostWord puzzle for day:', day);
+          return (
+            <div className="p-4">
+              <CrosswordGame 
+                across={content.across}
+                down={content.down}
+                answers={content.answers}
+                onComplete={onComplete}
+                day={day}
+                isCompleted={puzzleState?.completed || false}
+              />
+            </div>
+          );
+        }
+        console.error('Invalid content for FrostWord puzzle');
+        return <div>Error: Invalid puzzle configuration</div>;
       
       case "northsort":
         const northsortContent = content as { 
