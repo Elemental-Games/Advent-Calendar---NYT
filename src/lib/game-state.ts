@@ -18,8 +18,14 @@ export const markDayIncomplete = (day: number) => {
 };
 
 export const getCompletedDays = (): number[] => {
+  // Initialize with days 1-9 completed if not already set
   const stored = localStorage.getItem(COMPLETION_KEY);
-  return stored ? JSON.parse(stored) : [];
+  if (!stored) {
+    const initialCompleted = Array.from({length: 9}, (_, i) => i + 1);
+    localStorage.setItem(COMPLETION_KEY, JSON.stringify(initialCompleted));
+    return initialCompleted;
+  }
+  return JSON.parse(stored);
 };
 
 export const isDayCompleted = (day: number): boolean => {

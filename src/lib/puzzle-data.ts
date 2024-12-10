@@ -148,6 +148,46 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   },
   9: {
     word: "MUMMY"
+  },
+  10: {
+    type: "frostword",
+    across: {
+      "1": "A bird's mouth",
+      "5": "Brief____",
+      "6": "Me everytime I want McDonalds",
+      "8": "____ Mints",
+      "9": "A dog's back legs"
+    },
+    down: {
+      "1": "Secretly include on an email",
+      "2": "We live on this",
+      "3": "Super dry rice beer, Japenese. Sounds like a good bowl",
+      "4": "The Home Alone kid",
+      "7": "The ___"
+    },
+    answers: {
+      "a1": "BEAK",
+      "a5": "CASE",
+      "a6": "CRAVE",
+      "a8": "THIN",
+      "a9": "HIND",
+      "d1": "BCC",
+      "d2": "EARTH",
+      "d3": "ASAHI",
+      "d4": "KEVIN",
+      "d7": "END"
+    },
+    size: {
+      rows: 5,
+      cols: 5
+    },
+    grid: [
+      ["B", "E", "A", "K", " "],
+      ["C", "A", "S", "E", " "],
+      ["C", "R", "A", "V", "E"],
+      [" ", "T", "H", "I", "N"],
+      [" ", "H", "I", "N", "D"]
+    ]
   }
 };
 
