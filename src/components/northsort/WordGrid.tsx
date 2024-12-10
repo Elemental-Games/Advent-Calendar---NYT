@@ -13,23 +13,45 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGr
     // Create a vertical arrangement by grouping words into columns
     const customArrangement = [...words];
     
-    // Specific word placements for vertical arrangement
-    const wordOrder = {
+    // Determine which word set we're dealing with based on the words present
+    const isDay11 = words.includes('MOGUL');
+    
+    // Word order mappings for different days
+    const wordOrder = isDay11 ? {
+      // Day 11 vertical arrangement
+      'MOGUL': 0,
+      'BAR': 4,
+      'SWAN': 8,
+      'HOP': 12,
+      'LUGE': 1,
+      'VAULT': 5,
+      'DUCK': 9,
+      'SPRING': 13,
+      'SLALOM': 2,
+      'TANK': 6,
+      'CRANE': 10,
+      'RISE': 14,
+      'SKII': 3,
+      'BANK': 7,
+      'SWIFT': 11,
+      'LEAP': 15
+    } : {
+      // Day 7 vertical arrangement
       'HAZELNUT': 0,
-      'SPRUCE': 4,
-      'JACK FROST': 8,
-      'COOKIES': 12,
-      'FRENCH VANILLA': 1,
+      'FRENCH VANILLA': 4,
+      'CARAMEL': 8,
+      'PEPPERMINT': 12,
+      'SPRUCE': 1,
       'CYPRESS': 5,
-      'KRANKS': 9,
-      'BROWNIES': 13,
-      'CARAMEL': 2,
-      'FIR': 6,
+      'FIR': 9,
+      'PINE': 13,
+      'JACK FROST': 2,
+      'KRANKS': 6,
       'ELF': 10,
-      'CAKES': 14,
-      'PEPPERMINT': 3,
-      'PINE': 7,
-      'GRINCH': 11,
+      'GRINCH': 14,
+      'COOKIES': 3,
+      'BROWNIES': 7,
+      'CAKES': 11,
       'BISCUITS': 15
     };
 
