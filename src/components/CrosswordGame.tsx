@@ -13,8 +13,8 @@ import { GameControls } from "./crossword/GameControls";
 import type { CrosswordGameProps } from "./crossword/types";
 import type { CrosswordPuzzle } from "@/lib/puzzle-types";
 
-export function CrosswordGame({ across, down, answers, onComplete, day }: CrosswordGameProps) {
-  console.log(`Initializing CrosswordGame for day ${day}`);
+export function CrosswordGame({ across, down, answers, onComplete, day, isCompleted = false }: CrosswordGameProps) {
+  console.log(`Initializing CrosswordGame for day ${day}, isCompleted:`, isCompleted);
   
   const gameState = useGameState(day, answers, onComplete);
   
@@ -141,7 +141,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day }: Crossw
         onBackspace={() => gameState.selectedCell && handleBackspace(gameState.selectedCell)}
         across={across}
         down={down}
-        isCompleted={gameState.puzzleState.completed}
+        isCompleted={isCompleted || gameState.puzzleState.completed}
       />
 
       <StartDialog

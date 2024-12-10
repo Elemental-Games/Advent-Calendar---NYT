@@ -11,6 +11,7 @@ export interface CrosswordGameProps {
   answers: Record<string, string>;
   onComplete?: () => void;
   day: number;
+  isCompleted?: boolean;
 }
 
 export interface CrosswordGridProps {
