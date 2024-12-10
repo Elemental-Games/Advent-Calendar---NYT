@@ -42,6 +42,7 @@ export function GameControls({
       onSubmit={onSubmit}
       onKeyPress={onKeyPress}
       onBackspace={onBackspace}
+      onReset={onReset}
     />
   );
 }
