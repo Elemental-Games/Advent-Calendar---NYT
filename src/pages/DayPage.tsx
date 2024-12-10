@@ -65,30 +65,32 @@ const DayPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8 flex justify-between items-center">
-          <Button onClick={() => navigate("/")} variant="outline">
-            Back to Calendar
-          </Button>
-          <h1 className="text-2xl font-bold text-red-700">
-            {dayInfo.day === 10 ? "FrostWord #3" : `Day ${dayInfo.day}`}
-          </h1>
-          <div className="flex gap-2">
-            {dayNumber === 10 && (
-              <Button 
-                onClick={handlePuzzleReset}
-                variant="outline"
-                className="text-orange-600 border-orange-600 hover:bg-orange-50"
-              >
-                Reset Puzzle
-              </Button>
-            )}
-            <Button 
-              onClick={handleReset}
-              variant="outline"
-              className="text-red-600 border-red-600 hover:bg-red-50"
-            >
-              Reset Day
+        <div className="mb-8 space-y-4 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <Button onClick={() => navigate("/")} variant="outline">
+              Back to Calendar
             </Button>
+            <h1 className="text-2xl font-bold text-red-700 text-center">
+              {dayInfo.day === 10 ? "FrostWord #3" : `Day ${dayInfo.day}`}
+            </h1>
+            <div className="flex gap-2 justify-end">
+              {dayNumber === 10 && (
+                <Button 
+                  onClick={handlePuzzleReset}
+                  variant="outline"
+                  className="text-orange-600 border-orange-600 hover:bg-orange-50 whitespace-nowrap"
+                >
+                  Reset Puzzle
+                </Button>
+              )}
+              <Button 
+                onClick={handleReset}
+                variant="outline"
+                className="text-red-600 border-red-600 hover:bg-red-50 whitespace-nowrap"
+              >
+                Reset Day
+              </Button>
+            </div>
           </div>
         </div>
         
