@@ -54,24 +54,24 @@ export const northsortPuzzles: Record<number, ConnectionsPuzzle> = {
     type: "northsort",
     groups: [
       {
-        category: "Snow Sports",
+        category: "Snow Sports ⛷️",
         color: "rgb(234 179 8)",
-        words: ["SLALOM", "SKII", "MOGUL", "LUGE"]
+        words: ["MOGUL", "LUGE", "SLALOM", "SKII"]  // Reordered
       },
       {
-        category: "Things that store things",
+        category: "Things that store things 🗄️",
         color: "rgb(34 197 94)",
-        words: ["VAULT", "TANK", "BANK", "BAR"]
+        words: ["BAR", "VAULT", "TANK", "BANK"]  // Reordered
       },
       {
-        category: "Birds with double meanings",
+        category: "Birds with double meanings 🦢",
         color: "rgb(59 130 246)",
-        words: ["CRANE", "DUCK", "SWIFT", "SWAN"]
+        words: ["SWAN", "DUCK", "CRANE", "SWIFT"]  // Reordered
       },
       {
-        category: "Words that mean \"to jump\"",
+        category: "Words that mean \"to jump\" 🦘",
         color: "rgb(239 68 68)",
-        words: ["SPRING", "RISE", "LEAP", "HOP"]
+        words: ["HOP", "SPRING", "RISE", "LEAP"]  // Reordered
       }
     ]
   }

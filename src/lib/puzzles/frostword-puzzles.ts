@@ -1,121 +1,55 @@
 import { CrosswordPuzzle } from '../puzzle-types';
 
 export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
-  2: {
-    across: {
-      "1": "Remain unfinished or undecided",
-      "5": "A child's way of saying \"ouch!\"",
-      "6": "Red hat guy",
-      "8": "have a good time",
-      "9": "needed to cut a tree"
-    },
-    down: {
-      "1": "strike a ____",
-      "2": "Obi Wan actor in Star Wars ____ McGregor",
-      "3": "Stealthy Warrior",
-      "4": "Cleansing Diet",
-      "7": "LETS GO"
-    },
-    answers: {
-      "a1": "PEND",
-      "a5": "OWIE",
-      "a6": "SANTA",
-      "a8": "ENJOY",
-      "a9": "AXE",
-      "d1": "POSE",
-      "d2": "EWAN",
-      "d3": "NINJA",
-      "d4": "DETOX",
-      "d7": "AYE"
-    },
-    size: {
-      rows: 5,
-      cols: 5
-    },
-    grid: [
-      ["P", "E", "N", "D", " "],
-      ["O", "W", "I", "E", " "],
-      ["S", "A", "N", "T", "A"],
-      ["E", "N", "J", "O", "Y"],
-      [" ", " ", "A", "X", "E"]
-    ]
+  1: {
+    word: "SNOWY"
   },
-  6: {
-    across: {
-      "1": "Douglass ___",
-      "4": "Your boss, maybe spelled different tho lol",
-      "5": "2 weddings this day...(also goes with 1 down)",
-      "6": "testing of a metal or ore/to determine ingredients",
-      "7": "dogs are better pets than these"
-    },
-    down: {
-      "1": "2 weddings this day...(also goes with 5 across)",
-      "2": "these people lived in Machu Picchu and had their own civilization thing (lost city)",
-      "3": "I don't think this is a word, but it's the name of a horse I've never heard of. I know you'll get this somehow",
-      "4": "My dream job",
-      "5": "I almost bought this Cyber Monday but I'm cheap"
-    },
-    answers: {
-      "a1": "FIR",
-      "a4": "NINA",
-      "a5": "MARCH",
-      "a6": "ASSAY",
-      "a7": "CATS",
-      "d1": "FIRST",
-      "d2": "INCAS",
-      "d3": "RAHY",
-      "d4": "NASA",
-      "d5": "MAC"
-    },
-    size: {
-      rows: 5,
-      cols: 5
-    },
-    grid: [
-      [" ", " ", "F", "I", "R"],
-      [" ", "N", "I", "N", "A"],
-      ["M", "A", "R", "C", "H"],
-      ["A", "S", "S", "A", "Y"],
-      ["C", "A", "T", "S", " "]
-    ]
+  5: {
+    word: "QUILT"
   },
-  10: {
+  9: {
+    word: "MUMMY"
+  },
+  13: {
+    word: "OCEAN"
+  },
+  14: {
     across: {
-      "1": "A bird's mouth",
-      "5": "Brief____",
-      "6": "Me everytime I want McDonalds",
-      "8": "____ Mints",
-      "9": "A dog's back legs"
+      "1": "Color of a Heart",
+      "4": "I want to do this for every dog",
+      "7": "People that earn their own BitCoin",
+      "8": "Where I bought all of your Christmas gifts ; )",
+      "9": "To wish something hadn't happen/Regret something"
     },
     down: {
-      "1": "Secretly include on an email",
-      "2": "We live on this",
-      "3": "Super dry rice beer, Japenese. Sounds like a good bowl",
-      "4": "The Home Alone kid",
-      "7": "The ___"
+      "1": "LA Football Team",
+      "2": "Modify something",
+      "3": "An organ _____",
+      "5": "Machu Picchu location",
+      "6": "Christmas ____"
     },
     answers: {
-      "a1": "BEAK",
-      "a5": "CASE",
-      "a6": "CRAVE",
-      "a8": "THIN",
-      "a9": "HIND",
-      "d1": "BCC",
-      "d2": "EARTH",
-      "d3": "ASAHI",
-      "d4": "KEVIN",
-      "d7": "END"
+      "a1": "RED",
+      "a4": "ADOPT",
+      "a7": "MINER",
+      "a8": "STORE",
+      "a9": "RUE",
+      "d1": "RAMS",
+      "d2": "EDIT",
+      "d3": "DONOR",
+      "d5": "PERU",
+      "d6": "TREE"
     },
     size: {
       rows: 5,
       cols: 5
     },
     grid: [
-      ["B", "E", "A", "K", " "],
-      ["C", "A", "S", "E", " "],
-      ["C", "R", "A", "V", "E"],
-      [" ", "T", "H", "I", "N"],
-      [" ", "H", "I", "N", "D"]
+      ["R", "E", "D", " ", " "],
+      ["A", "D", "O", "P", "T"],
+      ["M", "I", "N", "E", "R"],
+      ["S", "T", "O", "R", "E"],
+      [" ", " ", "R", "U", "E"]
     ]
   }
 };

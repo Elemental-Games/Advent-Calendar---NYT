@@ -8,8 +8,8 @@ export const garlandPuzzles: Record<number, StrandsPuzzle> = {
   },
   12: {
     type: "garland",
-    words: ["PENNE", "GNOCCHI", "FETTUCINE", "LASAGNA", "ZITI", "ROTINI", "PASTATYPES"],
-    themeWord: "PASTA",
+    words: ["PENNE", "GNOCCHI", "FETTUCINE", "LASAGNA", "ZITI", "ROTINI"],
+    themeWord: "PASTATYPES",
     grid: [
       ["P", "E", "C", "C", "H", "I"],
       ["N", "N", "N", "O", "N", "E"],
