@@ -16,6 +16,7 @@ const DayPage = () => {
   console.log('Day info:', dayInfo);
   
   const [isCompleted, setIsCompleted] = useState(false);
+  const [key, setKey] = useState(0); // Add key for forcing re-render
 
   useEffect(() => {
     if (dayNumber) {
@@ -37,8 +38,9 @@ const DayPage = () => {
       markDayIncomplete(dayNumber);
       setIsCompleted(false);
       clearPuzzleState(dayNumber);
+      localStorage.removeItem(`crossword_${dayNumber}`); // Clear crossword specific state
       toast.info("Day reset! Try again!");
-      window.location.reload();
+      setKey(prev => prev + 1); // Force re-render of PuzzleDisplay
     }
   };
 
@@ -46,8 +48,9 @@ const DayPage = () => {
     if (dayNumber) {
       console.log('Resetting puzzle state for day:', dayNumber);
       clearPuzzleState(dayNumber);
+      localStorage.removeItem(`crossword_${dayNumber}`); // Clear crossword specific state
       toast.info("Puzzle reset! Try again!");
-      window.location.reload();
+      setKey(prev => prev + 1); // Force re-render of PuzzleDisplay
     }
   };
 
@@ -97,6 +100,7 @@ const DayPage = () => {
         {dayInfo.puzzleContent && (
           <div className="bg-white rounded-xl shadow-lg p-6">
             <PuzzleDisplay 
+              key={key} // Add key to force re-render
               type={dayInfo.puzzleType}
               content={dayInfo.puzzleContent}
               day={dayInfo.day}
