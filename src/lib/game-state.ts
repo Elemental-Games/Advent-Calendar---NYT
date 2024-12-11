@@ -1,25 +1,29 @@
 import { PuzzleStates } from '@/types/puzzle';
-import { getPuzzleState } from '@/lib/puzzle-data';
 
-const completedDays = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+const STORAGE_PREFIX = 'puzzle_';
 
-export function isDayCompleted(day: number): boolean {
-  return completedDays.has(day);
+export function getPuzzleState(day: number): PuzzleStates | null {
+  const savedState = localStorage.getItem(`${STORAGE_PREFIX}${day}`);
+  return savedState ? JSON.parse(savedState) : null;
 }
 
-export function markDayComplete(day: number): void {
-  completedDays.add(day);
-}
-
-export function markDayIncomplete(day: number): void {
-  completedDays.delete(day);
+export function savePuzzleState(day: number, state: PuzzleStates): void {
+  localStorage.setItem(`${STORAGE_PREFIX}${day}`, JSON.stringify(state));
 }
 
 export function clearPuzzleState(day: number): void {
-  localStorage.removeItem(`puzzle_${day}`);
+  localStorage.removeItem(`${STORAGE_PREFIX}${day}`);
 }
 
-export function getPuzzleState(day: number): PuzzleStates | null {
-  const savedState = localStorage.getItem(`puzzle_${day}`);
-  return savedState ? JSON.parse(savedState) : null;
+export function isDayCompleted(day: number): boolean {
+  const state = getPuzzleState(day);
+  return state?.completed || false;
+}
+
+export function markDayComplete(day: number): void {
+  savePuzzleState(day, { completed: true });
+}
+
+export function markDayIncomplete(day: number): void {
+  savePuzzleState(day, { completed: false });
 }

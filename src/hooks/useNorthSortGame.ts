@@ -1,12 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { savePuzzleState, getPuzzleState } from "@/lib/game-state";
+import { PuzzleStates } from "@/types/puzzle";
 
-interface GameState {
-  completedGroups: string[];
-  gameOver: boolean;
-  remainingAttempts: number;
-  showCongrats: boolean;
+interface Group {
+  category: string;
+  words: string[];
 }
 
 export function useNorthSortGame(day: number, groups: Array<{ category: string; words: string[] }>, onComplete?: () => void) {
@@ -25,7 +24,6 @@ export function useNorthSortGame(day: number, groups: Array<{ category: string; 
       setRemainingAttempts(savedState.remainingAttempts || 4);
       if (savedState.showCongrats) {
         setShowCongrats(true);
-        // If all groups are completed, show them
         if (savedState.completedGroups?.length === groups.length) {
           console.log('Loading completed state:', savedState);
           setCompletedGroups(groups.map(g => g.category));
@@ -38,13 +36,15 @@ export function useNorthSortGame(day: number, groups: Array<{ category: string; 
 
   // Save state whenever it changes
   useEffect(() => {
-    savePuzzleState(day, {
+    const state: PuzzleStates = {
+      completed: completedGroups.length === groups.length,
       completedGroups,
       gameOver,
       remainingAttempts,
       showCongrats
-    });
-  }, [completedGroups, gameOver, remainingAttempts, showCongrats, day]);
+    };
+    savePuzzleState(day, state);
+  }, [completedGroups, gameOver, remainingAttempts, showCongrats, day, groups.length]);
 
   const checkNearMatch = useCallback((words: string[]) => {
     for (const group of groups) {

@@ -20,6 +20,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
 
   // Get the current puzzle state to check completion
   const puzzleState = getPuzzleState(day);
+  const isCompleted = puzzleState?.completed || false;
   console.log('Current puzzle state:', puzzleState);
 
   const renderPuzzle = () => {
