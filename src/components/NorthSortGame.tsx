@@ -49,12 +49,17 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
   }, [completedGroups.length, groups.length, setGameOver]);
 
   const handleWordClick = (word: string) => {
+    console.log('Word clicked:', word);
+    console.log('Current selected words:', selectedWords);
+    
     if (gameOver) return;
     
     if (selectedWords.includes(word)) {
-      setSelectedWords(prev => prev.filter(w => w !== word));
+      console.log('Deselecting word:', word);
+      setSelectedWords(selectedWords.filter(w => w !== word));
     } else if (selectedWords.length < 4) {
-      setSelectedWords(prev => [...prev, word]);
+      console.log('Selecting word:', word);
+      setSelectedWords([...selectedWords, word]);
     }
   };
 
