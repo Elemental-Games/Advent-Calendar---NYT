@@ -53,17 +53,27 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     console.log('Current selected words:', selectedWords);
     
     if (gameOver) return;
-    
-    setSelectedWords(prev => {
-      if (prev.includes(word)) {
-        console.log('Deselecting word:', word);
-        return prev.filter(w => w !== word);
-      } else if (prev.length < 4) {
-        console.log('Selecting word:', word);
-        return [...prev, word];
-      }
-      return prev;
-    });
+
+    // Toggle word selection
+    const isSelected = selectedWords.includes(word);
+    console.log('Is word currently selected?', isSelected);
+
+    if (isSelected) {
+      // Deselect the word
+      console.log('Deselecting word:', word);
+      const newSelectedWords = selectedWords.filter(w => w !== word);
+      console.log('New selected words after deselection:', newSelectedWords);
+      setSelectedWords(newSelectedWords);
+    } else if (selectedWords.length < 4) {
+      // Select the word if we haven't reached the limit
+      console.log('Selecting word:', word);
+      const newSelectedWords = [...selectedWords, word];
+      console.log('New selected words after selection:', newSelectedWords);
+      setSelectedWords(newSelectedWords);
+    } else {
+      console.log('Cannot select more than 4 words');
+      toast.error("You can only select 4 words at a time");
+    }
   };
 
   const handleSubmit = () => {
