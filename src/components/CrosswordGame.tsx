@@ -126,7 +126,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
       <CrosswordLayout
         elapsedTime={gameState.elapsedTime}
         grid={grid}
-        guesses={gameState.puzzleState.completed ? gameState.puzzleState.guesses || {} : guesses}
+        guesses={gameState.puzzleState.completed && gameState.puzzleState.guesses ? gameState.puzzleState.guesses : guesses}
         showDown={gameState.showDown}
         selectedCell={gameState.selectedCell}
         isValidCell={isValidCell}

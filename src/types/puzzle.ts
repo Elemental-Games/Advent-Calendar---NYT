@@ -9,4 +9,5 @@ export interface PuzzleStates {
 export interface PuzzleState {
   completed: boolean;
   completionTime?: number;
+  guesses?: Record<string, string>;
 }
