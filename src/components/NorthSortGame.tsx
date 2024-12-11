@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Button } from "./ui/button";
 import { NorthSortHeader } from "./northsort/NorthSortHeader";
 import { CompletedGroup } from "./northsort/CompletedGroup";
 import { WordGrid } from "./northsort/WordGrid";
+import { GameControls } from "./northsort/GameControls";
+import { CongratsDialog } from "./northsort/CongratsDialog";
 import { useNorthSortGame } from "@/hooks/useNorthSortGame";
 
 interface NorthSortGameProps {
@@ -54,13 +54,16 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     
     if (gameOver) return;
     
-    if (selectedWords.includes(word)) {
-      console.log('Deselecting word:', word);
-      setSelectedWords(selectedWords.filter(w => w !== word));
-    } else if (selectedWords.length < 4) {
-      console.log('Selecting word:', word);
-      setSelectedWords([...selectedWords, word]);
-    }
+    setSelectedWords(prev => {
+      if (prev.includes(word)) {
+        console.log('Deselecting word:', word);
+        return prev.filter(w => w !== word);
+      } else if (prev.length < 4) {
+        console.log('Selecting word:', word);
+        return [...prev, word];
+      }
+      return prev;
+    });
   };
 
   const handleSubmit = () => {
@@ -78,13 +81,11 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       setCompletedGroups(prev => [...prev, matchingGroup.category]);
       setSelectedWords([]);
       
-      // Check if this was the last group
       if (completedGroups.length + 1 === groups.length) {
-        // Add delay before showing congratulations
         setTimeout(() => {
           setShowCongrats(true);
           onComplete?.();
-        }, 2000); // 2 second delay
+        }, 2000);
       } else {
         toast.success("Correct group!");
       }
@@ -153,32 +154,17 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
           </div>
         )}
 
-        <Button
-          onClick={handleSubmit}
-          disabled={selectedWords.length !== 4 || gameOver}
-          className="w-full mt-6 bg-red-600 hover:bg-red-700"
-        >
-          Submit Selection
-        </Button>
+        <GameControls 
+          selectedWords={selectedWords}
+          onSubmit={handleSubmit}
+          gameOver={gameOver}
+        />
       </div>
 
-      <Dialog open={showCongrats} onOpenChange={setShowCongrats}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-bold text-red-700">
-              Congratulations! 🎄🎁
-            </DialogTitle>
-          </DialogHeader>
-          <div className="text-center space-y-4">
-            <p className="text-lg">
-              You've completed NorthSort #1!
-            </p>
-            <p className="text-gray-600">
-              Come back tomorrow for a new Christmas-themed challenge.
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <CongratsDialog 
+        open={showCongrats} 
+        onOpenChange={setShowCongrats}
+      />
     </div>
   );
 }
