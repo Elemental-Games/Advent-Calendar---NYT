@@ -2,6 +2,7 @@ import { ConnectionsPuzzle } from '../puzzle-types';
 
 export const northsortPuzzles: Record<number, ConnectionsPuzzle> = {
   3: {
+    type: "northsort",
     groups: [
       {
         category: "Decorations",
@@ -56,22 +57,22 @@ export const northsortPuzzles: Record<number, ConnectionsPuzzle> = {
       {
         category: "Snow Sports ⛷️",
         color: "rgb(234 179 8)",
-        words: ["MOGUL", "LUGE", "SLALOM", "SKII"]  // Reordered
+        words: ["MOGUL", "LUGE", "SLALOM", "SKII"]
       },
       {
         category: "Things that store things 🗄️",
         color: "rgb(34 197 94)",
-        words: ["BAR", "VAULT", "TANK", "BANK"]  // Reordered
+        words: ["BAR", "VAULT", "TANK", "BANK"]
       },
       {
         category: "Birds with double meanings 🦢",
         color: "rgb(59 130 246)",
-        words: ["SWAN", "DUCK", "CRANE", "SWIFT"]  // Reordered
+        words: ["SWAN", "DUCK", "CRANE", "SWIFT"]
       },
       {
         category: "Words that mean \"to jump\" 🦘",
         color: "rgb(239 68 68)",
-        words: ["HOP", "SPRING", "RISE", "LEAP"]  // Reordered
+        words: ["HOP", "SPRING", "RISE", "LEAP"]
       }
     ]
   }

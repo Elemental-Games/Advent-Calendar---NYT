@@ -1,7 +1,7 @@
 import { CrosswordPuzzle } from '../puzzle-types';
 
 export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
-  1: {
+  2: {
     type: "frostword",
     across: {
       "1": "Winter precipitation",
@@ -36,7 +36,7 @@ export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
       [" ", " ", "E", " ", " "]
     ]
   },
-  5: {
+  6: {
     type: "frostword",
     across: {
       "1": "Warm blanket",
@@ -71,7 +71,7 @@ export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
       ["I", "G", "L", "O", "O"]
     ]
   },
-  9: {
+  10: {
     type: "frostword",
     across: {
       "1": "Halloween costume",
@@ -106,43 +106,6 @@ export const frostwordPuzzles: Record<number, CrosswordPuzzle> = {
       ["D", " ", "C", "A", "N"],
       ["T", "R", "E", "A", "T"],
       ["B", "O", "O", " ", " "]
-    ]
-  },
-  13: {
-    type: "frostword",
-    across: {
-      "1": "Large body of water",
-      "4": "Sea creature",
-      "6": "Beach find",
-      "8": "Water movement",
-      "9": "Sea bird"
-    },
-    down: {
-      "1": "Sea vessel",
-      "2": "Water sport",
-      "3": "Fish home",
-      "5": "Beach material",
-      "7": "Fish eggs"
-    },
-    size: { rows: 5, cols: 5 },
-    answers: {
-      "a1": "OCEAN",
-      "a4": "WHALE",
-      "a6": "SHELL",
-      "a8": "WAVE",
-      "a9": "GULL",
-      "d1": "OAR",
-      "d2": "SWIM",
-      "d3": "REEF",
-      "d5": "SAND",
-      "d7": "ROE"
-    },
-    grid: [
-      ["O", "C", "E", "A", "N"],
-      ["A", " ", " ", " ", " "],
-      ["R", " ", "S", "H", "E"],
-      ["W", "A", "V", "E", " "],
-      ["G", "U", "L", "L", " "]
     ]
   },
   14: {
