@@ -1,13 +1,18 @@
-import { PuzzleStates } from '@/types/puzzle';
+import { PuzzleStates, PuzzleState } from '@/types/puzzle';
 
 const STORAGE_PREFIX = 'puzzle_';
 
-export function getPuzzleState(day: number): PuzzleStates | null {
+export function getPuzzleState(day: number): PuzzleState | null {
+  // For days 1-10, always return completed state
+  if (day >= 1 && day <= 10) {
+    return { completed: true };
+  }
+  
   const savedState = localStorage.getItem(`${STORAGE_PREFIX}${day}`);
   return savedState ? JSON.parse(savedState) : null;
 }
 
-export function savePuzzleState(day: number, state: PuzzleStates): void {
+export function savePuzzleState(day: number, state: PuzzleState): void {
   localStorage.setItem(`${STORAGE_PREFIX}${day}`, JSON.stringify(state));
 }
 
@@ -16,6 +21,10 @@ export function clearPuzzleState(day: number): void {
 }
 
 export function isDayCompleted(day: number): boolean {
+  // For days 1-10, always return true
+  if (day >= 1 && day <= 10) {
+    return true;
+  }
   const state = getPuzzleState(day);
   return state?.completed || false;
 }

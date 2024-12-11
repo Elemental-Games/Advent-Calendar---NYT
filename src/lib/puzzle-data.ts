@@ -4,9 +4,11 @@ console.log('Loading puzzle data configuration');
 
 export const puzzleData: { [key: number]: PuzzleContent } = {
   1: {
+    type: "kringle",
     word: "SNOWY"
   },
   2: {
+    type: "frostword",
     across: {
       "1": "Remain unfinished or undecided",
       "5": "A child's way of saying \"ouch!\"",
@@ -180,7 +182,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       {
         category: "Snow Sports",
         color: "rgb(234 179 8)", // Yellow
-        words: ["SLALOM", "SKII", "MOGUL", "LUGE"]
+        words: ["SLALOM", "SKI", "MOGUL", "LUGE"]
       },
       {
         category: "Things that store things",
