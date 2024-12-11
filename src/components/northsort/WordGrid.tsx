@@ -12,33 +12,31 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGr
   const arrangedWords = useMemo(() => {
     const customArrangement = [...words];
     
-    // Find indices of specific words we want to move
-    const hazelnutIndex = customArrangement.findIndex(word => word === 'HAZELNUT');
-    const pineIndex = customArrangement.findIndex(word => word === 'PINE');
-    const grinchIndex = customArrangement.findIndex(word => word === 'GRINCH');
-    const browniesIndex = customArrangement.findIndex(word => word === 'BROWNIES');
-    
-    // Swap positions to create a more mixed arrangement
-    if (hazelnutIndex !== -1 && pineIndex !== -1) {
-      [customArrangement[hazelnutIndex], customArrangement[pineIndex]] = 
-      [customArrangement[pineIndex], customArrangement[hazelnutIndex]];
+    // Custom arrangement for day 11
+    if (customArrangement.includes("SLALOM")) {
+      // Arrange words in a scattered pattern
+      const positions = [0, 5, 10, 15, 2, 7, 12, 1, 6, 11, 3, 8, 13, 4, 9, 14];
+      const arrangedArray = new Array(16).fill(null);
+      
+      customArrangement.forEach((word, index) => {
+        arrangedArray[positions[index]] = word;
+      });
+      
+      return arrangedArray.filter(word => word !== null);
     }
     
-    if (grinchIndex !== -1 && browniesIndex !== -1) {
-      [customArrangement[grinchIndex], customArrangement[browniesIndex]] = 
-      [customArrangement[browniesIndex], customArrangement[grinchIndex]];
-    }
-    
+    // Keep existing arrangements for other days
     return customArrangement;
   }, [words]);
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {arrangedWords.map(word => {
+      {arrangedWords.map((word, index) => {
+        if (!word) return null;
         const isFound = selectedWords.includes(word);
         return (
           <motion.button
-            key={word}
+            key={`${word}-${index}`}
             whileHover={{ scale: isFound ? 1 : 1.02 }}
             whileTap={{ scale: isFound ? 1 : 0.98 }}
             onClick={() => !isFound && onWordClick(word)}
