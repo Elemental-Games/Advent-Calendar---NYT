@@ -35,17 +35,6 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
   const puzzleGrid = currentPuzzle.grid || Array(5).fill(Array(5).fill(" "));
   console.log('Using puzzle grid:', puzzleGrid);
 
-  // Initialize game as started if it's already completed
-  useEffect(() => {
-    if (isCompleted || gameState.puzzleState.completed) {
-      gameState.setShowStartDialog(false);
-      gameState.setIsStarted(true);
-      if (gameState.puzzleState.completionTime) {
-        gameState.setElapsedTime(gameState.puzzleState.completionTime);
-      }
-    }
-  }, [isCompleted, gameState.puzzleState.completed]);
-
   const {
     grid,
     cellRefs,
@@ -59,8 +48,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
     guesses,
     setGuesses,
     validatedCells,
-    validateSubmission,
-    resetGuesses  // Add this to the destructuring
+    validateSubmission
   } = useCrosswordInput(answers);
 
   const { handleInputChange, handleBackspace } = useCrosswordCellInput(
@@ -84,7 +72,6 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
   );
 
   useEffect(() => {
-    // Only start timer if game is started and not completed
     if (gameState.isStarted && !gameState.showCompletionDialog && !gameState.puzzleState.completed) {
       gameState.timerRef.current = setInterval(() => {
         gameState.setElapsedTime(prev => prev + 1);
@@ -132,32 +119,14 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
     }
   };
 
-  const handleReset = () => {
-    console.log('Resetting puzzle state...');
-    resetGuesses();  // Reset all guesses to empty
-    gameState.setSelectedCell(null);
-    gameState.setShowDown(false);
-    gameState.setElapsedTime(0);
-    gameState.setIsStarted(false);
-    gameState.setShowStartDialog(true);
-    if (gameState.timerRef.current) {
-      clearInterval(gameState.timerRef.current);
-    }
-    localStorage.removeItem(`crossword_${day}`);
-    gameState.resetPuzzle();
-  };
-
   const currentClue = getCurrentClue();
-
-  // If the puzzle is completed, use the saved guesses
-  const displayGuesses = gameState.puzzleState.completed ? gameState.puzzleState.guesses || {} : guesses;
 
   return (
     <>
       <CrosswordLayout
         elapsedTime={gameState.elapsedTime}
         grid={grid}
-        guesses={displayGuesses}
+        guesses={gameState.puzzleState.completed ? gameState.puzzleState.guesses || {} : guesses}
         showDown={gameState.showDown}
         selectedCell={gameState.selectedCell}
         isValidCell={isValidCell}
@@ -170,14 +139,13 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
         onSubmit={handleSubmit}
         onKeyPress={handleKeyPress}
         onBackspace={() => gameState.selectedCell && handleBackspace(gameState.selectedCell)}
-        onReset={handleReset}  // Add the reset handler
         across={across}
         down={down}
         isCompleted={isCompleted || gameState.puzzleState.completed}
       />
 
       <StartDialog
-        open={gameState.showStartDialog && !isCompleted && !gameState.puzzleState.completed}
+        open={gameState.showStartDialog}
         onOpenChange={gameState.setShowStartDialog}
         onStart={gameState.handleStartGame}
       />

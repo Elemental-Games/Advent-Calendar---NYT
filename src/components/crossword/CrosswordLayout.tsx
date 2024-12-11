@@ -28,7 +28,6 @@ interface CrosswordLayoutProps {
   onSubmit: () => void;
   onKeyPress: (key: string) => void;
   onBackspace: () => void;
-  onReset: () => void;  // Added this line
   across: Record<string, string>;
   down: Record<string, string>;
   isCompleted?: boolean;
@@ -50,7 +49,6 @@ export function CrosswordLayout({
   onSubmit,
   onKeyPress,
   onBackspace,
-  onReset,  // Added this line
   across,
   down,
   isCompleted = false
@@ -88,7 +86,6 @@ export function CrosswordLayout({
           onSubmit={onSubmit}
           onKeyPress={onKeyPress}
           onBackspace={onBackspace}
-          onReset={onReset}  // Added this line
         />
       )}
 

@@ -14,12 +14,6 @@ export function useCrosswordInput(answers: Record<string, string>) {
   const [validatedCells, setValidatedCells] = useState<Record<string, boolean>>({});
   const { calculatePosition } = useGridCalculations();
 
-  const resetGuesses = () => {
-    console.log('Resetting all guesses to empty state');
-    setGuesses({});
-    setValidatedCells({});
-  };
-
   const validateSubmission = (
     grid: string[][],
     isValidCell: (row: number, col: number) => boolean,
@@ -102,7 +96,6 @@ export function useCrosswordInput(answers: Record<string, string>) {
     guesses,
     setGuesses,
     validatedCells,
-    validateSubmission,
-    resetGuesses  // Add resetGuesses to the returned object
+    validateSubmission
   };
 }

@@ -35,7 +35,6 @@ export function useGameState(day: number, answers: Record<string, string>, onCom
     incorrectCount,
     setIncorrectCount,
     isStarted,
-    setIsStarted,  // Added this line to expose setIsStarted
     elapsedTime,
     setElapsedTime,
     selectedCell,

@@ -25,17 +25,10 @@ export interface ConnectionsPuzzle {
   groups: ConnectionsGroup[];
 }
 
-export interface WordPosition {
-  word: string;
-  positions: number[];
-}
-
 export interface StrandsPuzzle {
   type?: "garland";
   words: string[];
   themeWord: string;
-  grid?: string[][];
-  wordPositions?: WordPosition[];
 }
 
 export type PuzzleContent = 
