@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { savePuzzleState, getPuzzleState } from "@/lib/game-state";
-import { PuzzleStates } from "@/types/puzzle";
+import { PuzzleState } from "@/types/puzzle";
 
 interface Group {
   category: string;
@@ -22,21 +22,18 @@ export function useNorthSortGame(day: number, groups: Array<{ category: string; 
       setCompletedGroups(savedState.completedGroups || []);
       setGameOver(savedState.gameOver || false);
       setRemainingAttempts(savedState.remainingAttempts || 4);
-      if (savedState.showCongrats) {
-        setShowCongrats(true);
-        if (savedState.completedGroups?.length === groups.length) {
-          console.log('Loading completed state:', savedState);
-          setCompletedGroups(groups.map(g => g.category));
-          setGameOver(true);
-          onComplete?.();
-        }
+      if (savedState.completed) {
+        console.log('Loading completed state:', savedState);
+        setCompletedGroups(groups.map(g => g.category));
+        setGameOver(true);
+        onComplete?.();
       }
     }
   }, [day, groups, onComplete]);
 
   // Save state whenever it changes
   useEffect(() => {
-    const state: PuzzleStates = {
+    const state: PuzzleState = {
       completed: completedGroups.length === groups.length,
       completedGroups,
       gameOver,
