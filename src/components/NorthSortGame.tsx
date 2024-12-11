@@ -76,6 +76,11 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     }
   };
 
+  const handleDeselectAll = () => {
+    console.log('Deselecting all words');
+    setSelectedWords([]);
+  };
+
   const handleSubmit = () => {
     if (selectedWords.length !== 4) {
       toast.error("Please select exactly 4 words");
@@ -167,6 +172,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
         <GameControls 
           selectedWords={selectedWords}
           onSubmit={handleSubmit}
+          onDeselectAll={handleDeselectAll}
           gameOver={gameOver}
         />
       </div>
