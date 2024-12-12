@@ -1,4 +1,6 @@
 import { PuzzleContent } from './puzzle-types';
+import { day4Puzzle } from './puzzles/day4';
+import { day8Puzzle } from './puzzles/day8';
 import { day12Puzzle } from './puzzles/day12';
 
 console.log('Loading puzzle data configuration');
@@ -49,6 +51,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     ]
   },
   3: {
+    type: "northsort",
     groups: [
       {
         category: "Decorations",
@@ -72,137 +75,9 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       }
     ]
   },
-  4: {
-    words: ["SANTA", "SLEIGH", "RUDOLPH", "PRESENTS", "COOKIES", "STOCKINGS", "MISTLETOE"],
-    themeWord: "CHRISTMAS"
-  },
-  5: {
-    word: "QUILT"
-  },
-  6: {
-    type: "frostword",
-    across: {
-      "1": "Douglass ___",
-      "4": "Your boss, maybe spelled different tho lol",
-      "5": "2 weddings this day...(also goes with 1 down)",
-      "6": "testing of a metal or ore/to determine ingredients",
-      "7": "dogs are better pets than these"
-    },
-    down: {
-      "1": "2 weddings this day...(also goes with 5 across)",
-      "2": "these people lived in Machu Picchu and had their own civilization thing (lost city)",
-      "3": "I don't think this is a word, but it's the name of a horse I've never heard of. I know you'll get this somehow",
-      "4": "My dream job",
-      "5": "I almost bought this Cyber Monday but I'm cheap"
-    },
-    answers: {
-      "a1": "FIR",
-      "a4": "NINA",
-      "a5": "MARCH",
-      "a6": "ASSAY",
-      "a7": "CATS",
-      "d1": "FIRST",
-      "d2": "INCAS",
-      "d3": "RAHY",
-      "d4": "NASA",
-      "d5": "MAC"
-    },
-    size: {
-      rows: 5,
-      cols: 5
-    },
-    grid: [
-      [" ", " ", "F", "I", "R"],
-      [" ", "N", "I", "N", "A"],
-      ["M", "A", "R", "C", "H"],
-      ["A", "S", "S", "A", "Y"],
-      ["C", "A", "T", "S", " "]
-    ]
-  },
-  7: {
-    type: "northsort",
-    groups: [
-      {
-        category: "Coffee Flavors",
-        color: "rgb(234 179 8)", // Yellow
-        words: ["HAZELNUT", "FRENCH VANILLA", "CARAMEL", "PEPPERMINT"]
-      },
-      {
-        category: "Christmas Tree Types",
-        color: "rgb(34 197 94)", // Green
-        words: ["FIR", "SPRUCE", "CYPRESS", "PINE"]
-      },
-      {
-        category: "Christmas Movies",
-        color: "rgb(59 130 246)", // Blue
-        words: ["ELF", "JACK FROST", "KRANKS", "GRINCH"]
-      },
-      {
-        category: "Baking Snacks",
-        color: "rgb(239 68 68)", // Red
-        words: ["COOKIES", "BROWNIES", "CAKES", "BISCUITS"]
-      }
-    ]
-  },
-  8: {
-    type: "garland",
-    words: ["HERSHEY", "DARK", "RICH", "MILKY", "SWEETS", "TRUFFLES", "FUDGEY"],
-    themeWord: "CHOCOLATE"
-  },
-  9: {
-    word: "MUMMY"
-  },
-  10: {
-    type: "northsort",
-    groups: [
-      {
-        category: "Coffee Flavors",
-        color: "rgb(234 179 8)", // Yellow
-        words: ["HAZELNUT", "FRENCH VANILLA", "CARAMEL", "PEPPERMINT"]
-      },
-      {
-        category: "Christmas Tree Types",
-        color: "rgb(34 197 94)", // Green
-        words: ["FIR", "SPRUCE", "CYPRESS", "PINE"]
-      },
-      {
-        category: "Christmas Movies",
-        color: "rgb(59 130 246)", // Blue
-        words: ["ELF", "JACK FROST", "KRANKS", "GRINCH"]
-      },
-      {
-        category: "Baking Snacks",
-        color: "rgb(239 68 68)", // Red
-        words: ["COOKIES", "BROWNIES", "CAKES", "BISCUITS"]
-      }
-    ]
-  },
-  11: {
-    type: "northsort",
-    groups: [
-      {
-        category: "Snow Sports",
-        color: "rgb(234 179 8)", // Yellow
-        words: ["SLALOM", "SKI", "MOGUL", "LUGE"]
-      },
-      {
-        category: "Things that store things",
-        color: "rgb(34 197 94)", // Green
-        words: ["VAULT", "TANK", "BANK", "BAR"]
-      },
-      {
-        category: "Birds with double meanings",
-        color: "rgb(59 130 246)", // Blue
-        words: ["CRANE", "DUCK", "SWIFT", "SWAN"]
-      },
-      {
-        category: "Words that mean \"to jump\"",
-        color: "rgb(239 68 68)", // Red
-        words: ["SPRING", "RISE", "LEAP", "HOP"]
-      }
-    ]
-  },
-  12: day12Puzzle,
+  4: day4Puzzle,
+  8: day8Puzzle,
+  12: day12Puzzle
 };
 
 console.log('Puzzle data loaded successfully');
