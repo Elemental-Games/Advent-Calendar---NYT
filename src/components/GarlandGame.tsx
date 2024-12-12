@@ -17,8 +17,8 @@ interface GarlandGameProps {
 }
 
 export function GarlandGame({ 
-  words = ['HERSHEY', 'DARK', 'RICH', 'MILKY', 'SWEETS', 'TRUFFLES', 'FUDGEY'],
-  themeWord = 'CHOCOLATE',
+  words = ['PENNE', 'GNOCCHI', 'FETTUCINE', 'LASAGNA', 'ZITI', 'ROTINI'],
+  themeWord = 'PASTATYPES',
   onComplete,
   day
 }: GarlandGameProps) {
@@ -73,14 +73,14 @@ export function GarlandGame({
 
       <GameGrid
         grid={[
-          ['P', 'A', 'S', 'T', 'A', 'T'],
-          ['E', 'N', 'N', 'E', 'G', 'Y'],
-          ['N', 'O', 'C', 'C', 'H', 'P'],
-          ['F', 'E', 'T', 'T', 'U', 'E'],
-          ['C', 'I', 'N', 'E', 'Z', 'S'],
-          ['R', 'O', 'T', 'I', 'N', 'I'],
-          ['L', 'A', 'S', 'A', 'G', 'N'],
-          ['A', 'Z', 'I', 'T', 'I', 'I']
+          ['P', 'E', 'C', 'C', 'H', 'I'],
+          ['N', 'N', 'N', 'O', 'N', 'E'],
+          ['E', 'G', 'U', 'C', 'I', 'S'],
+          ['E', 'T', 'T', 'A', 'P', 'E'],
+          ['F', 'S', 'T', 'T', 'Y', 'Z'],
+          ['P', 'A', 'I', 'T', 'I', 'I'],
+          ['L', 'A', 'S', 'A', 'N', 'R'],
+          ['A', 'N', 'G', 'I', 'T', 'O']
         ]}
         selectedCells={selectedCells}
         foundWordsWithIndex={foundWordsWithIndex}
