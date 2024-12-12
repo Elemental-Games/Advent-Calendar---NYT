@@ -1,3 +1,9 @@
+/**
+ * Word positions for each day's Garland puzzle.
+ * Each position is calculated as (row + 1) * 10 + (col + 1)
+ * For example: row 0, col 0 = position 11
+ */
+
 export interface WordPositions {
   [key: string]: number[];
 }
@@ -24,7 +30,10 @@ export const WORD_POSITIONS: { [key: number]: WordPositions } = {
     'chocolate': [81, 82, 83, 84, 85, 86, 87, 88]
   },
   12: {
-    'penne': [11, 12, 21, 22, 31],
+    'penne': [
+      [11, 12, 21, 22, 31],  // First solution
+      [11, 12, 22, 21, 31]   // Alternative solution
+    ],
     'gnocchi': [32, 23, 24, 13, 14, 15, 16],
     'fettucine': [51, 41, 42, 43, 33, 34, 35, 25, 26],
     'lasagna': [71, 72, 73, 74, 83, 82, 81],

@@ -105,10 +105,16 @@ export function useWordSelection(
     }
 
     const wordEntry = Object.entries(dayPositions).find(([word, positions]) => {
-      const positionsMatch = selectedPositions.length === positions.length &&
+      // Check if positions is an array of arrays (multiple solutions)
+      if (Array.isArray(positions[0])) {
+        return positions.some(solution => 
+          selectedPositions.length === solution.length &&
+          selectedPositions.every((pos, index) => pos === solution[index])
+        );
+      }
+      // Single solution case
+      return selectedPositions.length === positions.length &&
         selectedPositions.every((pos, index) => pos === positions[index]);
-      console.log(`Checking word ${word}:`, positionsMatch);
-      return positionsMatch;
     });
 
     if (wordEntry) {
