@@ -88,6 +88,7 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
               words={garlandContent.words}
               themeWord={garlandContent.themeWord}
               onComplete={onComplete}
+              day={day}
             />
           </div>
         );
