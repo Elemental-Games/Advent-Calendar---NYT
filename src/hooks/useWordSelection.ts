@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { WORD_POSITIONS } from '@/lib/garland-positions';
+import { WORD_POSITIONS, WordPosition } from '@/lib/garland-positions';
 
 export function useWordSelection(
   words: string[],
@@ -106,15 +106,16 @@ export function useWordSelection(
 
     const wordEntry = Object.entries(dayPositions).find(([word, positions]) => {
       // Check if positions is an array of arrays (multiple solutions)
-      if (Array.isArray(positions[0])) {
-        return positions.some(solution => 
+      if (Array.isArray(positions) && Array.isArray(positions[0])) {
+        return (positions as number[][]).some(solution => 
           selectedPositions.length === solution.length &&
           selectedPositions.every((pos, index) => pos === solution[index])
         );
       }
       // Single solution case
-      return selectedPositions.length === positions.length &&
-        selectedPositions.every((pos, index) => pos === positions[index]);
+      const singleSolution = positions as number[];
+      return selectedPositions.length === singleSolution.length &&
+        selectedPositions.every((pos, index) => pos === singleSolution[index]);
     });
 
     if (wordEntry) {
