@@ -108,14 +108,11 @@ export function useWordSelection(
       // Check if positions is an array of arrays (multiple solutions)
       if (Array.isArray(positions) && Array.isArray(positions[0])) {
         return (positions as number[][]).some(solution => 
-          selectedPositions.length === solution.length &&
-          selectedPositions.every((pos, index) => pos === solution[index])
+          arePositionsEqual(selectedPositions, solution)
         );
       }
       // Single solution case
-      const singleSolution = positions as number[];
-      return selectedPositions.length === singleSolution.length &&
-        selectedPositions.every((pos, index) => pos === singleSolution[index]);
+      return arePositionsEqual(selectedPositions, positions as number[]);
     });
 
     if (wordEntry) {
@@ -166,4 +163,9 @@ const isAdjacent = (cell1: number, cell2: number): boolean => {
   const col2 = cell2 % 6;
   
   return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
+};
+
+const arePositionsEqual = (selected: number[], solution: number[]): boolean => {
+  if (selected.length !== solution.length) return false;
+  return selected.every((pos, idx) => pos === solution[idx]);
 };

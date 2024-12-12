@@ -6,18 +6,16 @@ export function useFoundWordDisplay(
   themeWord: string
 ) {
   const isLetterInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
-    const pos = (rowIndex + 1) * 10 + (colIndex + 1); // Convert to position format (e.g., 11, 12, etc.)
+    const pos = (rowIndex + 1) * 10 + (colIndex + 1);
     console.log(`Checking position ${pos} for found words`);
     
     for (const { word, index } of foundWords) {
       const wordPositions = WORD_POSITIONS[12][word.toLowerCase()];
       console.log(`Checking word ${word} with positions:`, wordPositions);
       
-      // Check if this cell's position is in the found word's positions
       if (Array.isArray(wordPositions)) {
         // Handle multiple solutions case
         if (Array.isArray(wordPositions[0])) {
-          // If it's an array of arrays (multiple solutions)
           const isInAnySolution = (wordPositions as number[][]).some(solution => 
             solution.includes(pos)
           );
