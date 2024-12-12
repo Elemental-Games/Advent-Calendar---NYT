@@ -1,4 +1,5 @@
 import { PuzzleContent } from './puzzle-types';
+import { day12Puzzle } from './puzzles/day12';
 
 console.log('Loading puzzle data configuration');
 
@@ -200,7 +201,8 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
         words: ["SPRING", "RISE", "LEAP", "HOP"]
       }
     ]
-  }
+  },
+  12: day12Puzzle,
 };
 
 console.log('Puzzle data loaded successfully');

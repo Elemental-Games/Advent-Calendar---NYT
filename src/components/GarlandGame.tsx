@@ -13,12 +13,14 @@ interface GarlandGameProps {
   words?: string[];
   themeWord?: string;
   onComplete?: () => void;
+  day: number;
 }
 
 export function GarlandGame({ 
   words = ['HERSHEY', 'DARK', 'RICH', 'MILKY', 'SWEETS', 'TRUFFLES', 'FUDGEY'],
   themeWord = 'CHOCOLATE',
-  onComplete 
+  onComplete,
+  day
 }: GarlandGameProps) {
   console.log('GarlandGame rendering with words:', words);
   
@@ -39,7 +41,8 @@ export function GarlandGame({
     words, 
     foundWordsWithIndex,
     setFoundWordsWithIndex,
-    themeWord
+    themeWord,
+    day
   );
 
   useEffect(() => {
@@ -70,14 +73,14 @@ export function GarlandGame({
 
       <GameGrid
         grid={[
-          ['C', 'H', 'O', 'C', 'O', 'L'],
-          ['H', 'E', 'R', 'S', 'H', 'E'],
-          ['Y', 'D', 'A', 'R', 'K', 'A'],
-          ['R', 'I', 'C', 'H', 'M', 'T'],
-          ['F', 'U', 'D', 'G', 'E', 'E'],
-          ['Y', 'S', 'W', 'E', 'E', 'T'],
-          ['S', 'T', 'R', 'U', 'F', 'F'],
-          ['L', 'E', 'S', 'M', 'I', 'L']
+          ['P', 'A', 'S', 'T', 'A', 'T'],
+          ['E', 'N', 'N', 'E', 'G', 'Y'],
+          ['N', 'O', 'C', 'C', 'H', 'P'],
+          ['F', 'E', 'T', 'T', 'U', 'E'],
+          ['C', 'I', 'N', 'E', 'Z', 'S'],
+          ['R', 'O', 'T', 'I', 'N', 'I'],
+          ['L', 'A', 'S', 'A', 'G', 'N'],
+          ['A', 'Z', 'I', 'T', 'I', 'I']
         ]}
         selectedCells={selectedCells}
         foundWordsWithIndex={foundWordsWithIndex}

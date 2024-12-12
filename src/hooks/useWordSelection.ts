@@ -1,41 +1,20 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-
-const WORD_POSITIONS = {
-  'hershey': [25, 26, 16, 15, 14, 13, 12],
-  'dark': [43, 33, 23, 24],
-  'rich': [46, 36, 35, 34],
-  'milky': [53, 54, 55, 45, 44],
-  'sweets': [73, 63, 64, 65, 56, 66],  // Updated positions for SWEETS
-  'truffles': [83, 84, 85, 86, 76, 75, 74, 73],
-  'fudgey': [31, 41, 51, 61, 71, 81],
-  'chocolate': [11, 21, 22, 32, 42, 52, 62, 72, 82]  // Theme word positions
-};
-
-const getPositionNumber = (row: number, col: number): number => {
-  return (row + 1) * 10 + (col + 1);
-};
-
-const isAdjacent = (cell1: number, cell2: number): boolean => {
-  const row1 = Math.floor(cell1 / 6);
-  const col1 = cell1 % 6;
-  const row2 = Math.floor(cell2 / 6);
-  const col2 = cell2 % 6;
-  
-  return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
-};
+import { WORD_POSITIONS } from '@/lib/garland-positions';
 
 export function useWordSelection(
   words: string[],
   foundWords: Array<{word: string, index: number}>,
   setFoundWords: (words: Array<{word: string, index: number}>) => void,
-  themeWord: string
+  themeWord: string,
+  day: number
 ) {
   const [selectedCells, setSelectedCells] = useState<number[]>([]);
   const [currentWord, setCurrentWord] = useState<string>('');
 
   console.log('useWordSelection - Initial render with words:', words);
   console.log('useWordSelection - Found words:', foundWords);
+  console.log('useWordSelection - Day:', day);
 
   const handleCellClick = useCallback((rowIndex: number, colIndex: number) => {
     console.log(`Cell clicked at (${rowIndex},${colIndex})`);
@@ -89,14 +68,14 @@ export function useWordSelection(
 
   const getLetterFromGrid = (row: number, col: number): string => {
     const grid = [
-      ['C', 'Y', 'E', 'H', 'S', 'R'],
-      ['H', 'O', 'R', 'K', 'H', 'E'],
-      ['F', 'C', 'A', 'I', 'C', 'H'],
-      ['U', 'O', 'D', 'Y', 'K', 'R'],
-      ['D', 'L', 'M', 'I', 'L', 'T'],
-      ['G', 'A', 'W', 'E', 'E', ' '],
-      ['E', 'T', 'S', 'E', 'L', 'F'],
-      ['Y', 'E', 'T', 'R', 'U', 'F']
+      ['P', 'A', 'S', 'T', 'A', 'T'],
+      ['E', 'N', 'N', 'E', 'G', 'Y'],
+      ['N', 'O', 'C', 'C', 'H', 'P'],
+      ['F', 'E', 'T', 'T', 'U', 'E'],
+      ['C', 'I', 'N', 'E', 'Z', 'S'],
+      ['R', 'O', 'T', 'I', 'N', 'I'],
+      ['L', 'A', 'S', 'A', 'G', 'N'],
+      ['A', 'Z', 'I', 'T', 'I', 'I']
     ];
     return grid[row][col];
   };
@@ -119,7 +98,13 @@ export function useWordSelection(
 
     console.log('Selected positions:', selectedPositions);
 
-    const wordEntry = Object.entries(WORD_POSITIONS).find(([word, positions]) => {
+    const dayPositions = WORD_POSITIONS[day];
+    if (!dayPositions) {
+      console.error(`No word positions found for day ${day}`);
+      return;
+    }
+
+    const wordEntry = Object.entries(dayPositions).find(([word, positions]) => {
       const positionsMatch = selectedPositions.length === positions.length &&
         selectedPositions.every((pos, index) => pos === positions[index]);
       console.log(`Checking word ${word}:`, positionsMatch);
@@ -153,7 +138,7 @@ export function useWordSelection(
 
     setSelectedCells([]);
     setCurrentWord('');
-  }, [currentWord, selectedCells, words, foundWords, setFoundWords, themeWord]);
+  }, [currentWord, selectedCells, words, foundWords, setFoundWords, themeWord, day]);
 
   return {
     selectedCells,
@@ -162,3 +147,16 @@ export function useWordSelection(
     handleSubmit
   };
 }
+
+const getPositionNumber = (row: number, col: number): number => {
+  return (row + 1) * 10 + (col + 1);
+};
+
+const isAdjacent = (cell1: number, cell2: number): boolean => {
+  const row1 = Math.floor(cell1 / 6);
+  const col1 = cell1 % 6;
+  const row2 = Math.floor(cell2 / 6);
+  const col2 = cell2 % 6;
+  
+  return Math.abs(row1 - row2) <= 1 && Math.abs(col1 - col2) <= 1;
+};
