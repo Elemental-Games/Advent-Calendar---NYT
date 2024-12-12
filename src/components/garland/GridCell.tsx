@@ -35,16 +35,15 @@ export const GridCell = memo(function GridCell({
   });
 
   const getBaseStyles = () => {
-    // Found letters get a darker appearance
+    // Found letters get green fill with red outline
     if (isFound) {
       return cn(
-        'bg-slate-700',      // Dark background
-        'text-slate-300',    // Light gray text for subtle contrast
+        'bg-green-500',      // Green background
+        'text-white',        // White text for contrast
         'border-2',
-        'border-slate-600',  // Slightly lighter border
+        'border-red-500',    // Red outline
         'cursor-not-allowed',
-        'pointer-events-none',
-        'opacity-90'
+        'pointer-events-none'
       );
     }
 
