@@ -7,9 +7,11 @@ export function useFoundWordDisplay(
 ) {
   const isLetterInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
     const pos = (rowIndex + 1) * 10 + (colIndex + 1); // Convert to position format (e.g., 11, 12, etc.)
+    console.log(`Checking position ${pos} for found words`);
     
     for (const { word, index } of foundWords) {
       const wordPositions = WORD_POSITIONS[12][word.toLowerCase()];
+      console.log(`Checking word ${word} with positions:`, wordPositions);
       
       // Check if this cell's position is in the found word's positions
       if (wordPositions?.includes(pos)) {
