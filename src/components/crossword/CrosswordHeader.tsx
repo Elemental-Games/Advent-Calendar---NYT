@@ -2,10 +2,9 @@ import { formatTime } from "@/lib/utils";
 
 interface CrosswordHeaderProps {
   elapsedTime: number;
-  day: number;
 }
 
-export function CrosswordHeader({ elapsedTime, day }: CrosswordHeaderProps) {
+export function CrosswordHeader({ elapsedTime }: CrosswordHeaderProps) {
   return (
     <>
       <h3 className="text-2xl font-bold mb-6 text-center text-blue-700">

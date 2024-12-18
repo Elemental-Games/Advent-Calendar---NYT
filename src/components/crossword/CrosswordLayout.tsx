@@ -1,3 +1,9 @@
+/**
+ * Layout component that arranges all crossword elements.
+ * Provides structure for the grid, clues, controls, and game information.
+ * Acts as the main container for the crossword puzzle interface.
+ */
+
 import React from 'react';
 import { CrosswordHeader } from "./CrosswordHeader";
 import { CrosswordGrid } from "./CrosswordGrid";
@@ -8,7 +14,6 @@ import type { CellPosition } from "./types";
 
 interface CrosswordLayoutProps {
   elapsedTime: number;
-  day: number;
   grid: string[][];
   guesses: Record<string, string>;
   showDown: boolean;
@@ -30,7 +35,6 @@ interface CrosswordLayoutProps {
 
 export function CrosswordLayout({
   elapsedTime,
-  day,
   grid,
   guesses,
   showDown,
@@ -51,7 +55,7 @@ export function CrosswordLayout({
 }: CrosswordLayoutProps) {
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <CrosswordHeader elapsedTime={elapsedTime} day={day} />
+      <CrosswordHeader elapsedTime={elapsedTime} />
       
       <div className="mb-8">
         <CrosswordGrid

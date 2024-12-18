@@ -137,11 +137,6 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
             />
           ))}
         </div>
-        <CongratsDialog 
-          open={showCongrats} 
-          onOpenChange={setShowCongrats}
-          day={day}
-        />
       </div>
     );
   }
@@ -187,7 +182,6 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       <CongratsDialog 
         open={showCongrats} 
         onOpenChange={setShowCongrats}
-        day={day}
       />
     </div>
   );
