@@ -29,7 +29,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
     getClueNumber,
     findNextCell,
     findPreviousCell
-  } = useCrosswordGrid();
+  } = useCrosswordGrid({ answers });
 
   const {
     guesses,

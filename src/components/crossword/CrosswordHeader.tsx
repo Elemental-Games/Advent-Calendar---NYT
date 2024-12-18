@@ -1,3 +1,5 @@
+import { formatTime } from "@/lib/utils";
+
 interface CrosswordHeaderProps {
   elapsedTime: number;
   day: number;
