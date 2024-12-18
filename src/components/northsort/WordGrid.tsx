@@ -14,30 +14,30 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: W
     const customArrangement = [...words];
     
     if (day === 15) {
-      // Day 15's specific arrangement
+      // Day 15's specific arrangement to match the image layout
       const positions = [
-        13, // Hinge
-        42, // Philadelphia
-        20, // Bar
-        31, // Nashville
-        10, // Morgan Wallen
-        43, // 76ers
-        22, // Restaurant
-        30, // Wegmans
-        41, // Virginia
-        12, // Beach
-        33, // Eagles
-        21, // Bar
-        40, // Hilton Head
-        11, // Beach
-        32, // Concerts
-        23  // Parking Lot
+        0,  // Eagles
+        1,  // Nashville
+        2,  // Hinge
+        3,  // Philadelphia
+        4,  // Restaurant
+        5,  // 76ers
+        6,  // Concerts
+        7,  // Hilton Head
+        8,  // Wegmans
+        9,  // Weddings
+        10, // Virginia
+        11, // Morgan Wallen
+        12, // Parking Lot
+        13, // Phillies
+        14, // Bar
+        15  // Beach
       ];
       
       const arrangedArray = new Array(16).fill(null);
       customArrangement.forEach((word, index) => {
         if (positions[index] !== undefined) {
-          arrangedArray[positions[index] % 16] = word;
+          arrangedArray[positions[index]] = word;
         }
       });
       
