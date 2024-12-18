@@ -14,23 +14,23 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: W
     const customArrangement = [...words];
     
     if (day === 15) {
-      // Day 15's specific arrangement - fixed positions to ensure all words appear
+      // Day 15's specific arrangement - randomized positions
       const positions = [
-        13, // Hinge
         42, // Philadelphia
-        20, // Bar
         31, // Nashville
-        10, // Morgan Wallen
-        43, // 76ers
+        13, // Hinge
+        33, // Eagles
         22, // Restaurant
-        30, // Wegmans
         41, // Virginia
         12, // Beach
-        33, // Eagles
+        30, // Wegmans
+        10, // Morgan Wallen
         21, // Bar
         40, // Hilton Head
-        11, // Beach
         32, // Concerts
+        11, // Beach
+        43, // 76ers
+        20, // Bar
         23  // Parking Lot
       ];
       
@@ -40,8 +40,7 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: W
       // Map each word to its position, ensuring we don't exceed array bounds
       customArrangement.forEach((word, index) => {
         if (positions[index] !== undefined) {
-          const position = index % words.length;
-          arrangedArray[position] = word;
+          arrangedArray[index] = word;
         }
       });
       
