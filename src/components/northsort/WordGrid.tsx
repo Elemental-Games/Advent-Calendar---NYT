@@ -13,54 +13,27 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: W
   const arrangedWords = useMemo(() => {
     const customArrangement = [...words];
     
-    if (day === 15) {
-      // Day 15's specific arrangement - randomized positions
-      const positions = [
-        42, // Philadelphia
-        31, // Nashville
-        13, // Hinge
-        33, // Eagles
-        22, // Restaurant
-        41, // Virginia
-        12, // Beach
-        30, // Wegmans
-        10, // Morgan Wallen
-        21, // Bar
-        40, // Hilton Head
-        32, // Concerts
-        11, // Beach
-        43, // 76ers
-        20, // Bar
-        23  // Parking Lot
-      ];
-      
-      // Create array with exact size needed
-      const arrangedArray = new Array(words.length).fill(null);
-      
-      // Map each word to its position, ensuring we don't exceed array bounds
-      customArrangement.forEach((word, index) => {
-        if (positions[index] !== undefined) {
-          arrangedArray[index] = word;
-        }
-      });
-      
-      return arrangedArray.filter(word => word !== null);
-    }
+    // New arrangement based on randomized positions
+    const positions = [
+      14, 43, 21, 32,  // Column 4 group 1, Column 3 group 4, Column 1 group 2, Column 2 group 3
+      11, 44, 23, 31,  // Column 1 group 1, Column 4 group 4, Column 3 group 2, Column 1 group 3
+      42, 13, 34, 22,  // Column 2 group 4, Column 3 group 1, Column 4 group 3, Column 2 group 2
+      41, 12, 33, 24   // Column 1 group 4, Column 2 group 1, Column 3 group 3, Column 4 group 2
+    ];
     
-    // Keep existing arrangements for other days
-    if (customArrangement.includes("SLALOM")) {
-      const positions = [0, 5, 10, 15, 2, 7, 12, 1, 6, 11, 3, 8, 13, 4, 9, 14];
-      const arrangedArray = new Array(16).fill(null);
-      
-      customArrangement.forEach((word, index) => {
-        arrangedArray[positions[index]] = word;
-      });
-      
-      return arrangedArray.filter(word => word !== null);
-    }
+    // Create array with exact size needed
+    const arrangedArray = new Array(words.length).fill(null);
     
-    return customArrangement;
-  }, [words, day]);
+    // Map each word to its position
+    customArrangement.forEach((word, index) => {
+      if (positions[index] !== undefined) {
+        const position = index % words.length;
+        arrangedArray[position] = word;
+      }
+    });
+    
+    return arrangedArray.filter(word => word !== null);
+  }, [words]);
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
