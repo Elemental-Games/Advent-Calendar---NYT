@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
-import { WORD_POSITIONS, WordPosition } from '@/lib/garland-positions';
+import { WORD_POSITIONS } from '@/lib/garland-positions';
 
 export function useFoundWordDisplay(
   foundWords: Array<{word: string, index: number}>,
   themeWord: string
 ) {
   const isLetterInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
-    const pos = (rowIndex + 1) * 10 + (colIndex + 1);
+    const pos = (rowIndex + 1) * 10 + (colIndex + 1); // Convert to position format (e.g., 11, 12, etc.)
     console.log(`Checking position ${pos} for found words`);
     
     for (const { word, index } of foundWords) {
-      const wordPositions = WORD_POSITIONS[12][word.toLowerCase()];
+      const wordPositions = WORD_POSITIONS[16][word.toLowerCase()];
       console.log(`Checking word ${word} with positions:`, wordPositions);
       
       if (Array.isArray(wordPositions)) {
