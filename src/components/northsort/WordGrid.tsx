@@ -11,28 +11,34 @@ interface WordGridProps {
 
 export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: WordGridProps) {
   const arrangedWords = useMemo(() => {
-    const customArrangement = [...words];
-    
-    // New arrangement based on randomized positions
     const positions = [
-      14, 43, 21, 32,  // Column 4 group 1, Column 3 group 4, Column 1 group 2, Column 2 group 3
-      11, 44, 23, 31,  // Column 1 group 1, Column 4 group 4, Column 3 group 2, Column 1 group 3
-      42, 13, 34, 22,  // Column 2 group 4, Column 3 group 1, Column 4 group 3, Column 2 group 2
-      41, 12, 33, 24   // Column 1 group 4, Column 2 group 1, Column 3 group 3, Column 4 group 2
+      14, 43, 21, 32,  // Morgan Wallen, Beach, Hinge, Phillies
+      11, 44, 23, 31,  // Wegmans, Bar, Restaurant, Parking Lot
+      42, 13, 34, 22,  // Hilton Head, Virginia, Nashville, Philadelphia
+      41, 12, 33, 24   // Concerts, Weddings, Eagles, 76ers
     ];
     
-    // Create array with exact size needed
-    const arrangedArray = new Array(words.length).fill(null);
-    
-    // Map each word to its position
-    customArrangement.forEach((word, index) => {
+    // Create a mapping of positions to words
+    const positionMap: { [key: number]: string } = {};
+    words.forEach((word, index) => {
       if (positions[index] !== undefined) {
-        const position = index % words.length;
-        arrangedArray[position] = word;
+        positionMap[positions[index]] = word;
       }
     });
-    
-    return arrangedArray.filter(word => word !== null);
+
+    // Create the final arrangement by position
+    const finalArrangement: string[] = [];
+    for (let row = 1; row <= 4; row++) {
+      for (let col = 1; col <= 4; col++) {
+        const position = row * 10 + col;
+        const word = positionMap[position];
+        if (word) {
+          finalArrangement.push(word);
+        }
+      }
+    }
+
+    return finalArrangement;
   }, [words]);
 
   return (
@@ -57,8 +63,8 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: W
               {word}
             </span>
           </motion.button>
-        )
-      })}
+        )}
+      )}
     </div>
   );
 }
