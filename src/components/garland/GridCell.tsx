@@ -26,16 +26,56 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const getBaseStyles = () => {
-    // Found word styling (including theme word)
+    // Found word styling with different colors for specific words
     if (isFound) {
+      // MUSICIANS (theme word) - Yellow fill
+      if (isThemeWord) {
+        return cn(
+          'bg-yellow-400',    // Yellow background
+          'text-black',       // Black text for better contrast
+          'border-2',
+          'border-red-500',
+          'cursor-not-allowed',
+          'opacity-100',
+          'pointer-events-none'
+        );
+      }
+
+      // WALLEN (index 1) and SAMFENDER (index 5) - Darker green
+      if (foundWordIndex === 1 || foundWordIndex === 5) {
+        return cn(
+          'bg-green-700',     // Darker green background
+          'text-white',
+          'border-2',
+          'border-red-500',
+          'cursor-not-allowed',
+          'opacity-100',
+          'pointer-events-none'
+        );
+      }
+
+      // ERNEST (index 3) - Lighter green
+      if (foundWordIndex === 3) {
+        return cn(
+          'bg-green-300',     // Lighter green background
+          'text-black',       // Black text for better contrast
+          'border-2',
+          'border-red-500',
+          'cursor-not-allowed',
+          'opacity-100',
+          'pointer-events-none'
+        );
+      }
+
+      // Default found word style - Regular green
       return cn(
-        'bg-green-500',        // Green background
-        'text-white',          // White text
-        'border-2',           // 2px border width
-        'border-red-500',     // Red border
-        'cursor-not-allowed', // Not clickable cursor
-        'opacity-100',        // Full opacity to make it stand out
-        'pointer-events-none' // Prevent any interaction
+        'bg-green-500',
+        'text-white',
+        'border-2',
+        'border-red-500',
+        'cursor-not-allowed',
+        'opacity-100',
+        'pointer-events-none'
       );
     }
 
