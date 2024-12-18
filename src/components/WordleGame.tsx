@@ -106,10 +106,18 @@ export function WordleGame({ solution, onComplete, day, title }: WordleGameProps
     toast.success('Puzzle reset successfully!');
   };
 
+  const getKringleNumber = () => {
+    return Math.ceil(day / 4);
+  };
+
   return (
     <div className="flex flex-col items-center space-y-8 p-4">
       <h2 className="text-2xl font-bold text-center">
-        {title || `Kringle #${Math.ceil(day/4)} 🎅`}
+        {title || (
+          <span>
+            <span className="text-[#ea384c]">Kringle</span> #{getKringleNumber()} 🎅
+          </span>
+        )}
       </h2>
       <WordleBoard 
         guesses={guesses} 

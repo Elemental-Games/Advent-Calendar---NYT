@@ -67,8 +67,29 @@ export function GarlandGame({
     setShowCompletionDialog(false);
   };
 
+  const titleColors = [
+    'text-red-500',
+    'text-blue-500',
+    'text-green-500',
+    'text-yellow-500',
+    'text-purple-500',
+    'text-orange-500',
+    'text-pink-500',
+    'text-indigo-500',
+    'text-emerald-500',
+    'text-amber-500'
+  ];
+
   return (
     <div className="flex flex-col items-center space-y-6 p-4">
+      <h2 className="text-2xl font-bold text-center">
+        {'Garland #4 🎄'.split('').map((char, i) => (
+          <span key={i} className={titleColors[i % titleColors.length]}>
+            {char}
+          </span>
+        ))}
+      </h2>
+
       <GameHeader elapsedTime={elapsedTime} />
 
       <GameGrid
