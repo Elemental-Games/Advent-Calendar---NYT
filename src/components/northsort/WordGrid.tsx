@@ -37,7 +37,8 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: W
       const arrangedArray = new Array(16).fill(null);
       customArrangement.forEach((word, index) => {
         if (positions[index] !== undefined) {
-          arrangedArray[positions[index] % 16] = word;
+          const position = positions[index] % 16;
+          arrangedArray[position] = word;
         }
       });
       

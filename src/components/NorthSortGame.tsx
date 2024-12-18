@@ -97,10 +97,11 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
       setSelectedWords([]);
       
       if (completedGroups.length + 1 === groups.length) {
+        toast.success("Congratulations! You've completed all groups!");
         setTimeout(() => {
           setShowCongrats(true);
           onComplete?.();
-        }, 2000);
+        }, 1000);
       } else {
         toast.success("Correct group!");
       }
