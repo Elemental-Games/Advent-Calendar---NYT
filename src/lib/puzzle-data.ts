@@ -77,7 +77,12 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   },
   4: day4Puzzle,
   8: day8Puzzle,
-  12: day12Puzzle
+  12: day12Puzzle,
+  13: {
+    type: "kringle",
+    word: "CRISP"
+  }
+  // ... keep existing code (other puzzle data)
 };
 
 console.log('Puzzle data loaded successfully');
