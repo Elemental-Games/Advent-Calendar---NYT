@@ -3,6 +3,7 @@ export type PuzzleType = "kringle" | "frostword" | "northsort" | "garland";
 export interface WordlePuzzle {
   type?: "kringle";
   word: string;
+  title?: string;
 }
 
 export interface CrosswordPuzzle {
