@@ -41,7 +41,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
   const {
     handleInputChange,
     handleBackspace
-  } = useCrosswordCellInput(
+  } = useCrosswordCellInput({
     isValidCell,
     getClueNumber,
     findNextCell,
@@ -51,7 +51,7 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
     showDown,
     guesses,
     setGuesses
-  );
+  });
 
   const handleKeyPress = (key: string) => {
     if (selectedCell) {
