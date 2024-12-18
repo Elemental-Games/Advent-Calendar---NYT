@@ -14,6 +14,7 @@ import type { CellPosition } from "./types";
 
 interface CrosswordLayoutProps {
   elapsedTime: number;
+  day: number; // Added day prop
   grid: string[][];
   guesses: Record<string, string>;
   showDown: boolean;
@@ -35,6 +36,7 @@ interface CrosswordLayoutProps {
 
 export function CrosswordLayout({
   elapsedTime,
+  day,
   grid,
   guesses,
   showDown,
@@ -55,7 +57,7 @@ export function CrosswordLayout({
 }: CrosswordLayoutProps) {
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <CrosswordHeader elapsedTime={elapsedTime} />
+      <CrosswordHeader elapsedTime={elapsedTime} day={day} />
       
       <div className="mb-8">
         <CrosswordGrid

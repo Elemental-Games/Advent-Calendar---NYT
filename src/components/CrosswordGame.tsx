@@ -5,6 +5,8 @@ import { CrosswordClues } from './crossword/CrosswordClues';
 import { CrosswordControls } from './crossword/CrosswordControls';
 import { CrosswordProvider } from '@/contexts/CrosswordContext';
 import { savePuzzleState } from '@/lib/game-state';
+import { useCrosswordInput } from '@/hooks/useCrosswordInput';
+import { useCrosswordGrid } from '@/hooks/useCrosswordGrid';
 
 interface CrosswordGameProps {
   across: Record<string, string>;
@@ -18,6 +20,23 @@ interface CrosswordGameProps {
 export function CrosswordGame({ across, down, answers, onComplete, day, isCompleted }: CrosswordGameProps) {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isActive, setIsActive] = useState(!isCompleted);
+
+  // Initialize grid state
+  const { 
+    grid, 
+    guesses, 
+    showDown, 
+    selectedCell, 
+    isValidCell,
+    getClueNumber,
+    handleCellClick,
+    handleInputChange,
+    cellRefs,
+    validatedCells 
+  } = useCrosswordGrid(answers);
+
+  // Initialize input handlers
+  const { handleKeyPress, handleBackspace, handleSubmit } = useCrosswordInput(answers);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -52,8 +71,23 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col space-y-6">
-            <CrosswordGrid />
-            <CrosswordControls />
+            <CrosswordGrid 
+              grid={grid}
+              guesses={guesses}
+              showDown={showDown}
+              selectedCell={selectedCell}
+              isValidCell={isValidCell}
+              getClueNumber={getClueNumber}
+              handleCellClick={handleCellClick}
+              handleInputChange={handleInputChange}
+              cellRefs={cellRefs}
+              validatedCells={validatedCells}
+            />
+            <CrosswordControls 
+              onSubmit={handleSubmit}
+              onKeyPress={handleKeyPress}
+              onBackspace={handleBackspace}
+            />
           </div>
           <CrosswordClues />
         </div>
