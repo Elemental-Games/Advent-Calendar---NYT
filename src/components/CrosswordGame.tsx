@@ -10,6 +10,8 @@ import { useClueManagement } from "@/hooks/useClueManagement";
 import { puzzleData } from "@/lib/puzzle-data";
 import { useGameState } from "./crossword/GameStateProvider";
 import { GameControls } from "./crossword/GameControls";
+import { Button } from "./ui/button";
+import { toast } from "sonner";
 import type { CrosswordGameProps } from "./crossword/types";
 import type { CrosswordPuzzle } from "@/lib/puzzle-types";
 
@@ -119,6 +121,16 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
     }
   };
 
+  const handleReset = () => {
+    console.log('Resetting FrostWord puzzle for day:', day);
+    gameState.resetPuzzle();
+    setGuesses({});
+    gameState.setSelectedCell(null);
+    gameState.setShowCompletionDialog(false);
+    gameState.setElapsedTime(0);
+    toast.success('Puzzle reset successfully!');
+  };
+
   const currentClue = getCurrentClue();
 
   return (
@@ -143,6 +155,18 @@ export function CrosswordGame({ across, down, answers, onComplete, day, isComple
         down={down}
         isCompleted={isCompleted || gameState.puzzleState.completed}
       />
+
+      {(isCompleted || gameState.puzzleState.completed) && (
+        <div className="flex justify-center mt-4">
+          <Button 
+            onClick={handleReset}
+            variant="outline"
+            className="text-red-600 border-red-600 hover:bg-red-50"
+          >
+            Reset Puzzle
+          </Button>
+        </div>
+      )}
 
       <StartDialog
         open={gameState.showStartDialog}
