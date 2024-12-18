@@ -2,6 +2,6 @@ import { PuzzleContent } from '../puzzle-types';
 
 export const day16Puzzle: PuzzleContent = {
   type: "garland",
-  words: ["SLEIGH", "REINDEER", "RUDOLPH", "DASHER", "COMET", "VIXEN"],
-  themeWord: "SANTASHELP"
+  words: ["MUSICIANS", "WALLEN", "MALONE", "ERNEST", "MTJOY", "SAMFENDER", "SABRINA"],
+  themeWord: "MUSICIANS"
 };
