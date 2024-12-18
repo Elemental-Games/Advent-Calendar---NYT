@@ -6,6 +6,7 @@ import { day14Puzzle } from './puzzles/day14';
 import { day15Puzzle } from './puzzles/day15';
 import { day16Puzzle } from './puzzles/day16';
 import { day18Puzzle } from './puzzles/day18';
+import { day19Puzzle } from './puzzles/day19';
 
 console.log('Loading puzzle data configuration');
 
@@ -95,7 +96,32 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     word: "YACHT",
     title: "Kringle #5 🎅"
   },
-  18: day18Puzzle
+  18: day18Puzzle,
+  19: {
+    type: "northsort",
+    groups: [
+      {
+        category: "Weather Terms",
+        color: "rgb(234 179 8)", // yellow
+        words: ["Clear", "Bright", "Hazy", "Fair"]
+      },
+      {
+        category: "Types of Wine",
+        color: "rgb(34 197 94)", // green
+        words: ["Red", "White", "Sparkling", "Rosé"]
+      },
+      {
+        category: "Browsers",
+        color: "rgb(59 130 246)", // blue
+        words: ["Chrome", "Edge", "Safari", "Brave"]
+      },
+      {
+        category: "Text Styling",
+        color: "rgb(239 68 68)", // red
+        words: ["Bold", "Italic", "Plain", "Black"]
+      }
+    ]
+  }
 };
 
 console.log('Puzzle data loaded successfully');
