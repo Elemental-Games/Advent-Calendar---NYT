@@ -8,9 +8,10 @@ import {
 interface CongratsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  day: number;
 }
 
-export function CongratsDialog({ open, onOpenChange }: CongratsDialogProps) {
+export function CongratsDialog({ open, onOpenChange, day }: CongratsDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -21,7 +22,7 @@ export function CongratsDialog({ open, onOpenChange }: CongratsDialogProps) {
         </DialogHeader>
         <div className="text-center space-y-4">
           <p className="text-lg">
-            You've completed NorthSort #1!
+            You've completed NorthSort #{day}!
           </p>
           <p className="text-gray-600">
             Come back tomorrow for a new Christmas-themed challenge.
