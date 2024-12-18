@@ -6,15 +6,47 @@ interface WordGridProps {
   selectedWords: string[];
   onWordClick: (word: string) => void;
   disabled?: boolean;
+  day?: number;
 }
 
-export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGridProps) {
+export function WordGrid({ words, selectedWords, onWordClick, disabled, day }: WordGridProps) {
   const arrangedWords = useMemo(() => {
     const customArrangement = [...words];
     
-    // Custom arrangement for day 11
+    if (day === 15) {
+      // Day 15's specific arrangement
+      const positions = [
+        13, // Hinge
+        42, // Philadelphia
+        20, // Bar
+        31, // Nashville
+        10, // Morgan Wallen
+        43, // 76ers
+        22, // Restaurant
+        30, // Wegmans
+        41, // Virginia
+        12, // Beach
+        33, // Eagles
+        21, // Bar
+        40, // Hilton Head
+        11, // Beach
+        32, // Concerts
+        23  // Parking Lot
+      ];
+      
+      const arrangedArray = new Array(16).fill(null);
+      customArrangement.forEach((word, index) => {
+        if (positions[index] !== undefined) {
+          arrangedArray[positions[index] % 16] = word;
+        }
+      });
+      
+      return arrangedArray.filter(word => word !== null);
+    }
+    
+    // Keep existing arrangements for other days
     if (customArrangement.includes("SLALOM")) {
-      // Arrange words in a scattered pattern
+      // Day 11's arrangement
       const positions = [0, 5, 10, 15, 2, 7, 12, 1, 6, 11, 3, 8, 13, 4, 9, 14];
       const arrangedArray = new Array(16).fill(null);
       
@@ -25,9 +57,8 @@ export function WordGrid({ words, selectedWords, onWordClick, disabled }: WordGr
       return arrangedArray.filter(word => word !== null);
     }
     
-    // Keep existing arrangements for other days
     return customArrangement;
-  }, [words]);
+  }, [words, day]);
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

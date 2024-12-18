@@ -125,7 +125,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
     console.log('Rendering completed state with all groups');
     return (
       <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
-        <NorthSortHeader remainingAttempts={remainingAttempts} />
+        <NorthSortHeader remainingAttempts={remainingAttempts} day={day} />
         <div className="space-y-6 mt-4">
           {groups.map((group) => (
             <CompletedGroup
@@ -142,7 +142,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
-      <NorthSortHeader remainingAttempts={remainingAttempts} />
+      <NorthSortHeader remainingAttempts={remainingAttempts} day={day} />
 
       <div className="space-y-6 mt-4">
         <div className="space-y-6">
@@ -165,6 +165,7 @@ export function NorthSortGame({ groups, onComplete, day }: NorthSortGameProps) {
               words={remainingWords}
               selectedWords={selectedWords}
               onWordClick={handleWordClick}
+              day={day}
             />
           </div>
         )}
