@@ -16,7 +16,7 @@ export function WordleKeyboard({
   onKeyPress, 
   onBackspace, 
   onEnter,
-  usedLetters 
+  usedLetters = { correct: [], present: [], absent: [] }
 }: WordleKeyboardProps) {
   const rows = [
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
