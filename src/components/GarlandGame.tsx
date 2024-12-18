@@ -69,7 +69,7 @@ export function GarlandGame({
 
   return (
     <div className="flex flex-col items-center space-y-6 p-4">
-      <GameHeader elapsedTime={elapsedTime} day={day} />
+      <GameHeader elapsedTime={elapsedTime} />
 
       <GameGrid
         grid={[

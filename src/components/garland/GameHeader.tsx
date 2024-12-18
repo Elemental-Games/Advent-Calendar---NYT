@@ -1,9 +1,16 @@
+/**
+ * GameHeader Component
+ * Displays the game title, theme, and elapsed time.
+ * Formats and shows the timer in minutes:seconds format.
+ * Provides context about the current game session.
+ */
+import React from 'react';
+
 interface GameHeaderProps {
   elapsedTime: number;
-  day: number;
 }
 
-export function GameHeader({ elapsedTime, day }: GameHeaderProps) {
+export function GameHeader({ elapsedTime }: GameHeaderProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -12,7 +19,7 @@ export function GameHeader({ elapsedTime, day }: GameHeaderProps) {
 
   return (
     <div className="text-center space-y-2">
-      <h2 className="text-xl font-bold">Garland #4 🎄</h2>
+      <h2 className="text-xl font-bold">Garland #1</h2>
       <p className="text-sm text-muted-foreground">
         Theme: "Tis the Season"
       </p>
