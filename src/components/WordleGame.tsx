@@ -10,9 +10,10 @@ interface WordleGameProps {
   solution: string;
   onComplete?: () => void;
   day: number;
+  title?: string;
 }
 
-export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
+export function WordleGame({ solution, onComplete, day, title }: WordleGameProps) {
   console.log('WordleGame rendering with solution:', solution);
   
   const [guesses, setGuesses] = useState<string[]>(() => {
@@ -107,6 +108,9 @@ export function WordleGame({ solution, onComplete, day }: WordleGameProps) {
 
   return (
     <div className="flex flex-col items-center space-y-8 p-4">
+      <h2 className="text-2xl font-bold text-center">
+        {title || `Kringle #${Math.ceil(day/4)} 🎅`}
+      </h2>
       <WordleBoard 
         guesses={guesses} 
         currentGuess={currentGuess} 

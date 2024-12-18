@@ -4,6 +4,7 @@ import { day8Puzzle } from './puzzles/day8';
 import { day12Puzzle } from './puzzles/day12';
 import { day14Puzzle } from './puzzles/day14';
 import { day15Puzzle } from './puzzles/day15';
+import { day16Puzzle } from './puzzles/day16';
 import { day18Puzzle } from './puzzles/day18';
 
 console.log('Loading puzzle data configuration');
@@ -83,13 +84,16 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   12: day12Puzzle,
   13: {
     type: "kringle",
-    word: "CRISP"
+    word: "CRISP",
+    title: "Kringle #4 🎅"
   },
   14: day14Puzzle,
   15: day15Puzzle,
+  16: day16Puzzle,
   17: {
     type: "kringle",
-    word: "YACHT"
+    word: "YACHT",
+    title: "Kringle #5 🎅"
   },
   18: day18Puzzle
 };
