@@ -67,6 +67,19 @@ export const GridCell = memo(function GridCell({
         );
       }
 
+      // MALONE (index 2), MTJOY (index 4), and SABRINA (index 6) - Red fill with green outline
+      if (foundWordIndex === 2 || foundWordIndex === 4 || foundWordIndex === 6) {
+        return cn(
+          'bg-red-500',      // Red background
+          'text-white',      // White text
+          'border-2',
+          'border-green-500', // Green outline
+          'cursor-not-allowed',
+          'opacity-100',
+          'pointer-events-none'
+        );
+      }
+
       // Default found word style - Regular green
       return cn(
         'bg-green-500',
