@@ -19,9 +19,8 @@ export function GameHeader({ elapsedTime }: GameHeaderProps) {
 
   return (
     <div className="text-center space-y-2">
-      <h2 className="text-xl font-bold">Garland #1</h2>
       <p className="text-sm text-muted-foreground">
-        Theme: "Tis the Season"
+        Theme: "Artists"
       </p>
       <div className="text-lg font-mono text-green-600">
         {formatTime(elapsedTime)}
