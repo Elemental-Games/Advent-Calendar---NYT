@@ -81,6 +81,10 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
   13: {
     type: "kringle",
     word: "CRISP"
+  },
+  17: {
+    type: "kringle",
+    word: "YACHT"
   }
   // ... keep existing code (other puzzle data)
 };

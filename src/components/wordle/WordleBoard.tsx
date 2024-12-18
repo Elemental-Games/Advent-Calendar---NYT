@@ -1,96 +1,51 @@
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React from 'react';
 
 interface WordleBoardProps {
   guesses: string[];
   currentGuess: string;
-  activeCell: number;
   solution: string;
+  activeCell: number;
   isWinner: boolean;
 }
 
-export function WordleBoard({ guesses, currentGuess, activeCell, solution, isWinner }: WordleBoardProps) {
-  const WORD_LENGTH = 5;
-  const MAX_GUESSES = 6;
-
-  const getLetterStyle = (letter: string, index: number, guess: string) => {
-    // If there's no letter, or no guess (which happens after reset), return base style
-    if (!letter || !guess) return "bg-transparent border-red-200";
-    
-    if (guess[index] === solution[index]) {
-      return "bg-green-700 text-white border-red-800";
-    }
-    
-    const solutionLetterCount = [...solution].filter(l => l === letter).length;
-    const correctPositionsCount = [...guess].filter((l, i) => l === letter && solution[i] === letter).length;
-    const previousOccurrences = [...guess].slice(0, index).filter(l => l === letter).length;
-    
-    if (solution.includes(letter) && 
-        previousOccurrences + correctPositionsCount < solutionLetterCount) {
-      return "bg-amber-500 text-white border-red-300";
-    }
-    
-    return "bg-gray-600 text-white border-gray-700";
-  };
-
-  const handleCellClick = () => {
-    const hiddenInput = document.querySelector('input[type="text"]') as HTMLInputElement;
-    if (hiddenInput) {
-      hiddenInput.focus();
-    }
-  };
-
+export function WordleBoard({ guesses, currentGuess, solution, activeCell, isWinner }: WordleBoardProps) {
   console.log('WordleBoard rendering with guesses:', guesses);
+  
+  const getCellColor = (guess: string, index: number, letterIndex: number) => {
+    const letter = guess[letterIndex];
+    
+    if (!letter) return 'bg-white border-2 border-gray-300';
+    
+    if (solution[letterIndex] === letter) {
+      return 'bg-green-500 text-white border-2 border-green-600';
+    }
+    
+    if (solution.includes(letter)) {
+      return 'bg-yellow-500 text-white border-2 border-yellow-600';
+    }
+    
+    return 'bg-gray-500 text-white border-2 border-gray-600';
+  };
+
+  const emptyCells = Array(5).fill('');
 
   return (
-    <div className="grid gap-2 w-full max-w-[95vw] sm:max-w-sm mx-auto">
-      {[...Array(MAX_GUESSES)].map((_, rowIndex) => (
-        <div key={rowIndex} className="grid grid-cols-5 gap-2">
-          {[...Array(WORD_LENGTH)].map((_, colIndex) => {
-            const letter = rowIndex === guesses.length 
-              ? currentGuess[colIndex] 
-              : guesses[rowIndex]?.[colIndex];
-            
-            const style = guesses[rowIndex] 
-              ? getLetterStyle(letter, colIndex, guesses[rowIndex])
-              : "bg-transparent border-red-200";
-
-            const isActive = rowIndex === guesses.length && colIndex === activeCell;
-
-            return (
-              <motion.div
-                key={colIndex}
-                initial={{ scale: 0.8 }}
-                animate={{ 
-                  scale: 1,
-                  backgroundColor: isWinner && rowIndex === guesses.length - 1 
-                    ? "rgb(21 128 61)" 
-                    : undefined
-                }}
-                transition={isWinner && rowIndex === guesses.length - 1 
-                  ? { 
-                      delay: colIndex * 0.2,
-                      duration: 0.3
-                    }
-                  : undefined
-                }
-                className={cn(
-                  "w-full relative cursor-pointer",
-                  "before:content-[''] before:float-left before:pt-[100%]",
-                  "border-2 rounded",
-                  "text-2xl font-bold uppercase transition-all duration-300",
-                  style,
-                  isActive && "border-red-500 shadow-lg scale-105",
-                  rowIndex === guesses.length && !letter && "hover:border-red-400"
-                )}
-                onClick={handleCellClick}
-              >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {letter}
-                </div>
-              </motion.div>
-            );
-          })}
+    <div className="grid gap-1">
+      {Array(6).fill(null).map((_, i) => (
+        <div key={i} className="flex gap-1 justify-center">
+          {(guesses[i] || (i === guesses.length ? currentGuess : '')).split('').concat(emptyCells).slice(0, 5).map((letter, j) => (
+            <div
+              key={j}
+              className={`
+                w-14 h-14 flex items-center justify-center text-2xl font-bold rounded
+                ${guesses[i] ? getCellColor(guesses[i], i, j) : 'bg-white border-2 border-gray-300'}
+                ${i === guesses.length && j === activeCell && !guesses[i] ? 'border-black' : ''}
+                transition-colors duration-300
+              `}
+            >
+              {letter}
+            </div>
+          ))}
         </div>
       ))}
     </div>
