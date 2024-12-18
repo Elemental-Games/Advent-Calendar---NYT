@@ -53,11 +53,13 @@ export function useWordSelection(
       if (isAdjacent(prev[prev.length - 1], cellIndex)) {
         console.log('Adding adjacent cell');
         const newCells = [...prev, cellIndex];
-        setCurrentWord(newCells.map(cell => {
+        const word = newCells.map(cell => {
           const row = Math.floor(cell / 6);
           const col = cell % 6;
           return getLetterFromGrid(row, col);
-        }).join(''));
+        }).join('');
+        console.log('Current word:', word);
+        setCurrentWord(word);
         return newCells;
       }
 
@@ -68,14 +70,14 @@ export function useWordSelection(
 
   const getLetterFromGrid = (row: number, col: number): string => {
     const grid = [
-      ['P', 'E', 'C', 'C', 'H', 'I'],
-      ['N', 'N', 'N', 'O', 'N', 'E'],
-      ['E', 'G', 'U', 'C', 'I', 'S'],
-      ['E', 'T', 'T', 'A', 'P', 'E'],
-      ['F', 'S', 'T', 'T', 'Y', 'Z'],
-      ['P', 'A', 'I', 'T', 'I', 'I'],
-      ['L', 'A', 'S', 'A', 'N', 'R'],
-      ['A', 'N', 'G', 'I', 'T', 'O']
+      ['S', 'W', 'A', 'L', 'M', 'A'],
+      ['A', 'N', 'A', 'L', 'E', 'L'],
+      ['S', 'M', 'F', 'I', 'N', 'O'],
+      ['E', 'E', 'C', 'T', 'S', 'N'],
+      ['R', 'D', 'N', 'I', 'E', 'E'],
+      ['N', 'A', 'S', 'N', 'R', 'E'],
+      ['I', 'R', 'B', 'U', 'O', 'Y'],
+      ['S', 'A', 'M', 'J', 'T', 'M']
     ];
     return grid[row][col];
   };
