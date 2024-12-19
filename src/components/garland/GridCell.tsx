@@ -30,10 +30,10 @@ export const GridCell = memo(function GridCell({
       // Theme word (Fantasy) - Brighter yellow fill with darker green outline
       if (isThemeWord) {
         return cn(
-          'bg-[#FEF7CD]',    // Brighter yellow background
+          'bg-[#FFE566]',    // Much brighter yellow background
           'text-black',       // Black text for contrast
           'border-2',
-          'border-[#6E59A5]', // Darker green outline
+          'border-[#2E7D32]', // Darker forest green outline
           'cursor-not-allowed',
           'opacity-100',
           'pointer-events-none'
@@ -42,52 +42,52 @@ export const GridCell = memo(function GridCell({
       
       // Specific styles for each word based on foundWordIndex
       switch(foundWordIndex) {
-        case 1: // COURTLAND - Orange fill and navy blue outline
+        case 1: // COURTLAND - Vibrant orange fill and navy blue outline
           return cn(
-            'bg-[#FEC6A1]',   // Orange
-            'text-black',
+            'bg-[#FF7043]',   // Vibrant orange
+            'text-white',
             'border-2',
-            'border-[#221F26]', // Navy blue
+            'border-[#1A237E]', // Deep navy blue
             'cursor-not-allowed'
           );
-        case 2: // LAMAR - Purple fill and black outline
+        case 2: // LAMAR - Rich purple fill and black outline
           return cn(
-            'bg-[#9b87f5]',   // Purple
+            'bg-[#7C4DFF]',   // Rich purple
             'text-white',
             'border-2',
             'border-black',
             'cursor-not-allowed'
           );
-        case 3: // LADD - Baby blue fill and bright yellow outline
+        case 3: // LADD - Bright sky blue fill and bright yellow outline
           return cn(
-            'bg-[#D3E4FD]',   // Baby blue
+            'bg-[#40C4FF]',   // Bright sky blue
             'text-black',
             'border-2',
-            'border-[#F97316]', // Bright yellow
+            'border-[#FFD700]', // Bright yellow
             'cursor-not-allowed'
           );
-        case 4: // WALKER - Navy blue fill and custom neon green outline
+        case 4: // WALKER - Navy blue fill and neon green outline
           return cn(
-            'bg-[#221F26]',   // Navy blue
+            'bg-[#1A237E]',   // Deep navy blue
             'text-white',
             'border-2',
-            'border-[#39FF14]', // Neon green (custom color)
+            'border-[#39FF14]', // Neon green
             'cursor-not-allowed'
           );
-        case 5: // MONTGOMERY - Baby blue fill and black outline
+        case 5: // MONTGOMERY - Bright sky blue fill and black outline
           return cn(
-            'bg-[#D3E4FD]',   // Baby blue
+            'bg-[#40C4FF]',   // Bright sky blue
             'text-black',
             'border-2',
             'border-black',
             'cursor-not-allowed'
           );
-        case 6: // LAPORTA - Black fill and baby blue outline
+        case 6: // LAPORTA - Pure black fill and bright sky blue outline
           return cn(
             'bg-black',
             'text-white',
             'border-2',
-            'border-[#D3E4FD]', // Baby blue
+            'border-[#40C4FF]', // Bright sky blue
             'cursor-not-allowed'
           );
         default:
