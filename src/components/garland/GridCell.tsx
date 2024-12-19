@@ -42,9 +42,9 @@ export const GridCell = memo(function GridCell({
       
       // Specific styles for each word based on foundWordIndex
       switch(foundWordIndex) {
-        case 1: // LAMAR - Purple fill and black outline
+        case 1: // LAMAR - Purple fill (PMS 273 C) and black outline
           return cn(
-            'bg-[#7C4DFF]',   // Rich purple
+            'bg-[#241773]',   // Specific purple from image
             'text-white',
             'border-2',
             'border-black',
