@@ -27,29 +27,78 @@ export const GridCell = memo(function GridCell({
 }: GridCellProps) {
   const getBaseStyles = () => {
     if (isFound) {
-      // Theme word (Fantasy) - Yellow fill with blue outline
+      // Theme word (Fantasy) - Brighter yellow fill with darker green outline
       if (isThemeWord) {
         return cn(
-          'bg-[#FEF7CD]',    // Soft yellow background
+          'bg-[#FEF7CD]',    // Brighter yellow background
           'text-black',       // Black text for contrast
           'border-2',
-          'border-[#0EA5E9]', // Ocean blue outline
+          'border-[#6E59A5]', // Darker green outline
           'cursor-not-allowed',
           'opacity-100',
           'pointer-events-none'
         );
       }
       
-      // All other found words - Green fill with red outline
-      return cn(
-        'bg-green-500',     // Green background
-        'text-white',       // White text
-        'border-2',
-        'border-[#ea384c]', // Red outline
-        'cursor-not-allowed',
-        'opacity-100',
-        'pointer-events-none'
-      );
+      // Specific styles for each word based on foundWordIndex
+      switch(foundWordIndex) {
+        case 1: // COURTLAND - Orange fill and navy blue outline
+          return cn(
+            'bg-[#FEC6A1]',   // Orange
+            'text-black',
+            'border-2',
+            'border-[#221F26]', // Navy blue
+            'cursor-not-allowed'
+          );
+        case 2: // LAMAR - Purple fill and black outline
+          return cn(
+            'bg-[#9b87f5]',   // Purple
+            'text-white',
+            'border-2',
+            'border-black',
+            'cursor-not-allowed'
+          );
+        case 3: // LADD - Baby blue fill and bright yellow outline
+          return cn(
+            'bg-[#D3E4FD]',   // Baby blue
+            'text-black',
+            'border-2',
+            'border-[#F97316]', // Bright yellow
+            'cursor-not-allowed'
+          );
+        case 4: // WALKER - Navy blue fill and custom neon green outline
+          return cn(
+            'bg-[#221F26]',   // Navy blue
+            'text-white',
+            'border-2',
+            'border-[#39FF14]', // Neon green (custom color)
+            'cursor-not-allowed'
+          );
+        case 5: // MONTGOMERY - Baby blue fill and black outline
+          return cn(
+            'bg-[#D3E4FD]',   // Baby blue
+            'text-black',
+            'border-2',
+            'border-black',
+            'cursor-not-allowed'
+          );
+        case 6: // LAPORTA - Black fill and baby blue outline
+          return cn(
+            'bg-black',
+            'text-white',
+            'border-2',
+            'border-[#D3E4FD]', // Baby blue
+            'cursor-not-allowed'
+          );
+        default:
+          return cn(
+            'bg-green-500',
+            'text-white',
+            'border-2',
+            'border-red-500',
+            'cursor-not-allowed'
+          );
+      }
     }
 
     // Selected state
