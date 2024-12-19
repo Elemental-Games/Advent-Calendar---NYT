@@ -127,6 +127,11 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     type: "garland",
     words: ["FANTASY", "LADD", "COURTLAND", "LAMAR", "WALKER", "MONTGOMERY", "LAPORTA"],
     themeWord: "FANTASY"
+  },
+  21: {
+    type: "kringle",
+    word: "ANGEL",
+    title: "Kringle #6 🎅"
   }
 };
 
