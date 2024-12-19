@@ -13,6 +13,7 @@ export interface CrosswordPuzzle {
   size: { rows: number; cols: number };
   answers?: Record<string, string>;
   grid?: string[][];
+  title?: string;  // Add title property
 }
 
 export interface ConnectionsGroup {
