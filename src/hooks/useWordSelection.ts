@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { WORD_POSITIONS, WordPosition } from '@/lib/garland-positions';
+import { WORD_POSITIONS } from '@/lib/garland-positions';
 
 export function useWordSelection(
   words: string[],
@@ -23,7 +23,7 @@ export function useWordSelection(
     setSelectedCells(prev => {
       if (prev.length === 0) {
         console.log('First cell selected');
-        const letter = getLetterFromGrid(rowIndex, colIndex);
+        const letter = getLetterFromGrid(rowIndex, colIndex, day);
         setCurrentWord(letter);
         return [cellIndex];
       }
@@ -35,7 +35,7 @@ export function useWordSelection(
           setCurrentWord(newCells.map(cell => {
             const row = Math.floor(cell / 6);
             const col = cell % 6;
-            return getLetterFromGrid(row, col);
+            return getLetterFromGrid(row, col, day);
           }).join(''));
           return newCells;
         }
@@ -45,7 +45,7 @@ export function useWordSelection(
         setCurrentWord(newCells.map(cell => {
           const row = Math.floor(cell / 6);
           const col = cell % 6;
-          return getLetterFromGrid(row, col);
+          return getLetterFromGrid(row, col, day);
         }).join(''));
         return newCells;
       }
@@ -56,7 +56,7 @@ export function useWordSelection(
         const word = newCells.map(cell => {
           const row = Math.floor(cell / 6);
           const col = cell % 6;
-          return getLetterFromGrid(row, col);
+          return getLetterFromGrid(row, col, day);
         }).join('');
         console.log('Current word:', word);
         setCurrentWord(word);
@@ -66,10 +66,19 @@ export function useWordSelection(
       console.log('Cell not adjacent, keeping current selection');
       return prev;
     });
-  }, []);
+  }, [day]);
 
-  const getLetterFromGrid = (row: number, col: number): string => {
-    const grid = [
+  const getLetterFromGrid = (row: number, col: number, day: number): string => {
+    const grid = day === 20 ? [
+      ['L', 'A', 'A', 'D', 'E', 'R'],
+      ['D', 'R', 'L', 'N', 'A', 'K'],
+      ['D', 'U', 'T', 'M', 'R', 'L'],
+      ['C', 'O', 'L', 'A', 'W', 'A'],
+      ['F', 'A', 'N', 'T', 'A', 'S'],
+      ['M', 'O', 'A', 'P', 'O', 'Y'],
+      ['N', 'T', 'L', 'E', 'R', 'R'],
+      ['G', 'O', 'M', 'Y', 'A', 'T']
+    ] : [
       ['S', 'W', 'A', 'L', 'M', 'A'],
       ['A', 'N', 'A', 'L', 'E', 'L'],
       ['S', 'M', 'F', 'I', 'N', 'O'],
@@ -107,13 +116,6 @@ export function useWordSelection(
     }
 
     const wordEntry = Object.entries(dayPositions).find(([word, positions]) => {
-      // Check if positions is an array of arrays (multiple solutions)
-      if (Array.isArray(positions) && Array.isArray(positions[0])) {
-        return (positions as number[][]).some(solution => 
-          arePositionsEqual(selectedPositions, solution)
-        );
-      }
-      // Single solution case
       return arePositionsEqual(selectedPositions, positions as number[]);
     });
 

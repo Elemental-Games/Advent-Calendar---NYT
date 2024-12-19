@@ -40,9 +40,9 @@ export const GridCell = memo(function GridCell({
         );
       }
       
-      // All other found words - Blue fill with red outline
+      // All other found words - Green fill with red outline
       return cn(
-        'bg-[#0EA5E9]',     // Ocean blue background
+        'bg-green-500',     // Green background
         'text-white',       // White text
         'border-2',
         'border-[#ea384c]', // Red outline
