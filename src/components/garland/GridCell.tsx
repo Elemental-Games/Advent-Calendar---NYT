@@ -42,7 +42,7 @@ export const GridCell = memo(function GridCell({
       
       // Specific styles for each word based on foundWordIndex
       switch(foundWordIndex) {
-        case 1: // COURTLAND - Vibrant orange fill and navy blue outline
+        case 1: // COURTLAND - Orange fill and navy blue outline
           return cn(
             'bg-[#FF7043]',   // Vibrant orange
             'text-white',
@@ -52,15 +52,15 @@ export const GridCell = memo(function GridCell({
           );
         case 2: // LAMAR - Rich purple fill and black outline
           return cn(
-            'bg-[#7C4DFF]',   // Rich purple
+            'bg-[#9C27B0]',   // More vibrant purple
             'text-white',
             'border-2',
             'border-black',
             'cursor-not-allowed'
           );
-        case 3: // LADD - Bright sky blue fill and bright yellow outline
+        case 3: // LADD - Baby blue fill and bright yellow outline
           return cn(
-            'bg-[#40C4FF]',   // Bright sky blue
+            'bg-[#D3E4FD]',   // Baby blue
             'text-black',
             'border-2',
             'border-[#FFD700]', // Bright yellow
