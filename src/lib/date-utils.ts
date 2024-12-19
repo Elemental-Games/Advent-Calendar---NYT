@@ -35,8 +35,8 @@ export function generateCalendarData(): DayInfo[] {
     const unlockTime = new Date(baseDate);
     unlockTime.setDate(unlockTime.getDate() + (day - 1));
 
-    // Make first 19 days available immediately for testing
-    if (day <= 19) {
+    // Make first 19 days and days 21-23 available immediately for testing
+    if (day <= 19 || (day >= 21 && day <= 23)) {
       unlockTime.setFullYear(2020);
     }
 

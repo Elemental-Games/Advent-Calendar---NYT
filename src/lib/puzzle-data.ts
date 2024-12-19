@@ -132,6 +132,46 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     type: "kringle",
     word: "ANGEL",
     title: "Kringle #6 🎅"
+  },
+  22: {
+    type: "frostword",
+    across: {
+      "1": "Obi-Wan & Luke Skywalker",
+      "5": "What you're going to do tomorrow ___ ___ (5 and 6 across, respectively)",
+      "6": "What you're going to do tomorrow ___ ___ (5 and 6 across, respectively)",
+      "8": "Center of an Apple",
+      "9": "A thing to sit on"
+    },
+    down: {
+      "1": "Not quite a run",
+      "2": "CRAZY Stories! Also, a rarity in Elemental Masters ; )",
+      "3": "a suffix similar to 're' and then an enemy is a ___",
+      "4": "Within/Lead-in",
+      "7": "Ready, ___, GO!"
+    },
+    answers: {
+      "a1": "JEDI",
+      "a5": "OPEN",
+      "a6": "GIFTS",
+      "a8": "CORE",
+      "a9": "SEAT",
+      "d1": "JOG",
+      "d2": "EPICS",
+      "d3": "DEFOE",
+      "d4": "INTRA",
+      "d7": "SET"
+    },
+    size: {
+      rows: 5,
+      cols: 5
+    },
+    grid: [
+      ["J", "E", "D", "I", " "],
+      ["O", "P", "E", "N", " "],
+      ["G", "I", "F", "T", "S"],
+      [" ", "C", "O", "R", "E"],
+      [" ", "S", "E", "A", "T"]
+    ]
   }
 };
 
