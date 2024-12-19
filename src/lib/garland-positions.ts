@@ -1,17 +1,6 @@
 /**
  * Word positions for each day's Garland puzzle.
  * Each position is calculated as (row + 1) * 10 + (col + 1)
- * For example: row 0, col 0 = position 11
- * 
- * Grid reference for day 12:
- * ['P', 'E', 'C', 'C', 'H', 'I'],  // Row 1
- * ['N', 'N', 'N', 'O', 'N', 'E'],  // Row 2
- * ['E', 'G', 'U', 'C', 'I', 'S'],  // Row 3
- * ['E', 'T', 'T', 'A', 'P', 'E'],  // Row 4
- * ['F', 'S', 'T', 'T', 'Y', 'Z'],  // Row 5
- * ['P', 'A', 'I', 'T', 'I', 'I'],  // Row 6
- * ['L', 'A', 'S', 'A', 'N', 'R'],  // Row 7
- * ['A', 'N', 'G', 'I', 'T', 'O']   // Row 8
  */
 
 export type WordPosition = number[] | number[][];
@@ -61,5 +50,15 @@ export const WORD_POSITIONS: { [key: number]: WordPositions } = {
     'mtjoy': [86, 85, 84, 75, 76],
     'samfender': [31, 21, 32, 33, 42, 53, 52, 41, 51],
     'sabrina': [81, 82, 73, 72, 71, 61, 62]
+  }
+  
+  20: {
+    'fantasy': [51, 52, 53, 54, 55, 56, 66],
+    'ladd': [11, 12, 21, 31],
+    'courtland': [41, 42, 32, 22, 33, 23, 13, 24, 14],
+    'lamar': [43, 44, 34, 25, 35],
+    'walker': [45, 46, 36, 26, 15, 16],
+    'montgomery': [61, 62, 71, 72, 81, 82, 83, 74, 75, 84],
+    'laporta': [73, 63, 64, 65, 76, 86, 85]
   }
 };

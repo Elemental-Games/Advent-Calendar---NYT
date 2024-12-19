@@ -7,6 +7,7 @@ import { day15Puzzle } from './puzzles/day15';
 import { day16Puzzle } from './puzzles/day16';
 import { day18Puzzle } from './puzzles/day18';
 import { day19Puzzle } from './puzzles/day19';
+import { day20Puzzle } from './puzzles/day20';
 
 console.log('Loading puzzle data configuration');
 
@@ -121,7 +122,8 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
         words: ["Bold", "Italic", "Plain", "Black"]
       }
     ]
-  }
+  },
+  20: day20Puzzle
 };
 
 console.log('Puzzle data loaded successfully');

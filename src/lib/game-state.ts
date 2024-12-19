@@ -3,8 +3,8 @@ import { PuzzleStates, PuzzleState } from '@/types/puzzle';
 const STORAGE_PREFIX = 'puzzle_';
 
 export function getPuzzleState(day: number): PuzzleState | null {
-  // For days 1-12, always return completed state
-  if (day >= 1 && day <= 12) {
+  // For days 1-18, always return completed state
+  if (day >= 1 && day <= 18) {
     return { completed: true };
   }
   
@@ -21,8 +21,8 @@ export function clearPuzzleState(day: number): void {
 }
 
 export function isDayCompleted(day: number): boolean {
-  // For days 1-12, always return true
-  if (day >= 1 && day <= 12) {
+  // For days 1-18, always return true
+  if (day >= 1 && day <= 18) {
     return true;
   }
   const state = getPuzzleState(day);
