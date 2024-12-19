@@ -23,6 +23,7 @@ export function GarlandGame({
   day
 }: GarlandGameProps) {
   console.log('GarlandGame rendering with words:', words);
+  console.log('GarlandGame rendering with day:', day);
   
   const [foundWordsWithIndex, setFoundWordsWithIndex] = useState<Array<{word: string, index: number}>>([]);
   const [showStartDialog, setShowStartDialog] = useState(true);
@@ -80,20 +81,43 @@ export function GarlandGame({
     'text-amber-500'
   ];
 
+  const getGameNumber = (day: number) => {
+    switch(day) {
+      case 4: return 1;
+      case 8: return 2;
+      case 12: return 3;
+      case 16: return 4;
+      case 20: return 5;
+      default: return 1;
+    }
+  };
+
   return (
     <div className="flex flex-col items-center space-y-6 p-4">
       <h2 className="text-2xl font-bold text-center">
-        {'Garland #4 🎄'.split('').map((char, i) => (
+        {`Garland #${getGameNumber(day)} 🎄`.split('').map((char, i) => (
           <span key={i} className={titleColors[i % titleColors.length]}>
             {char}
           </span>
         ))}
       </h2>
 
-      <GameHeader elapsedTime={elapsedTime} />
+      <GameHeader 
+        elapsedTime={elapsedTime} 
+        theme={day === 20 ? "Fuck Dem Boyz" : "Artists"}
+      />
 
       <GameGrid
-        grid={[
+        grid={day === 20 ? [
+          ['L', 'A', 'A', 'D', 'E', 'R'],
+          ['D', 'R', 'L', 'N', 'A', 'K'],
+          ['D', 'U', 'T', 'M', 'R', 'L'],
+          ['C', 'O', 'L', 'A', 'W', 'A'],
+          ['F', 'A', 'N', 'T', 'A', 'S'],
+          ['M', 'O', 'A', 'P', 'O', 'Y'],
+          ['N', 'T', 'L', 'E', 'R', 'R'],
+          ['G', 'O', 'M', 'Y', 'A', 'T']
+        ] : [
           ['S', 'W', 'A', 'L', 'M', 'A'],
           ['A', 'N', 'A', 'L', 'E', 'L'],
           ['S', 'M', 'F', 'I', 'N', 'O'],
