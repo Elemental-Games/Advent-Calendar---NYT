@@ -42,25 +42,25 @@ export const GridCell = memo(function GridCell({
       
       // Specific styles for each word based on foundWordIndex
       switch(foundWordIndex) {
-        case 1: // COURTLAND - Purple fill and black outline
+        case 1: // COURTLAND - Baby blue fill and black outline
           return cn(
-            'bg-[#241773]',   // Deep purple
+            'bg-[#40C4FF]',   // Baby blue
+            'text-black',
+            'border-2',
+            'border-black',
+            'cursor-not-allowed'
+          );
+        case 2: // LAMAR - Orange fill and black outline
+          return cn(
+            'bg-[#FF7043]',   // Orange
             'text-white',
             'border-2',
             'border-black',
             'cursor-not-allowed'
           );
-        case 2: // LAMAR - Baby blue fill and gold outline with black text
+        case 3: // LADD - Purple fill and black outline
           return cn(
-            'bg-[#40C4FF]',   // Baby blue
-            'text-black',
-            'border-2',
-            'border-[#FFD700]', // Gold outline
-            'cursor-not-allowed'
-          );
-        case 3: // LADD - Orange fill and black outline
-          return cn(
-            'bg-[#FF7043]',   // Orange
+            'bg-[#241773]',   // Deep purple
             'text-white',
             'border-2',
             'border-black',
