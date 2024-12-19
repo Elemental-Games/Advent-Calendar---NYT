@@ -27,13 +27,43 @@ export const GridCell = memo(function GridCell({
 }: GridCellProps) {
   const getBaseStyles = () => {
     if (isFound) {
-      // Theme word (Fantasy) - Gold fill with darker green outline
+      // Theme word (Fantasy) - Red, White, and Blue gradient theme
       if (isThemeWord) {
+        const gradientPosition = position % 7; // 7 letters in FANTASY
+        let gradient;
+        
+        // Alternate between different patriotic gradients for each letter
+        switch(gradientPosition) {
+          case 0: // F
+            gradient = 'bg-gradient-to-br from-[#ea384c] via-white to-[#0EA5E9]';
+            break;
+          case 1: // A
+            gradient = 'bg-gradient-to-bl from-[#0EA5E9] via-white to-[#ea384c]';
+            break;
+          case 2: // N
+            gradient = 'bg-gradient-to-tr from-[#ea384c] via-white to-[#0EA5E9]';
+            break;
+          case 3: // T
+            gradient = 'bg-gradient-to-tl from-[#0EA5E9] via-white to-[#ea384c]';
+            break;
+          case 4: // A
+            gradient = 'bg-gradient-to-r from-[#ea384c] via-white to-[#0EA5E9]';
+            break;
+          case 5: // S
+            gradient = 'bg-gradient-to-l from-[#0EA5E9] via-white to-[#ea384c]';
+            break;
+          case 6: // Y
+            gradient = 'bg-gradient-to-b from-[#ea384c] via-white to-[#0EA5E9]';
+            break;
+          default:
+            gradient = 'bg-gradient-to-r from-[#ea384c] via-white to-[#0EA5E9]';
+        }
+        
         return cn(
-          'bg-[#FFD700]',    // Gold background
-          'text-black',       // Black text for contrast
+          gradient,
+          'text-black',
           'border-2',
-          'border-[#2E7D32]', // Darker forest green outline
+          'border-[#2E7D32]',
           'cursor-not-allowed',
           'opacity-100',
           'pointer-events-none'
