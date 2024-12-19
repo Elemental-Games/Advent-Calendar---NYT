@@ -28,8 +28,8 @@ export function formatCountdown(unlockTime: Date): string {
 }
 
 export function generateCalendarData(): DayInfo[] {
+  const baseDate = new Date('2024-12-01T12:30:00.000Z');
   const days: DayInfo[] = [];
-  const baseDate = new Date('2024-12-01T12:30:00.000Z'); // 7:30 AM EST
 
   for (let day = 1; day <= 24; day++) {
     const unlockTime = new Date(baseDate);
@@ -40,12 +40,17 @@ export function generateCalendarData(): DayInfo[] {
       unlockTime.setFullYear(2020);
     }
 
+    // Set unlock time to 7:30 AM EST
+    unlockTime.setUTCHours(12, 30, 0, 0);
+
     const puzzleType = getPuzzleType(day);
+    const puzzleContent = puzzleData[day];
+
     days.push({
       day,
       puzzleType,
       unlockTime,
-      puzzleContent: puzzleData[day]
+      puzzleContent
     });
   }
 

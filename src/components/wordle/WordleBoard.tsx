@@ -1,4 +1,6 @@
 import React from 'react';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface WordleBoardProps {
   guesses: string[];
@@ -6,45 +8,74 @@ interface WordleBoardProps {
   solution: string;
   activeCell: number;
   isWinner: boolean;
+  getLetterStates: (guess: string) => string[];
 }
 
-export function WordleBoard({ guesses, currentGuess, solution, activeCell, isWinner }: WordleBoardProps) {
+export function WordleBoard({ 
+  guesses, 
+  currentGuess, 
+  solution,
+  activeCell,
+  isWinner,
+  getLetterStates
+}: WordleBoardProps) {
   console.log('WordleBoard rendering with guesses:', guesses);
-  
-  const getCellColor = (guess: string, index: number, letterIndex: number) => {
-    const letter = guess[letterIndex];
-    
-    if (!letter) return 'bg-white border-2 border-red-300';
-    
-    if (solution[letterIndex] === letter) {
-      return 'bg-green-500 text-white border-2 border-green-600';
-    }
-    
-    if (solution.includes(letter)) {
-      return 'bg-yellow-500 text-white border-2 border-yellow-600';
-    }
-    
-    return 'bg-gray-500 text-white border-2 border-red-300';
-  };
 
-  const emptyCells = Array(5).fill('');
+  const empties = Array(6 - guesses.length - 1).fill('');
+  const currentGuessArray = currentGuess.split('').concat(Array(5 - currentGuess.length).fill(''));
 
   return (
-    <div className="grid gap-1">
-      {Array(6).fill(null).map((_, i) => (
-        <div key={i} className="flex gap-1 justify-center">
-          {(guesses[i] || (i === guesses.length ? currentGuess : '')).split('').concat(emptyCells).slice(0, 5).map((letter, j) => (
-            <div
-              key={j}
-              className={`
-                w-14 h-14 flex items-center justify-center text-2xl font-bold rounded
-                ${guesses[i] ? getCellColor(guesses[i], i, j) : 'bg-white border-2 border-red-300'}
-                ${i === guesses.length && j === activeCell && !guesses[i] ? 'border-black' : ''}
-                transition-colors duration-300
-              `}
+    <div className="grid grid-rows-6 gap-1">
+      {guesses.map((guess, i) => (
+        <div key={i} className="grid grid-cols-5 gap-1">
+          {guess.split('').map((letter, j) => {
+            const states = getLetterStates(guess);
+            const state = states[j];
+            return (
+              <motion.div
+                key={j}
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                className={cn(
+                  "w-14 h-14 border-2 flex items-center justify-center text-2xl font-bold rounded",
+                  state === 'correct' && "bg-green-500 border-green-600 text-white",
+                  state === 'present' && "bg-yellow-500 border-yellow-600 text-white",
+                  state === 'absent' && "bg-gray-500 border-gray-600 text-white"
+                )}
+              >
+                {letter}
+              </motion.div>
+            );
+          })}
+        </div>
+      ))}
+      
+      {guesses.length < 6 && (
+        <div className="grid grid-cols-5 gap-1">
+          {currentGuessArray.map((letter, i) => (
+            <motion.div
+              key={i}
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className={cn(
+                "w-14 h-14 border-2 flex items-center justify-center text-2xl font-bold rounded",
+                letter ? "border-gray-400" : "border-gray-200",
+                i === activeCell && "border-blue-500"
+              )}
             >
               {letter}
-            </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {empties.map((_, i) => (
+        <div key={i} className="grid grid-cols-5 gap-1">
+          {Array(5).fill('').map((_, j) => (
+            <div
+              key={j}
+              className="w-14 h-14 border-2 border-gray-200 flex items-center justify-center text-2xl font-bold rounded"
+            />
           ))}
         </div>
       ))}

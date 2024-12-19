@@ -28,20 +28,55 @@ export function WordleGame({ solution, onComplete, day, title }: WordleGameProps
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [activeCell, setActiveCell] = useState(0);
 
+  // New function to handle letter validation with proper duplicate handling
+  const getLetterStates = (guess: string) => {
+    const solutionChars = solution.split('');
+    const guessChars = guess.split('');
+    const states = Array(5).fill('absent');
+    const unusedSolutionChars: { [key: string]: number } = {};
+
+    // First, count all characters in solution
+    solutionChars.forEach(char => {
+      unusedSolutionChars[char] = (unusedSolutionChars[char] || 0) + 1;
+    });
+
+    // First pass: mark correct positions
+    guessChars.forEach((char, i) => {
+      if (char === solutionChars[i]) {
+        states[i] = 'correct';
+        unusedSolutionChars[char]--;
+      }
+    });
+
+    // Second pass: mark present letters, but only if we haven't used all instances
+    guessChars.forEach((char, i) => {
+      if (states[i] !== 'correct' && unusedSolutionChars[char] > 0) {
+        states[i] = 'present';
+        unusedSolutionChars[char]--;
+      }
+    });
+
+    return states;
+  };
+
   const usedLetters = {
     correct: [] as string[],
     present: [] as string[],
     absent: [] as string[]
   };
 
-  // Calculate used letters
+  // Calculate used letters with the new validation logic
   guesses.forEach(guess => {
+    const states = getLetterStates(guess);
     guess.split('').forEach((letter, i) => {
-      if (solution[i] === letter) {
+      if (states[i] === 'correct' && !usedLetters.correct.includes(letter)) {
         usedLetters.correct.push(letter);
-      } else if (solution.includes(letter)) {
+      } else if (states[i] === 'present' && !usedLetters.present.includes(letter)) {
         usedLetters.present.push(letter);
-      } else {
+      } else if (states[i] === 'absent' && 
+                !usedLetters.absent.includes(letter) && 
+                !usedLetters.correct.includes(letter) && 
+                !usedLetters.present.includes(letter)) {
         usedLetters.absent.push(letter);
       }
     });
@@ -125,6 +160,7 @@ export function WordleGame({ solution, onComplete, day, title }: WordleGameProps
         solution={solution}
         activeCell={activeCell}
         isWinner={isGameOver && guesses[guesses.length - 1] === solution}
+        getLetterStates={getLetterStates}
       />
       <WordleInput 
         currentGuess={currentGuess}
