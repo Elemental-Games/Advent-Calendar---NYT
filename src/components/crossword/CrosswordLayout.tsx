@@ -31,6 +31,7 @@ interface CrosswordLayoutProps {
   across: Record<string, string>;
   down: Record<string, string>;
   isCompleted?: boolean;
+  day?: number;
 }
 
 export function CrosswordLayout({
@@ -51,11 +52,12 @@ export function CrosswordLayout({
   onBackspace,
   across,
   down,
-  isCompleted = false
+  isCompleted = false,
+  day
 }: CrosswordLayoutProps) {
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <CrosswordHeader elapsedTime={elapsedTime} />
+      <CrosswordHeader elapsedTime={elapsedTime} day={day} />
       
       <div className="mb-8">
         <CrosswordGrid
