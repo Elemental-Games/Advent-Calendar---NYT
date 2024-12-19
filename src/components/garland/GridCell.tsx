@@ -27,10 +27,10 @@ export const GridCell = memo(function GridCell({
 }: GridCellProps) {
   const getBaseStyles = () => {
     if (isFound) {
-      // Theme word (Fantasy) - Brighter yellow fill with darker green outline
+      // Theme word (Fantasy) - Gold fill with darker green outline
       if (isThemeWord) {
         return cn(
-          'bg-[#FFE566]',    // Much brighter yellow background
+          'bg-[#FFD700]',    // Gold background
           'text-black',       // Black text for contrast
           'border-2',
           'border-[#2E7D32]', // Darker forest green outline
