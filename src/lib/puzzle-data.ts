@@ -171,6 +171,32 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       ["G", "I", "F", "T", "S"],
       [" ", "C", "O", "R", "E"],
       [" ", "S", "E", "A", "T"]
+    ],
+    title: "Mini FrostWord #6"
+  },
+  23: {
+    type: "northsort",
+    groups: [
+      {
+        category: "Nicknames for each other",
+        color: "rgb(234 179 8)", // yellow
+        words: ["Baby", "Love", "Slime", "Best Friend"]
+      },
+      {
+        category: "The perfect breakfast doesn't exi...",
+        color: "rgb(34 197 94)", // green
+        words: ["Sweet", "Savory", "Coffee", "Mimosa"]
+      },
+      {
+        category: "Who you get gifts for",
+        color: "rgb(59 130 246)", // blue
+        words: ["Family", "Friends", "Boyfriend", "Pet"]
+      },
+      {
+        category: "How I describe you to anyone & everyone",
+        color: "rgb(239 68 68)", // red
+        words: ["Perfect", "Smart", "Funny", "Beautiful"]
+      }
     ]
   }
 };
