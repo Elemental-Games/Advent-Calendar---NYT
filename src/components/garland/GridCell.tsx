@@ -58,9 +58,9 @@ export const GridCell = memo(function GridCell({
             'border-black',
             'cursor-not-allowed'
           );
-        case 3: // LADD - Purple fill and black outline
+        case 3: // LADD - Brighter purple fill and black outline
           return cn(
-            'bg-[#241773]',   // Deep purple
+            'bg-[#8B5CF6]',   // Vivid Purple - much brighter than before
             'text-white',
             'border-2',
             'border-black',
