@@ -27,10 +27,10 @@ export const GridCell = memo(function GridCell({
 }: GridCellProps) {
   const getBaseStyles = () => {
     if (isFound) {
-      // Theme word (Fantasy) - Gold fill with darker green outline
+      // Theme word (Fantasy) - Brighter yellow fill with darker green outline
       if (isThemeWord) {
         return cn(
-          'bg-[#F97316]',    // Gold background
+          'bg-[#FFE566]',    // Much brighter yellow background
           'text-black',       // Black text for contrast
           'border-2',
           'border-[#2E7D32]', // Darker forest green outline
@@ -42,17 +42,17 @@ export const GridCell = memo(function GridCell({
       
       // Specific styles for each word based on foundWordIndex
       switch(foundWordIndex) {
-        case 1: // COURTLAND - Baby blue fill and gold outline
+        case 1: // COURTLAND - Baby blue fill and black outline
           return cn(
             'bg-[#40C4FF]',   // Baby blue
             'text-black',
             'border-2',
-            'border-[#F97316]', // Gold outline
+            'border-black',
             'cursor-not-allowed'
           );
-        case 2: // LAMAR - Brighter orange fill and black outline
+        case 2: // LAMAR - Orange fill and black outline
           return cn(
-            'bg-[#FF7043]',   // Brighter orange
+            'bg-[#FF7043]',   // Orange
             'text-white',
             'border-2',
             'border-black',
