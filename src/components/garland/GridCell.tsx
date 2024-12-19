@@ -26,66 +26,27 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const getBaseStyles = () => {
-    // Found word styling with different colors for specific words
+    // Found word styling
     if (isFound) {
-      // MUSICIANS (theme word) - Yellow fill
+      // Fantasy (theme word) - Yellow fill with green outline
       if (isThemeWord) {
         return cn(
-          'bg-yellow-400',    // Yellow background
-          'text-black',       // Black text for better contrast
+          'bg-[#FEF7CD]',    // Soft yellow background
+          'text-black',       // Black text for contrast
           'border-2',
-          'border-red-500',
+          'border-[#0EA5E9]', // Ocean blue outline
           'cursor-not-allowed',
           'opacity-100',
           'pointer-events-none'
         );
       }
-
-      // WALLEN (index 1) and SAMFENDER (index 5) - Darker green
-      if (foundWordIndex === 1 || foundWordIndex === 5) {
-        return cn(
-          'bg-green-700',     // Darker green background
-          'text-white',
-          'border-2',
-          'border-red-500',
-          'cursor-not-allowed',
-          'opacity-100',
-          'pointer-events-none'
-        );
-      }
-
-      // ERNEST (index 3) - Lighter green
-      if (foundWordIndex === 3) {
-        return cn(
-          'bg-green-300',     // Lighter green background
-          'text-black',       // Black text for better contrast
-          'border-2',
-          'border-red-500',
-          'cursor-not-allowed',
-          'opacity-100',
-          'pointer-events-none'
-        );
-      }
-
-      // MALONE (index 2), MTJOY (index 4), and SABRINA (index 6) - Red fill with green outline
-      if (foundWordIndex === 2 || foundWordIndex === 4 || foundWordIndex === 6) {
-        return cn(
-          'bg-red-500',      // Red background
-          'text-white',      // White text
-          'border-2',
-          'border-green-500', // Green outline
-          'cursor-not-allowed',
-          'opacity-100',
-          'pointer-events-none'
-        );
-      }
-
-      // Default found word style - Regular green
+      
+      // All other found words - Green fill with red outline
       return cn(
-        'bg-green-500',
-        'text-white',
+        'bg-[#0EA5E9]',     // Ocean blue background
+        'text-white',       // White text
         'border-2',
-        'border-red-500',
+        'border-[#ea384c]', // Red outline
         'cursor-not-allowed',
         'opacity-100',
         'pointer-events-none'
@@ -141,7 +102,9 @@ export const GridCell = memo(function GridCell({
           getBaseStyles()
         )}
         style={{ touchAction: 'none' }}
-        onClick={!isFound ? onMouseDown : undefined}
+        onMouseDown={!isFound ? onMouseDown : undefined}
+        onMouseEnter={onMouseEnter}
+        onMouseUp={onMouseUp}
       >
         {letter}
       </button>
