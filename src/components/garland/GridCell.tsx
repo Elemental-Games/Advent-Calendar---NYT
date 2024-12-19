@@ -42,31 +42,31 @@ export const GridCell = memo(function GridCell({
       
       // Specific styles for each word based on foundWordIndex
       switch(foundWordIndex) {
-        case 1: // LADD - Orange/coral fill
+        case 1: // COURTLAND - Orange fill and navy blue outline
           return cn(
-            'bg-[#FF7043]',   // Coral/orange
+            'bg-[#FF7043]',   // Vibrant orange
+            'text-white',
+            'border-2',
+            'border-[#1A237E]', // Deep navy blue
+            'cursor-not-allowed'
+          );
+        case 2: // LAMAR - Purple fill (PMS 273 C) and black outline
+          return cn(
+            'bg-[#241773]',   // Specific purple from image
             'text-white',
             'border-2',
             'border-black',
             'cursor-not-allowed'
           );
-        case 2: // WALKER - Light blue with bright outline
+        case 3: // LADD - Baby blue fill and yellow outline
           return cn(
-            'bg-[#40C4FF]',   // Light blue
+            'bg-[#40C4FF]',   // Baby blue
             'text-white',
             'border-2',
-            'border-[#39FF14]', // Bright green outline
+            'border-[#FFD700]', // Bright yellow
             'cursor-not-allowed'
           );
-        case 3: // COURTLAND - Navy blue
-          return cn(
-            'bg-[#1A237E]',   // Navy blue
-            'text-white',
-            'border-2',
-            'border-black',
-            'cursor-not-allowed'
-          );
-        case 4: // MONTGOMERY - Navy blue fill and neon green outline
+        case 4: // WALKER - Navy blue fill and neon green outline
           return cn(
             'bg-[#1A237E]',   // Deep navy blue
             'text-white',
@@ -74,7 +74,15 @@ export const GridCell = memo(function GridCell({
             'border-[#39FF14]', // Neon green
             'cursor-not-allowed'
           );
-        case 5: // LAPORTA - Pure black fill and bright sky blue outline
+        case 5: // MONTGOMERY - Bright sky blue fill and black outline
+          return cn(
+            'bg-[#40C4FF]',   // Bright sky blue
+            'text-black',
+            'border-2',
+            'border-black',
+            'cursor-not-allowed'
+          );
+        case 6: // LAPORTA - Pure black fill and bright sky blue outline
           return cn(
             'bg-black',
             'text-white',
