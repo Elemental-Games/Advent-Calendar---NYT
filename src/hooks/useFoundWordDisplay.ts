@@ -6,37 +6,21 @@ export function useFoundWordDisplay(
   themeWord: string
 ) {
   const isLetterInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
-    const pos = (rowIndex + 1) * 10 + (colIndex + 1); // Convert to position format (e.g., 11, 12, etc.)
+    const pos = (rowIndex + 1) * 10 + (colIndex + 1);
     console.log(`Checking position ${pos} for found words`);
     
     for (const { word, index } of foundWords) {
-      const wordPositions = WORD_POSITIONS[16][word.toLowerCase()];
+      const wordPositions = WORD_POSITIONS[20][word.toLowerCase()];
       console.log(`Checking word ${word} with positions:`, wordPositions);
       
-      if (Array.isArray(wordPositions)) {
-        // Handle multiple solutions case
-        if (Array.isArray(wordPositions[0])) {
-          const isInAnySolution = (wordPositions as number[][]).some(solution => 
-            solution.includes(pos)
-          );
-          if (isInAnySolution) {
-            console.log(`Found word ${word} at position ${pos}`);
-            return {
-              found: true,
-              wordIndex: index,
-              isThemeWord: word.toLowerCase() === themeWord.toLowerCase()
-            };
-          }
-        } else {
-          // Single solution case
-          if ((wordPositions as number[]).includes(pos)) {
-            console.log(`Found word ${word} at position ${pos}`);
-            return {
-              found: true,
-              wordIndex: index,
-              isThemeWord: word.toLowerCase() === themeWord.toLowerCase()
-            };
-          }
+      if (wordPositions) {
+        if (wordPositions.includes(pos)) {
+          console.log(`Found word ${word} at position ${pos}`);
+          return {
+            found: true,
+            wordIndex: index,
+            isThemeWord: word.toLowerCase() === themeWord.toLowerCase()
+          };
         }
       }
     }

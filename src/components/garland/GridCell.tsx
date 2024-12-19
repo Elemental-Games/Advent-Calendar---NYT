@@ -26,9 +26,8 @@ export const GridCell = memo(function GridCell({
   position,
 }: GridCellProps) {
   const getBaseStyles = () => {
-    // Found word styling
     if (isFound) {
-      // Fantasy (theme word) - Yellow fill with green outline
+      // Theme word (Fantasy) - Yellow fill with blue outline
       if (isThemeWord) {
         return cn(
           'bg-[#FEF7CD]',    // Soft yellow background
@@ -41,7 +40,7 @@ export const GridCell = memo(function GridCell({
         );
       }
       
-      // All other found words - Green fill with red outline
+      // All other found words - Blue fill with red outline
       return cn(
         'bg-[#0EA5E9]',     // Ocean blue background
         'text-white',       // White text
