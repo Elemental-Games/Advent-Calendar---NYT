@@ -14,7 +14,12 @@ export function useFoundWordDisplay(
       console.log(`Checking word ${word} with positions:`, wordPositions);
       
       if (wordPositions) {
-        if (wordPositions.includes(pos)) {
+        // Handle both single array and array of arrays cases
+        const positions = Array.isArray(wordPositions[0]) 
+          ? wordPositions.flat() 
+          : wordPositions;
+          
+        if (positions.includes(pos)) {
           console.log(`Found word ${word} at position ${pos}`);
           return {
             found: true,
