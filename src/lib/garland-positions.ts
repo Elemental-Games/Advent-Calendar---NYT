@@ -50,8 +50,7 @@ export const WORD_POSITIONS: { [key: number]: WordPositions } = {
     'mtjoy': [86, 85, 84, 75, 76],
     'samfender': [31, 21, 32, 33, 42, 53, 52, 41, 51],
     'sabrina': [81, 82, 73, 72, 71, 61, 62]
-  }
-  
+  },
   20: {
     'fantasy': [51, 52, 53, 54, 55, 56, 66],
     'ladd': [11, 12, 21, 31],
