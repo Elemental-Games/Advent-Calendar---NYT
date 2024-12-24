@@ -14,6 +14,15 @@ interface GridCellProps {
   position: number;
 }
 
+const SELECTION_COLORS = [
+  'bg-[#9b87f5]',   // Purple
+  'bg-[#F97316]',   // Orange
+  'bg-[#D946EF]',   // Magenta Pink
+  'bg-[#0EA5E9]',   // Ocean Blue
+  'bg-[#22c55e]',   // Green
+  'bg-[#eab308]',   // Yellow
+];
+
 export const GridCell = memo(function GridCell({
   letter,
   isSelected,
@@ -40,63 +49,21 @@ export const GridCell = memo(function GridCell({
         );
       }
       
-      // Specific styles for each word based on foundWordIndex
-      switch(foundWordIndex) {
-        case 0: // Talking - Green fill with red outline
-          return cn(
-            'bg-[#22c55e]',   // Green fill
-            'text-white',
-            'border-2',
-            'border-[#ea384c]', // Red outline
-            'cursor-not-allowed'
-          );
-        case 1: // Exploring - Brown fill with gold outline
-          return cn(
-            'bg-[#8B4513]',   // Brown fill
-            'text-white',
-            'border-2',
-            'border-[#FFD700]', // Gold outline
-            'cursor-not-allowed'
-          );
-        case 2: // Events - Gradient circular fill
-          return cn(
-            'bg-gradient-to-r from-[#2E7D32] via-[#ea384c] to-[#0EA5E9]',
-            'text-white',
-            'border-2',
-            'border-[#F97316]', // Orange outline
-            'cursor-not-allowed'
-          );
-        case 3: // Games - Purple fill with neon green outline
-          return cn(
-            'bg-[#9b87f5]',   // Purple fill
-            'text-white',
-            'border-2',
-            'border-[#39FF14]', // Neon green outline
-            'cursor-not-allowed'
-          );
-        case 4: // Pickleball - Neon green fill with dark green outline
-          return cn(
-            'bg-[#39FF14]',   // Neon green fill
-            'text-white',
-            'border-2',
-            'border-[#1B5E20]', // Dark green outline
-            'cursor-not-allowed'
-          );
-        default:
-          return cn(
-            'bg-green-500',
-            'text-white',
-            'border-2',
-            'border-red-500',
-            'cursor-not-allowed'
-          );
-      }
+      // All other found words - Green fill with red outline
+      return cn(
+        'bg-[#22c55e]',   // Green fill
+        'text-white',
+        'border-2',
+        'border-[#ea384c]', // Red outline
+        'cursor-not-allowed'
+      );
     }
 
-    // Selected state
+    // Selected state - Random color from selection colors
     if (isSelected) {
+      const colorIndex = position % SELECTION_COLORS.length;
       return cn(
-        'bg-blue-500',
+        SELECTION_COLORS[colorIndex],
         'text-white',
         'border-2',
         'border-black',
@@ -104,14 +71,14 @@ export const GridCell = memo(function GridCell({
       );
     }
 
-    // Default state with hover
+    // Default state with hover using random colors
     return cn(
       'bg-white',
       'text-gray-900',
       'border-2',
       'border-gray-200',
-      'hover:bg-blue-500',
       'hover:text-white',
+      SELECTION_COLORS[position % SELECTION_COLORS.length].replace('bg-', 'hover:bg-'),
       'transition-colors duration-200'
     );
   };
