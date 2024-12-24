@@ -18,8 +18,8 @@ const SELECTION_COLORS = [
   'bg-blue-500',   // Blue
   'bg-orange-500', // Orange
   'bg-purple-500', // Purple
-  'bg-[#FFD700]',  // Gold
-  'bg-[#C0C0C0]',  // Silver
+  'bg-[#F2FCE2]',  // Light Green
+  'bg-[#FFDEE2]',  // Light Red
 ];
 
 export const GridCell = memo(function GridCell({

@@ -87,12 +87,8 @@ export function useWordSelection(
       if (isAdjacent(prev[prev.length - 1], cellIndex)) {
         console.log('Adding adjacent cell');
         const newCells = [...prev, cellIndex];
-        const word = newCells.map(cell => {
-          const row = Math.floor(cell / 6);
-          const col = cell % 6;
-          return getLetterFromGrid(row, col);
-        }).join('');
-        setCurrentWord(word);
+        const letter = getLetterFromGrid(rowIndex, colIndex);
+        setCurrentWord(prev => prev + letter);
         return newCells;
       }
 
