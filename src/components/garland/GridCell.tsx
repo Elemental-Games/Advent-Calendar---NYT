@@ -27,97 +27,57 @@ export const GridCell = memo(function GridCell({
 }: GridCellProps) {
   const getBaseStyles = () => {
     if (isFound) {
-      // Theme word (Fantasy) - Red, White, and Blue gradient theme
+      // Theme word (QualityTime) - Red fill with green outline
       if (isThemeWord) {
-        const gradientPosition = position % 7; // 7 letters in FANTASY
-        let gradient;
-        
-        // Alternate between different patriotic gradients for each letter
-        switch(gradientPosition) {
-          case 0: // F
-            gradient = 'bg-gradient-to-br from-[#ea384c] via-white to-[#0EA5E9]';
-            break;
-          case 1: // A
-            gradient = 'bg-gradient-to-bl from-[#0EA5E9] via-white to-[#ea384c]';
-            break;
-          case 2: // N
-            gradient = 'bg-gradient-to-tr from-[#ea384c] via-white to-[#0EA5E9]';
-            break;
-          case 3: // T
-            gradient = 'bg-gradient-to-tl from-[#0EA5E9] via-white to-[#ea384c]';
-            break;
-          case 4: // A
-            gradient = 'bg-gradient-to-r from-[#ea384c] via-white to-[#0EA5E9]';
-            break;
-          case 5: // S
-            gradient = 'bg-gradient-to-l from-[#0EA5E9] via-white to-[#ea384c]';
-            break;
-          case 6: // Y
-            gradient = 'bg-gradient-to-b from-[#ea384c] via-white to-[#0EA5E9]';
-            break;
-          default:
-            gradient = 'bg-gradient-to-r from-[#ea384c] via-white to-[#0EA5E9]';
-        }
-        
         return cn(
-          gradient,
-          'text-black',
+          'bg-[#ea384c]',   // Red fill
+          'text-white',
           'border-2',
-          'border-[#2E7D32]',
-          'cursor-not-allowed',
-          'opacity-100',
-          'pointer-events-none'
+          'border-[#22c55e]', // Green outline
+          'cursor-not-allowed'
         );
       }
       
       // Specific styles for each word based on foundWordIndex
       switch(foundWordIndex) {
-        case 1: // COURTLAND - Baby blue fill and gold outline
+        case 0: // Talking - Green fill with red outline
           return cn(
-            'bg-[#40C4FF]',   // Baby blue
-            'text-black',
-            'border-2',
-            'border-[#FFD700]', // Gold border
-            'cursor-not-allowed'
-          );
-        case 2: // LAMAR - Orange fill and black outline
-          return cn(
-            'bg-[#FF7043]',   // Orange
+            'bg-[#22c55e]',   // Green fill
             'text-white',
             'border-2',
-            'border-black',
+            'border-[#ea384c]', // Red outline
             'cursor-not-allowed'
           );
-        case 3: // LADD - Brighter purple fill and black outline
+        case 1: // Exploring - Brown fill with gold outline
           return cn(
-            'bg-[#8B5CF6]',   // Vivid Purple - much brighter than before
+            'bg-[#8B4513]',   // Brown fill
             'text-white',
             'border-2',
-            'border-black',
+            'border-[#FFD700]', // Gold outline
             'cursor-not-allowed'
           );
-        case 4: // WALKER - Navy blue fill and neon green outline
+        case 2: // Events - Gradient circular fill
           return cn(
-            'bg-[#1A237E]',   // Deep navy blue
+            'bg-gradient-to-r from-[#2E7D32] via-[#ea384c] to-[#0EA5E9]',
             'text-white',
             'border-2',
-            'border-[#39FF14]', // Neon green
+            'border-[#F97316]', // Orange outline
             'cursor-not-allowed'
           );
-        case 5: // MONTGOMERY - Bright sky blue fill and black outline
+        case 3: // Games - Purple fill with neon green outline
           return cn(
-            'bg-[#40C4FF]',   // Bright sky blue
-            'text-black',
-            'border-2',
-            'border-black',
-            'cursor-not-allowed'
-          );
-        case 6: // LAPORTA - Pure black fill and bright sky blue outline
-          return cn(
-            'bg-black',
+            'bg-[#9b87f5]',   // Purple fill
             'text-white',
             'border-2',
-            'border-[#40C4FF]', // Bright sky blue
+            'border-[#39FF14]', // Neon green outline
+            'cursor-not-allowed'
+          );
+        case 4: // Pickleball - Neon green fill with dark green outline
+          return cn(
+            'bg-[#39FF14]',   // Neon green fill
+            'text-white',
+            'border-2',
+            'border-[#1B5E20]', // Dark green outline
             'cursor-not-allowed'
           );
         default:
@@ -133,31 +93,24 @@ export const GridCell = memo(function GridCell({
 
     // Selected state
     if (isSelected) {
-      const colors = [
-        'bg-red-500',
+      return cn(
         'bg-blue-500',
-        'bg-green-500',
-        'bg-yellow-500',
-        'bg-purple-500'
-      ];
-      const selectedColor = colors[position % colors.length];
-      return `${selectedColor} text-white border-2 border-black`;
+        'text-white',
+        'border-2',
+        'border-black',
+        'transition-colors duration-200'
+      );
     }
 
-    // Default hover state
-    const hoverColors = [
-      'hover:bg-red-500',
-      'hover:bg-blue-500',
-      'hover:bg-green-500',
-      'hover:bg-yellow-500',
-      'hover:bg-purple-500'
-    ];
-    const hoverColor = hoverColors[position % hoverColors.length];
-    
+    // Default state with hover
     return cn(
-      'bg-white text-gray-900 border-2 border-gray-200',
-      'hover:text-white active:text-white',
-      hoverColor
+      'bg-white',
+      'text-gray-900',
+      'border-2',
+      'border-gray-200',
+      'hover:bg-blue-500',
+      'hover:text-white',
+      'transition-colors duration-200'
     );
   };
 
