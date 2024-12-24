@@ -56,7 +56,6 @@ export function useWordSelection(
       if (prev.length === 0) {
         console.log('First cell selected');
         const letter = getLetterFromGrid(rowIndex, colIndex);
-        console.log('Setting current word to:', letter);
         setCurrentWord(letter);
         return [cellIndex];
       }
@@ -70,7 +69,6 @@ export function useWordSelection(
             const col = cell % 6;
             return getLetterFromGrid(row, col);
           }).join('');
-          console.log('Setting current word to:', newWord);
           setCurrentWord(newWord);
           return newCells;
         }
@@ -82,7 +80,6 @@ export function useWordSelection(
           const col = cell % 6;
           return getLetterFromGrid(row, col);
         }).join('');
-        console.log('Setting current word to:', newWord);
         setCurrentWord(newWord);
         return newCells;
       }
@@ -95,7 +92,6 @@ export function useWordSelection(
           const col = cell % 6;
           return getLetterFromGrid(row, col);
         }).join('');
-        console.log('Setting current word to:', word);
         setCurrentWord(word);
         return newCells;
       }
@@ -103,7 +99,7 @@ export function useWordSelection(
       console.log('Cell not adjacent, keeping current selection');
       return prev;
     });
-  }, [day, getLetterFromGrid]);
+  }, [getLetterFromGrid]);
 
   const handleSubmit = useCallback(() => {
     console.log('Submitting word:', currentWord);

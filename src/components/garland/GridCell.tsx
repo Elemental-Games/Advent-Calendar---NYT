@@ -15,11 +15,11 @@ interface GridCellProps {
 }
 
 const SELECTION_COLORS = [
-  'bg-green-500',  // Green
-  'bg-red-500',    // Red
   'bg-blue-500',   // Blue
   'bg-orange-500', // Orange
   'bg-purple-500', // Purple
+  'bg-[#FFD700]',  // Gold
+  'bg-[#C0C0C0]',  // Silver
 ];
 
 export const GridCell = memo(function GridCell({
