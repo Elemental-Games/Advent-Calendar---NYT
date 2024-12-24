@@ -148,6 +148,7 @@ export function GarlandGame({
         setShowCompletionDialog={handleCompletionDialogClose}
         handleStartGame={handleStartGame}
         completionTime={completionTime}
+        day={day}
       />
     </div>
   );
