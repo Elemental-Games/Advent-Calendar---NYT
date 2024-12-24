@@ -25,6 +25,8 @@ export const GridCell = memo(function GridCell({
   onMouseUp,
   position,
 }: GridCellProps) {
+  console.log('GridCell rendering:', { letter, isSelected, isFound, foundWordIndex, isThemeWord });
+
   const getBaseStyles = () => {
     if (isFound) {
       // Theme word (QualityTime) - Red fill with green outline
