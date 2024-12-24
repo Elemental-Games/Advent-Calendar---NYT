@@ -16,60 +16,17 @@ export function useWordSelection(
   console.log('useWordSelection - Found words:', foundWords);
   console.log('useWordSelection - Day:', day);
 
-  const handleCellClick = useCallback((rowIndex: number, colIndex: number) => {
-    console.log(`Cell clicked at (${rowIndex},${colIndex})`);
-    const cellIndex = rowIndex * 6 + colIndex;
-
-    setSelectedCells(prev => {
-      if (prev.length === 0) {
-        console.log('First cell selected');
-        const letter = getLetterFromGrid(rowIndex, colIndex, day);
-        setCurrentWord(letter);
-        return [cellIndex];
-      }
-
-      if (prev.includes(cellIndex)) {
-        if (cellIndex === prev[prev.length - 1]) {
-          console.log('Removing last selected cell');
-          const newCells = prev.slice(0, -1);
-          setCurrentWord(newCells.map(cell => {
-            const row = Math.floor(cell / 6);
-            const col = cell % 6;
-            return getLetterFromGrid(row, col, day);
-          }).join(''));
-          return newCells;
-        }
-        const index = prev.indexOf(cellIndex);
-        console.log('Trimming back to previously selected cell');
-        const newCells = prev.slice(0, index + 1);
-        setCurrentWord(newCells.map(cell => {
-          const row = Math.floor(cell / 6);
-          const col = cell % 6;
-          return getLetterFromGrid(row, col, day);
-        }).join(''));
-        return newCells;
-      }
-
-      if (isAdjacent(prev[prev.length - 1], cellIndex)) {
-        console.log('Adding adjacent cell');
-        const newCells = [...prev, cellIndex];
-        const word = newCells.map(cell => {
-          const row = Math.floor(cell / 6);
-          const col = cell % 6;
-          return getLetterFromGrid(row, col, day);
-        }).join('');
-        console.log('Current word:', word);
-        setCurrentWord(word);
-        return newCells;
-      }
-
-      console.log('Cell not adjacent, keeping current selection');
-      return prev;
-    });
-  }, [day]);
-
-  const getLetterFromGrid = (row: number, col: number, day: number): string => {
-    const grid = day === 20 ? [
+  const getLetterFromGrid = useCallback((row: number, col: number): string => {
+    const grid = day === 24 ? [
+      ['T', 'L', 'L', 'A', 'E', 'L'],
+      ['A', 'K', 'I', 'G', 'B', 'K'],
+      ['L', 'N', 'L', 'A', 'P', 'C'],
+      ['G', 'A', 'I', 'M', 'E', 'I'],
+      ['Q', 'U', 'T', 'T', 'I', 'S'],
+      ['E', 'V', 'Y', 'S', 'M', 'E'],
+      ['E', 'N', 'T', 'O', 'E', 'P'],
+      ['G', 'N', 'I', 'R', 'L', 'X']
+    ] : day === 20 ? [
       ['L', 'A', 'A', 'D', 'E', 'R'],
       ['D', 'R', 'L', 'N', 'A', 'K'],
       ['D', 'U', 'T', 'M', 'R', 'L'],
@@ -89,7 +46,64 @@ export function useWordSelection(
       ['S', 'A', 'M', 'J', 'T', 'M']
     ];
     return grid[row][col];
-  };
+  }, [day]);
+
+  const handleCellClick = useCallback((rowIndex: number, colIndex: number) => {
+    console.log(`Cell clicked at (${rowIndex},${colIndex})`);
+    const cellIndex = rowIndex * 6 + colIndex;
+
+    setSelectedCells(prev => {
+      if (prev.length === 0) {
+        console.log('First cell selected');
+        const letter = getLetterFromGrid(rowIndex, colIndex);
+        console.log('Setting current word to:', letter);
+        setCurrentWord(letter);
+        return [cellIndex];
+      }
+
+      if (prev.includes(cellIndex)) {
+        if (cellIndex === prev[prev.length - 1]) {
+          console.log('Removing last selected cell');
+          const newCells = prev.slice(0, -1);
+          const newWord = newCells.map(cell => {
+            const row = Math.floor(cell / 6);
+            const col = cell % 6;
+            return getLetterFromGrid(row, col);
+          }).join('');
+          console.log('Setting current word to:', newWord);
+          setCurrentWord(newWord);
+          return newCells;
+        }
+        const index = prev.indexOf(cellIndex);
+        console.log('Trimming back to previously selected cell');
+        const newCells = prev.slice(0, index + 1);
+        const newWord = newCells.map(cell => {
+          const row = Math.floor(cell / 6);
+          const col = cell % 6;
+          return getLetterFromGrid(row, col);
+        }).join('');
+        console.log('Setting current word to:', newWord);
+        setCurrentWord(newWord);
+        return newCells;
+      }
+
+      if (isAdjacent(prev[prev.length - 1], cellIndex)) {
+        console.log('Adding adjacent cell');
+        const newCells = [...prev, cellIndex];
+        const word = newCells.map(cell => {
+          const row = Math.floor(cell / 6);
+          const col = cell % 6;
+          return getLetterFromGrid(row, col);
+        }).join('');
+        console.log('Setting current word to:', word);
+        setCurrentWord(word);
+        return newCells;
+      }
+
+      console.log('Cell not adjacent, keeping current selection');
+      return prev;
+    });
+  }, [day, getLetterFromGrid]);
 
   const handleSubmit = useCallback(() => {
     console.log('Submitting word:', currentWord);
