@@ -15,11 +15,11 @@ interface GridCellProps {
 }
 
 const SELECTION_COLORS = [
-  'bg-blue-500',   // Blue
-  'bg-orange-500', // Orange
-  'bg-purple-500', // Purple
-  'bg-[#F2FCE2]',  // Light Green
-  'bg-[#FFDEE2]',  // Light Red
+  'bg-blue-500',    // Blue
+  'bg-orange-500',  // Orange
+  'bg-purple-500',  // Purple
+  'bg-[#F2FCE2]',   // Light Green
+  'bg-[#FFDEE2]',   // Light Red
 ];
 
 export const GridCell = memo(function GridCell({
@@ -65,7 +65,7 @@ export const GridCell = memo(function GridCell({
       const diagonalIndex = (row + col) % SELECTION_COLORS.length;
       return cn(
         SELECTION_COLORS[diagonalIndex],
-        diagonalIndex >= 3 ? 'text-gray-900' : 'text-white', // Black text for light colors
+        diagonalIndex >= 3 ? 'text-gray-900' : 'text-white',
         'border-2',
         'border-black',
         'transition-colors duration-200'
@@ -85,6 +85,7 @@ export const GridCell = memo(function GridCell({
       'border-gray-200',
       diagonalIndex >= 3 ? 'hover:text-gray-900' : 'hover:text-white',
       hoverColor.replace('bg-', 'hover:bg-'),
+      'hover:border-transparent', // Remove border on hover
       'transition-colors duration-200'
     );
   };
