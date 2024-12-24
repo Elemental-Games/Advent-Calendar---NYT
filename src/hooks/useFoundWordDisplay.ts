@@ -10,7 +10,7 @@ export function useFoundWordDisplay(
     console.log(`Checking position ${pos} for found words`);
     
     for (const { word, index } of foundWords) {
-      const wordPositions = WORD_POSITIONS[20][word.toLowerCase()];
+      const wordPositions = WORD_POSITIONS[24][word.toLowerCase()];
       console.log(`Checking word ${word} with positions:`, wordPositions);
       
       if (wordPositions) {
