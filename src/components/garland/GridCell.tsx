@@ -37,7 +37,7 @@ export const GridCell = memo(function GridCell({
 
   const getBaseStyles = () => {
     if (isFound) {
-      // Theme word (QualityTime) - Red fill with green outline
+      // Theme word (ILOVEYOUSOMUCH) - Red fill with green outline
       if (isThemeWord) {
         return cn(
           'bg-[#ea384c]',   // Red fill

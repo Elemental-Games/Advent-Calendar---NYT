@@ -17,8 +17,8 @@ interface GarlandGameProps {
 }
 
 export function GarlandGame({ 
-  words = ['MUSICIANS', 'WALLEN', 'MALONE', 'ERNEST', 'MTJOY', 'SAMFENDER', 'SABRINA'],
-  themeWord = 'MUSICIANS',
+  words = ['ILOVEYOUSOMUCH', 'CUDDLING', 'GAMES', 'EVENTS', 'EXPLORING', 'TENNIS'],
+  themeWord = 'ILOVEYOUSOMUCH',
   onComplete,
   day
 }: GarlandGameProps) {
@@ -109,33 +109,15 @@ export function GarlandGame({
       />
 
       <GameGrid
-        grid={day === 24 ? [
-          ['T', 'L', 'L', 'A', 'E', 'L'],
-          ['A', 'K', 'I', 'G', 'B', 'K'],
-          ['L', 'N', 'L', 'A', 'P', 'C'],
-          ['G', 'A', 'I', 'M', 'E', 'I'],
-          ['Q', 'U', 'T', 'T', 'I', 'S'],
-          ['E', 'V', 'Y', 'S', 'M', 'E'],
-          ['E', 'N', 'T', 'O', 'E', 'P'],
-          ['G', 'N', 'I', 'R', 'L', 'X']
-        ] : day === 20 ? [
-          ['L', 'A', 'A', 'D', 'E', 'R'],
-          ['D', 'R', 'L', 'N', 'A', 'K'],
-          ['D', 'U', 'T', 'M', 'R', 'L'],
-          ['C', 'O', 'L', 'A', 'W', 'A'],
-          ['F', 'A', 'N', 'T', 'A', 'S'],
-          ['M', 'O', 'A', 'P', 'O', 'Y'],
-          ['N', 'T', 'L', 'E', 'R', 'R'],
-          ['G', 'O', 'M', 'Y', 'A', 'T']
-        ] : [
-          ['S', 'W', 'A', 'L', 'M', 'A'],
-          ['A', 'N', 'A', 'L', 'E', 'L'],
-          ['S', 'M', 'F', 'I', 'N', 'O'],
-          ['E', 'E', 'C', 'T', 'S', 'N'],
-          ['R', 'D', 'N', 'I', 'E', 'E'],
-          ['N', 'A', 'S', 'N', 'R', 'E'],
-          ['I', 'R', 'B', 'U', 'O', 'Y'],
-          ['S', 'A', 'M', 'J', 'T', 'M']
+        grid={[
+          ['C', 'D', 'D', 'L', 'I', 'G'],
+          ['U', 'C', 'H', 'L', 'O', 'N'],
+          ['U', 'G', 'A', 'I', 'E', 'V'],
+          ['M', 'T', 'N', 'M', 'S', 'E'],
+          ['E', 'O', 'S', 'E', 'V', 'Y'],
+          ['G', 'X', 'S', 'E', 'O', 'T'],
+          ['N', 'P', 'O', 'U', 'E', 'I'],
+          ['I', 'R', 'L', 'N', 'N', 'S']
         ]}
         selectedCells={selectedCells}
         foundWordsWithIndex={foundWordsWithIndex}
