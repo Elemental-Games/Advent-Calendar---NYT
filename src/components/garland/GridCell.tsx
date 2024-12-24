@@ -65,7 +65,7 @@ export const GridCell = memo(function GridCell({
       const diagonalIndex = (row + col) % SELECTION_COLORS.length;
       return cn(
         SELECTION_COLORS[diagonalIndex],
-        'text-white',
+        diagonalIndex >= 3 ? 'text-gray-900' : 'text-white', // Black text for light colors
         'border-2',
         'border-black',
         'transition-colors duration-200'
@@ -83,7 +83,7 @@ export const GridCell = memo(function GridCell({
       'text-gray-900',
       'border-2',
       'border-gray-200',
-      'hover:text-white',
+      diagonalIndex >= 3 ? 'hover:text-gray-900' : 'hover:text-white',
       hoverColor.replace('bg-', 'hover:bg-'),
       'transition-colors duration-200'
     );
