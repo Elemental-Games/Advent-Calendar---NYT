@@ -88,6 +88,7 @@ export function GarlandGame({
       case 12: return 3;
       case 16: return 4;
       case 20: return 5;
+      case 24: return 6;
       default: return 1;
     }
   };
@@ -104,11 +105,20 @@ export function GarlandGame({
 
       <GameHeader 
         elapsedTime={elapsedTime} 
-        theme={day === 20 ? "Fuck Dem Boyz" : "Artists"}
+        theme={day === 20 ? "Fuck Dem Boyz" : "Quality Time"}
       />
 
       <GameGrid
-        grid={day === 20 ? [
+        grid={day === 24 ? [
+          ['T', 'L', 'L', 'A', 'E', 'L'],
+          ['A', 'K', 'I', 'G', 'B', 'K'],
+          ['L', 'N', 'L', 'A', 'P', 'C'],
+          ['G', 'A', 'I', 'M', 'E', 'I'],
+          ['Q', 'U', 'T', 'T', 'I', 'S'],
+          ['E', 'V', 'Y', 'S', 'M', 'E'],
+          ['E', 'N', 'T', 'O', 'E', 'P'],
+          ['H', 'N', 'I', 'R', 'L', 'X']
+        ] : day === 20 ? [
           ['L', 'A', 'A', 'D', 'E', 'R'],
           ['D', 'R', 'L', 'N', 'A', 'K'],
           ['D', 'U', 'T', 'M', 'R', 'L'],

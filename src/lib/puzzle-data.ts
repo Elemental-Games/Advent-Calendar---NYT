@@ -8,6 +8,7 @@ import { day16Puzzle } from './puzzles/day16';
 import { day18Puzzle } from './puzzles/day18';
 import { day19Puzzle } from './puzzles/day19';
 import { day20Puzzle } from './puzzles/day20';
+import { day24Puzzle } from './puzzles/day24';
 
 console.log('Loading puzzle data configuration');
 
@@ -198,7 +199,8 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
         words: ["Perfect", "Smart", "Funny", "Beautiful"]
       }
     ]
-  }
+  },
+  24: day24Puzzle
 };
 
 console.log('Puzzle data loaded successfully');
