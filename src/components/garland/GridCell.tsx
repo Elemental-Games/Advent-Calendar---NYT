@@ -15,12 +15,11 @@ interface GridCellProps {
 }
 
 const SELECTION_COLORS = [
-  'bg-[#9b87f5]',   // Purple
-  'bg-[#F97316]',   // Orange
-  'bg-[#D946EF]',   // Magenta Pink
-  'bg-[#0EA5E9]',   // Ocean Blue
-  'bg-[#22c55e]',   // Green
-  'bg-[#eab308]',   // Yellow
+  'bg-green-500',  // Green
+  'bg-red-500',    // Red
+  'bg-blue-500',   // Blue
+  'bg-orange-500', // Orange
+  'bg-purple-500', // Purple
 ];
 
 export const GridCell = memo(function GridCell({
@@ -59,11 +58,13 @@ export const GridCell = memo(function GridCell({
       );
     }
 
-    // Selected state - Random color from selection colors
+    // Selected state - Diagonal pattern using position
     if (isSelected) {
-      const colorIndex = position % SELECTION_COLORS.length;
+      const row = Math.floor(position / 6);
+      const col = position % 6;
+      const diagonalIndex = (row + col) % SELECTION_COLORS.length;
       return cn(
-        SELECTION_COLORS[colorIndex],
+        SELECTION_COLORS[diagonalIndex],
         'text-white',
         'border-2',
         'border-black',
@@ -71,14 +72,17 @@ export const GridCell = memo(function GridCell({
       );
     }
 
-    // Default state with hover using random colors
+    // Default state with hover using diagonal pattern
+    const row = Math.floor(position / 6);
+    const col = position % 6;
+    const diagonalIndex = (row + col) % SELECTION_COLORS.length;
     return cn(
       'bg-white',
       'text-gray-900',
       'border-2',
       'border-gray-200',
       'hover:text-white',
-      SELECTION_COLORS[position % SELECTION_COLORS.length].replace('bg-', 'hover:bg-'),
+      SELECTION_COLORS[diagonalIndex].replace('bg-', 'hover:bg-'),
       'transition-colors duration-200'
     );
   };
