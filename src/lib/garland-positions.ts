@@ -61,7 +61,7 @@ export const WORD_POSITIONS: { [key: number]: WordPositions } = {
     'laporta': [73, 63, 64, 65, 76, 86, 85]
   },
   24: {
-    'qualitytime': [41, 42, 32, 33],
+    'qualitytime': [51, 52, 42, 33, 43, 53, 63, 54, 55, 65, 66],
     'pickleball': [35, 46, 36, 26, 16, 15, 25, 14, 13, 12],
     'talking': [11, 21, 31, 22, 23, 32, 41],
     'games': [24, 34, 44, 45, 56],

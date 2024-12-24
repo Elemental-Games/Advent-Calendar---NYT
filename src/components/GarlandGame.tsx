@@ -105,7 +105,7 @@ export function GarlandGame({
 
       <GameHeader 
         elapsedTime={elapsedTime} 
-        theme={day === 20 ? "Fuck Dem Boyz" : "Quality Time"}
+        theme={day === 24 ? "Hobbies Together" : day === 20 ? "Fuck Dem Boyz" : "Quality Time"}
       />
 
       <GameGrid
@@ -117,7 +117,7 @@ export function GarlandGame({
           ['Q', 'U', 'T', 'T', 'I', 'S'],
           ['E', 'V', 'Y', 'S', 'M', 'E'],
           ['E', 'N', 'T', 'O', 'E', 'P'],
-          ['H', 'N', 'I', 'R', 'L', 'X']
+          ['G', 'N', 'I', 'R', 'L', 'X']
         ] : day === 20 ? [
           ['L', 'A', 'A', 'D', 'E', 'R'],
           ['D', 'R', 'L', 'N', 'A', 'K'],

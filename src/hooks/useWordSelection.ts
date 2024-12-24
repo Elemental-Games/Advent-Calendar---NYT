@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { WORD_POSITIONS } from '@/lib/garland-positions';
 
@@ -147,6 +147,11 @@ export function useWordSelection(
     setSelectedCells([]);
     setCurrentWord('');
   }, [currentWord, selectedCells, words, foundWords, setFoundWords, themeWord, day]);
+
+  useEffect(() => {
+    setSelectedCells([]);
+    setCurrentWord('');
+  }, [day]);
 
   return {
     selectedCells,
