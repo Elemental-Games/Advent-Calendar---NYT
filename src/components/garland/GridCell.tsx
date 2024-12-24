@@ -76,13 +76,15 @@ export const GridCell = memo(function GridCell({
     const row = Math.floor(position / 6);
     const col = position % 6;
     const diagonalIndex = (row + col) % SELECTION_COLORS.length;
+    const hoverColor = SELECTION_COLORS[diagonalIndex];
+    
     return cn(
       'bg-white',
       'text-gray-900',
       'border-2',
       'border-gray-200',
       'hover:text-white',
-      SELECTION_COLORS[diagonalIndex].replace('bg-', 'hover:bg-'),
+      hoverColor.replace('bg-', 'hover:bg-'),
       'transition-colors duration-200'
     );
   };
