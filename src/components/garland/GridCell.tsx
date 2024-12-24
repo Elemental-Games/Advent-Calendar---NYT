@@ -85,7 +85,7 @@ export const GridCell = memo(function GridCell({
       'border-gray-200',
       diagonalIndex >= 3 ? 'hover:text-gray-900' : 'hover:text-white',
       hoverColor.replace('bg-', 'hover:bg-'),
-      'hover:border-transparent', // Remove border on hover
+      'hover:border-transparent',
       'transition-colors duration-200'
     );
   };
