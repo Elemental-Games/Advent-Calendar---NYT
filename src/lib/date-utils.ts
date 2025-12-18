@@ -28,23 +28,36 @@ export function formatCountdown(unlockTime: Date): string {
 }
 
 export function generateCalendarData(): DayInfo[] {
-  const baseDate = new Date('2024-12-01T12:30:00.000Z');
   const days: DayInfo[] = [];
 
   for (let day = 1; day <= 24; day++) {
-    const unlockTime = new Date(baseDate);
-    unlockTime.setDate(unlockTime.getDate() + (day - 1));
-
-    // Make first 4 days available immediately
+    let unlockTime: Date;
+    
+    // All days unlock on specific dates in December 2025 at 8:00 AM EST
+    // 8:00 AM EST = 1:00 PM UTC (13:00 UTC)
+    let unlockDate: number;
+    let unlockMonth: number = 11; // December (0-indexed)
+    let unlockYear: number = 2025;
+    
     if (day <= 4) {
-      unlockTime.setFullYear(2020);
+      unlockDate = 18; // Days 1-4 unlock on December 18, 2025
     } else {
-      // Lock days 5-24 by setting them to future dates (2026)
-      unlockTime.setFullYear(2026);
+      if (day >= 5 && day <= 8) {
+        unlockDate = 19;
+      } else if (day >= 9 && day <= 12) {
+        unlockDate = 20;
+      } else if (day >= 13 && day <= 16) {
+        unlockDate = 21;
+      } else if (day >= 17 && day <= 20) {
+        unlockDate = 22;
+      } else if (day >= 21 && day <= 23) {
+        unlockDate = 23;
+      } else { // day 24
+        unlockDate = 24;
+      }
     }
-
-    // Set unlock time to 7:30 AM EST
-    unlockTime.setUTCHours(12, 30, 0, 0);
+    
+    unlockTime = new Date(Date.UTC(unlockYear, unlockMonth, unlockDate, 13, 0, 0, 0));
 
     const puzzleType = getPuzzleType(day);
     const puzzleContent = puzzleData[day];
