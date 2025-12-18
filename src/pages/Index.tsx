@@ -16,7 +16,7 @@ const Index = () => {
             KB's Advent Calendar
           </h1>
           <p className="text-green-700 text-sm md:text-base">
-            A new puzzle unlocks each day at 7:30 AM EST
+            A new puzzle unlocks each day at 8:00 AM EST
           </p>
         </div>
 

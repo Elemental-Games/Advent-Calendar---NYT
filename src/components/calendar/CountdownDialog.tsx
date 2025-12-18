@@ -19,7 +19,7 @@ export function CountdownDialog({ isOpen, onOpenChange, day, countdown }: Countd
             {countdown}
           </p>
           <p className="text-sm text-gray-500">
-            Come back at 7:30 AM EST to solve this puzzle!
+            Come back at 8:00 AM EST to solve this puzzle!
           </p>
         </div>
       </DialogContent>
