@@ -1,15 +1,15 @@
 export const day4Puzzle = {
   type: "garland" as const,
-  words: ["SANTA", "SLEIGH", "RUDOLPH", "PRESENTS", "COOKIES", "STOCKINGS", "MISTLETOE"],
-  themeWord: "CHRISTMAS",
+  words: ["WINSTON", "JACK", "COLBY", "MONTY", "DAISY", "BUTTER", "PEPPER"],
+  themeWord: "BESTNAMES",
   grid: [
-    ['S', 'L', 'E', 'I', 'G', 'H'],
-    ['A', 'N', 'T', 'A', 'R', 'U'],
-    ['D', 'O', 'L', 'P', 'H', 'P'],
-    ['R', 'E', 'S', 'E', 'N', 'T'],
-    ['S', 'C', 'O', 'O', 'K', 'I'],
-    ['E', 'S', 'T', 'O', 'C', 'K'],
-    ['I', 'N', 'G', 'S', 'M', 'I'],
-    ['S', 'T', 'L', 'E', 'T', 'O']
+    ['W', 'B', 'J', 'C', 'B', 'T'],
+    ['I', 'E', 'A', 'K', 'U', 'T'],
+    ['S', 'N', 'S', 'M', 'Y', 'E'],
+    ['T', 'E', 'T', 'O', 'S', 'R'],
+    ['O', 'N', 'T', 'N', 'A', 'I'],
+    ['N', 'A', 'Y', 'D', 'C', 'L'],
+    ['E', 'M', 'P', 'P', 'O', 'B'],
+    ['S', 'P', 'E', 'E', 'R', 'Y']
   ]
 };

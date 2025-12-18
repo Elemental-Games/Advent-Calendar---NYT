@@ -62,24 +62,24 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     type: "northsort",
     groups: [
       {
-        category: "Decorations",
+        category: "Apartments",
         color: "rgb(234 179 8)",
-        words: ["STAR", "GARLAND", "ANGEL", "HOLLY"]
+        words: ["SKYE", "ARRIVE", "RIVERVIEW", "POINT"]
       },
       {
-        category: "Santa's Snacks",
+        category: "Pizza Styles",
         color: "rgb(34 197 94)",
-        words: ["COOKIES", "MILK", "CAKE", "MINTS"]
+        words: ["ROUND", "PERSONAL", "SICILIAN", "LARGE"]
       },
       {
-        category: "Gift Wrap",
+        category: "What we need for the Apartment",
         color: "rgb(59 130 246)",
-        words: ["PAPER", "RIBBON", "STRING", "BOW"]
+        words: ["ENTRYWAY TABLE", "LAMPS", "PICTURES", "PEPPER"]
       },
       {
-        category: "Holiday Drinks",
+        category: "Ending Syllables of Popular Stores",
         color: "rgb(239 68 68)",
-        words: ["EGGNOG", "WINE", "COFFEE", "BEER"]
+        words: ["THE MART", "GO GET", "BIG BUCKS", "GO NUTS"]
       }
     ]
   },
