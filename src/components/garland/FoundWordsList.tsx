@@ -8,9 +8,10 @@ import React from 'react';
 
 interface FoundWordsListProps {
   foundWords: Array<{word: string, index: number}>;
+  totalWords: number;
 }
 
-export function FoundWordsList({ foundWords }: FoundWordsListProps) {
+export function FoundWordsList({ foundWords, totalWords }: FoundWordsListProps) {
   const capitalizeFirstLetter = (word: string) => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   };
@@ -18,7 +19,7 @@ export function FoundWordsList({ foundWords }: FoundWordsListProps) {
   return (
     <div className="space-y-4">
       <div className="text-sm">
-        Found words ({foundWords.length}/7):
+        Found words ({foundWords.length}/{totalWords}):
         <div className="flex flex-wrap gap-2 mt-2">
           {foundWords.map(({ word }, index) => (
             <span

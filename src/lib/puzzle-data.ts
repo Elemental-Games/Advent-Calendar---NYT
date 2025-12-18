@@ -135,11 +135,7 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
       }
     ]
   },
-  20: {
-    type: "garland",
-    words: ["FANTASY", "LADD", "COURTLAND", "LAMAR", "WALKER", "MONTGOMERY", "LAPORTA"],
-    themeWord: "FANTASY"
-  },
+  20: day20Puzzle,
   21: {
     type: "kringle",
     word: "SMART",

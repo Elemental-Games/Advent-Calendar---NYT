@@ -31,6 +31,7 @@ export interface StrandsPuzzle {
   type?: "garland";
   words: string[];
   themeWord: string;
+  grid?: string[][];
 }
 
 export type PuzzleContent = 

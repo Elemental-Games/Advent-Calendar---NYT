@@ -37,10 +37,10 @@ export const GridCell = memo(function GridCell({
 
   const getBaseStyles = () => {
     if (isFound) {
-      // Theme word (ILOVEYOUSOMUCH) - Red fill with green outline
+      // Theme word - Golden fill with green outline
       if (isThemeWord) {
         return cn(
-          'bg-[#ea384c]',   // Red fill
+          'bg-yellow-500',   // Golden fill
           'text-white',
           'border-2',
           'border-[#22c55e]', // Green outline
@@ -58,16 +58,13 @@ export const GridCell = memo(function GridCell({
       );
     }
 
-    // Selected state - Diagonal pattern using position
+    // Selected state - Red fill with green outline
     if (isSelected) {
-      const row = Math.floor(position / 6);
-      const col = position % 6;
-      const diagonalIndex = (row + col) % SELECTION_COLORS.length;
       return cn(
-        SELECTION_COLORS[diagonalIndex],
-        diagonalIndex >= 3 ? 'text-gray-900' : 'text-white',
+        'bg-[#ea384c]',   // Red fill
+        'text-white',
         'border-2',
-        'border-black',
+        'border-[#22c55e]', // Green outline
         'transition-colors duration-200'
       );
     }

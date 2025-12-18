@@ -12,6 +12,7 @@ import { Button } from './ui/button';
 interface GarlandGameProps {
   words?: string[];
   themeWord?: string;
+  grid?: string[][];
   onComplete?: () => void;
   day: number;
 }
@@ -19,6 +20,7 @@ interface GarlandGameProps {
 export function GarlandGame({ 
   words = ['ILOVEYOUSOMUCH', 'CUDDLING', 'GAMES', 'EVENTS', 'EXPLORING', 'TENNIS'],
   themeWord = 'ILOVEYOUSOMUCH',
+  grid,
   onComplete,
   day
 }: GarlandGameProps) {
@@ -31,8 +33,22 @@ export function GarlandGame({
   const [isStarted, setIsStarted] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord);
+  const { isLetterInFoundWord } = useFoundWordDisplay(foundWordsWithIndex, themeWord, day);
   const { elapsedTime, completionTime, completeGame } = useGameTimer(isStarted, onComplete);
+  // Default grid if none provided
+  const defaultGrid = [
+    ['C', 'D', 'D', 'L', 'I', 'G'],
+    ['U', 'C', 'H', 'L', 'O', 'N'],
+    ['U', 'G', 'A', 'I', 'E', 'V'],
+    ['M', 'T', 'N', 'M', 'S', 'E'],
+    ['E', 'O', 'S', 'E', 'V', 'Y'],
+    ['G', 'X', 'S', 'E', 'O', 'T'],
+    ['N', 'P', 'O', 'U', 'E', 'I'],
+    ['I', 'R', 'L', 'N', 'N', 'S']
+  ];
+  
+  const gameGrid = grid || defaultGrid;
+
   const { 
     selectedCells, 
     currentWord,
@@ -43,7 +59,8 @@ export function GarlandGame({
     foundWordsWithIndex,
     setFoundWordsWithIndex,
     themeWord,
-    day
+    day,
+    gameGrid
   );
 
   useEffect(() => {
@@ -105,20 +122,11 @@ export function GarlandGame({
 
       <GameHeader 
         elapsedTime={elapsedTime} 
-        theme={day === 24 ? "Hobbies Together" : day === 20 ? "Fuck Dem Boyz" : "Quality Time"}
+        theme={themeWord ? themeWord.toUpperCase() : (day === 24 ? "Hobbies Together" : day === 20 ? "Fuck Dem Boyz" : "Quality Time")}
       />
 
       <GameGrid
-        grid={[
-          ['C', 'D', 'D', 'L', 'I', 'G'],
-          ['U', 'C', 'H', 'L', 'O', 'N'],
-          ['U', 'G', 'A', 'I', 'E', 'V'],
-          ['M', 'T', 'N', 'M', 'S', 'E'],
-          ['E', 'O', 'S', 'E', 'V', 'Y'],
-          ['G', 'X', 'S', 'E', 'O', 'T'],
-          ['N', 'P', 'O', 'U', 'E', 'I'],
-          ['I', 'R', 'L', 'N', 'N', 'S']
-        ]}
+        grid={gameGrid}
         selectedCells={selectedCells}
         foundWordsWithIndex={foundWordsWithIndex}
         themeWord={themeWord}
@@ -139,7 +147,7 @@ export function GarlandGame({
         </Button>
       </div>
 
-      <FoundWordsList foundWords={foundWordsWithIndex} />
+      <FoundWordsList foundWords={foundWordsWithIndex} totalWords={words.length + 1} />
 
       <GameDialogs
         showStartDialog={showStartDialog}

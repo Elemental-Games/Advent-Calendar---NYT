@@ -34,6 +34,15 @@ export function clearAllPuzzleStates(): void {
     localStorage.removeItem(`${STORAGE_PREFIX}${day}`);
     localStorage.removeItem(`kringle_${day}`);
     localStorage.removeItem(`crossword_${day}`);
+    // Clear any other puzzle-specific states
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && (key.includes(`_${day}`) || key.startsWith(`puzzle_${day}`))) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
   }
   console.log('All puzzle states cleared!');
 }

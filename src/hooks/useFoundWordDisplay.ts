@@ -3,14 +3,20 @@ import { WORD_POSITIONS } from '@/lib/garland-positions';
 
 export function useFoundWordDisplay(
   foundWords: Array<{word: string, index: number}>,
-  themeWord: string
+  themeWord: string,
+  day: number
 ) {
   const isLetterInFoundWord = useCallback((rowIndex: number, colIndex: number) => {
     const pos = (rowIndex + 1) * 10 + (colIndex + 1);
     console.log(`Checking position ${pos} for found words`);
     
+    const dayPositions = WORD_POSITIONS[day];
+    if (!dayPositions) {
+      return { found: false, wordIndex: -1, isThemeWord: false };
+    }
+    
     for (const { word, index } of foundWords) {
-      const wordPositions = WORD_POSITIONS[24][word.toLowerCase()];
+      const wordPositions = dayPositions[word.toLowerCase()];
       console.log(`Checking word ${word} with positions:`, wordPositions);
       
       if (wordPositions) {
@@ -31,7 +37,7 @@ export function useFoundWordDisplay(
     }
     
     return { found: false, wordIndex: -1, isThemeWord: false };
-  }, [foundWords, themeWord]);
+  }, [foundWords, themeWord, day]);
 
   return { isLetterInFoundWord };
 }

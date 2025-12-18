@@ -80,13 +80,14 @@ export function PuzzleDisplay({ type, content, day, onComplete }: PuzzleDisplayP
         );
       
       case "garland":
-        const garlandContent = content as { words: string[]; themeWord: string };
+        const garlandContent = content as { words: string[]; themeWord: string; grid?: string[][] };
         console.log('Rendering GarlandGame with words:', garlandContent.words);
         return (
           <div className="p-4">
             <GarlandGame 
               words={garlandContent.words}
               themeWord={garlandContent.themeWord}
+              grid={garlandContent.grid}
               onComplete={onComplete}
               day={day}
             />

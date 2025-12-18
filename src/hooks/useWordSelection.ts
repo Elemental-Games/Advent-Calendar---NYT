@@ -7,7 +7,8 @@ export function useWordSelection(
   foundWords: Array<{word: string, index: number}>,
   setFoundWords: (words: Array<{word: string, index: number}>) => void,
   themeWord: string,
-  day: number
+  day: number,
+  grid: string[][]
 ) {
   const [selectedCells, setSelectedCells] = useState<number[]>([]);
   const [currentWord, setCurrentWord] = useState<string>('');
@@ -15,20 +16,14 @@ export function useWordSelection(
   console.log('useWordSelection - Initial render with words:', words);
   console.log('useWordSelection - Found words:', foundWords);
   console.log('useWordSelection - Day:', day);
+  console.log('useWordSelection - Grid:', grid);
 
   const getLetterFromGrid = useCallback((row: number, col: number): string => {
-    const grid = [
-      ['C', 'D', 'D', 'L', 'I', 'G'],
-      ['U', 'C', 'H', 'L', 'O', 'N'],
-      ['U', 'G', 'A', 'I', 'E', 'V'],
-      ['M', 'T', 'N', 'M', 'S', 'E'],
-      ['E', 'O', 'S', 'E', 'V', 'Y'],
-      ['G', 'X', 'S', 'E', 'O', 'T'],
-      ['N', 'P', 'O', 'U', 'E', 'I'],
-      ['I', 'R', 'L', 'N', 'N', 'S']
-    ];
-    return grid[row][col];
-  }, []);
+    if (row >= 0 && row < grid.length && col >= 0 && col < grid[row].length) {
+      return grid[row][col];
+    }
+    return '';
+  }, [grid]);
 
   const handleCellClick = useCallback((rowIndex: number, colIndex: number) => {
     console.log(`Cell clicked at (${rowIndex},${colIndex})`);
@@ -108,7 +103,9 @@ export function useWordSelection(
     }
 
     const wordEntry = Object.entries(dayPositions).find(([word, positions]) => {
-      return arePositionsEqual(selectedPositions, positions as number[]);
+      // Handle both single array and array of arrays (for words with multiple possible paths)
+      const posArray = Array.isArray(positions[0]) ? (positions as number[][]) : [positions as number[]];
+      return posArray.some(pos => arePositionsEqual(selectedPositions, pos));
     });
 
     if (wordEntry) {
@@ -116,8 +113,13 @@ export function useWordSelection(
       console.log('Found valid word:', word);
       
       if (!foundWords.some(fw => fw.word.toLowerCase() === word.toLowerCase())) {
-        const wordIndex = words.findIndex(w => w.toLowerCase() === word.toLowerCase()) || 
-                         (word.toLowerCase() === themeWord.toLowerCase() ? words.length : -1);
+        // Check if it's the theme word first (theme word might not be in words array)
+        let wordIndex = -1;
+        if (word.toLowerCase() === themeWord.toLowerCase()) {
+          wordIndex = words.length; // Theme word gets the last index
+        } else {
+          wordIndex = words.findIndex(w => w.toLowerCase() === word.toLowerCase());
+        }
                          
         if (wordIndex !== -1) {
           setFoundWords([...foundWords, { word: word.toUpperCase(), index: wordIndex }]);
