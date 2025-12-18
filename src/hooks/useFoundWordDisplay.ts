@@ -12,7 +12,7 @@ export function useFoundWordDisplay(
     
     const dayPositions = WORD_POSITIONS[day];
     if (!dayPositions) {
-      return { found: false, wordIndex: -1, isThemeWord: false };
+      return { found: false, wordIndex: -1, isThemeWord: false, wordName: '' };
     }
     
     for (const { word, index } of foundWords) {
@@ -30,13 +30,14 @@ export function useFoundWordDisplay(
           return {
             found: true,
             wordIndex: index,
-            isThemeWord: word.toLowerCase() === themeWord.toLowerCase()
+            isThemeWord: word.toLowerCase() === themeWord.toLowerCase(),
+            wordName: word
           };
         }
       }
     }
     
-    return { found: false, wordIndex: -1, isThemeWord: false };
+    return { found: false, wordIndex: -1, isThemeWord: false, wordName: '' };
   }, [foundWords, themeWord, day]);
 
   return { isLetterInFoundWord };

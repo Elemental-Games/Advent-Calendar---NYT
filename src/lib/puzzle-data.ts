@@ -89,6 +89,71 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     word: "FUDGE",
     title: "Kringle #2 🎅"
   },
+  6: {
+    type: "frostword",
+    across: {
+      "1": "Bust (into), like the Kool-Aid Man",
+      "6": "Yours is far too loud",
+      "7": "Dish cooked on a skewer",
+      "8": "Online invitation",
+      "9": "Meal for the Passover Holiday"
+    },
+    down: {
+      "1": "Cooks in the oven",
+      "2": "This shit slaps",
+      "3": "Foaming out the mouth",
+      "4": "Things you walk over in cities that you can fall down apparently",
+      "5": "___ Flicker"
+    },
+    answers: {
+      "a1": "BARGE",
+      "a6": "ALARM",
+      "a7": "KEBAB",
+      "a8": "EVITE",
+      "a9": "SEDER",
+      "d1": "BAKES",
+      "d2": "ALEVE",
+      "d3": "RABID",
+      "d4": "GRATE",
+      "d5": "EMBER"
+    },
+    size: {
+      rows: 5,
+      cols: 5
+    },
+    grid: [
+      ["B", "A", "R", "G", "E"],
+      ["A", "L", "A", "R", "M"],
+      ["K", "E", "B", "A", "B"],
+      ["E", "V", "I", "T", "E"],
+      ["S", "E", "D", "E", "R"]
+    ]
+  },
+  7: {
+    type: "northsort",
+    groups: [
+      {
+        category: "Things on our Christmas Tree",
+        color: "rgb(234 179 8)",
+        words: ["Snowflakes", "Lights", "Ornaments", "Star"]
+      },
+      {
+        category: "Tesla Models",
+        color: "rgb(34 197 94)",
+        words: ["3", "X", "Y", "Plaid"]
+      },
+      {
+        category: "Elekin Dragon Elements",
+        color: "rgb(59 130 246)",
+        words: ["Crystal", "Frost", "Sand", "Poison"]
+      },
+      {
+        category: "Amazon",
+        color: "rgb(239 68 68)",
+        words: ["A-Z", "Lightning Deals", "Prime", "Trucks"]
+      }
+    ]
+  },
   8: day8Puzzle,
   9: {
     type: "kringle",

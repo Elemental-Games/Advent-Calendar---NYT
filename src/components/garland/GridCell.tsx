@@ -8,6 +8,7 @@ interface GridCellProps {
   isFound: boolean;
   foundWordIndex: number;
   isThemeWord: boolean;
+  wordName?: string;
   onMouseDown: () => void;
   onMouseEnter: () => void;
   onMouseUp: () => void;
@@ -28,6 +29,7 @@ export const GridCell = memo(function GridCell({
   isFound,
   foundWordIndex,
   isThemeWord,
+  wordName = '',
   onMouseDown,
   onMouseEnter,
   onMouseUp,
@@ -37,6 +39,17 @@ export const GridCell = memo(function GridCell({
 
   const getBaseStyles = () => {
     if (isFound) {
+      // BESTSHOWS - Yellow fill with green outline
+      if (wordName.toLowerCase() === 'bestshows') {
+        return cn(
+          'bg-yellow-500',   // Yellow fill
+          'text-white',
+          'border-2',
+          'border-[#22c55e]', // Green outline
+          'cursor-not-allowed'
+        );
+      }
+      
       // Theme word - Golden fill with green outline
       if (isThemeWord) {
         return cn(

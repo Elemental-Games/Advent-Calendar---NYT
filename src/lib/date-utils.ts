@@ -40,8 +40,11 @@ export function generateCalendarData(): DayInfo[] {
     let unlockYear: number = 2025;
     
     if (day <= 4) {
-      unlockDate = 18; // Days 1-4 unlock on December 18, 2025
+      // Days 1-4 available immediately for testing (set to past date)
+      unlockTime = new Date('2020-12-01T13:00:00.000Z');
+      unlockTime.setDate(unlockTime.getDate() + (day - 1));
     } else {
+      // Set specific unlock dates for December 2025 at 8:00 AM EST
       if (day >= 5 && day <= 8) {
         unlockDate = 19;
       } else if (day >= 9 && day <= 12) {
@@ -55,9 +58,8 @@ export function generateCalendarData(): DayInfo[] {
       } else { // day 24
         unlockDate = 24;
       }
+      unlockTime = new Date(Date.UTC(unlockYear, unlockMonth, unlockDate, 13, 0, 0, 0));
     }
-    
-    unlockTime = new Date(Date.UTC(unlockYear, unlockMonth, unlockDate, 13, 0, 0, 0));
 
     const puzzleType = getPuzzleType(day);
     const puzzleContent = puzzleData[day];

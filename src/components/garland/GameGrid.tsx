@@ -7,7 +7,7 @@ interface GameGridProps {
   foundWordsWithIndex: Array<{word: string, index: number}>;
   themeWord: string;
   onCellClick: (rowIndex: number, colIndex: number) => void;
-  isLetterInFoundWord: (rowIndex: number, colIndex: number) => { found: boolean; wordIndex: number; isThemeWord: boolean };
+  isLetterInFoundWord: (rowIndex: number, colIndex: number) => { found: boolean; wordIndex: number; isThemeWord: boolean; wordName: string };
 }
 
 export function GameGrid({
@@ -32,7 +32,7 @@ export function GameGrid({
       {grid.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-1 md:gap-2 justify-center">
           {row.map((letter, colIndex) => {
-            const { found, wordIndex, isThemeWord } = isLetterInFoundWord(rowIndex, colIndex);
+            const { found, wordIndex, isThemeWord, wordName } = isLetterInFoundWord(rowIndex, colIndex);
             const isSelected = selectedCells.includes(rowIndex * 6 + colIndex);
             const cellIndex = rowIndex * 6 + colIndex;
             
@@ -44,6 +44,7 @@ export function GameGrid({
                 isFound={found}
                 foundWordIndex={wordIndex}
                 isThemeWord={isThemeWord}
+                wordName={wordName}
                 onMouseDown={() => handleClick(rowIndex, colIndex)}
                 onMouseEnter={() => {}}
                 onMouseUp={() => {}}
