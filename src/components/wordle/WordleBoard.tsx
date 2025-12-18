@@ -21,7 +21,10 @@ export function WordleBoard({
 }: WordleBoardProps) {
   console.log('WordleBoard rendering with guesses:', guesses);
 
-  const empties = Array(6 - guesses.length - 1).fill('');
+  // Calculate empty rows: total rows (6) - guesses - current guess row (if game not over)
+  const showCurrentGuess = guesses.length < 6;
+  const emptyRows = Math.max(0, 6 - guesses.length - (showCurrentGuess ? 1 : 0));
+  const empties = Array(emptyRows).fill('');
   const currentGuessArray = currentGuess.split('').concat(Array(5 - currentGuess.length).fill(''));
 
   return (
