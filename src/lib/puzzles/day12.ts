@@ -1,7 +1,7 @@
 export const day12Puzzle = {
   type: "garland" as const,
-  words: ["PENNE", "GNOCCHI", "FETTUCINE", "LASAGNA", "ZITI", "ROTINI"],
-  themeWord: "PASTATYPES",
+  words: ["PENNE", "GNOCCHI", "FETTUCINE", "LASAGNA", "ZITI", "ROTINI", "PASTATYPES"],
+  themeWord: "All Shapes & Sizes",
   grid: [
     ['P', 'E', 'C', 'C', 'H', 'I'],
     ['N', 'N', 'N', 'O', 'N', 'E'],

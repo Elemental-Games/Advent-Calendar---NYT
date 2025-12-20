@@ -160,6 +160,71 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     word: "BARON",
     title: "Kringle #3 🎅"
   },
+  10: {
+    type: "frostword",
+    across: {
+      "1": "Initialism for a remote employee",
+      "4": "Rock, paper, scissors, ___!",
+      "6": "Hooded winter jacket",
+      "7": "Took part in a play",
+      "8": "Something hidden in a fake rock"
+    },
+    down: {
+      "1": "Give a sharp slap",
+      "2": "Strong suit",
+      "3": "Cheesy or corny",
+      "4": "Business offering a salt scrub or body wrap",
+      "5": "Slightest bit"
+    },
+    answers: {
+      "a1": "WFH",
+      "a4": "SHOOT",
+      "a6": "PARKA",
+      "a7": "ACTED",
+      "a8": "KEY",
+      "d1": "WHACK",
+      "d2": "FORTE",
+      "d3": "HOKEY",
+      "d4": "SPA",
+      "d5": "TAD"
+    },
+    size: {
+      rows: 5,
+      cols: 5
+    },
+    grid: [
+      [" ", "W", "F", "H", " "],
+      ["S", "H", "O", "O", "T"],
+      ["P", "A", "R", "K", "A"],
+      ["A", "C", "T", "E", "D"],
+      [" ", "K", "E", "Y", " "]
+    ]
+  },
+  11: {
+    type: "northsort",
+    groups: [
+      {
+        category: "First Name of Christmas Figures",
+        color: "rgb(234 179 8)",
+        words: ["Santa", "Heat", "Jack", "Cold"]
+      },
+      {
+        category: "Types of Oil",
+        color: "rgb(34 197 94)",
+        words: ["Olive", "Avocado", "Motor", "Coconut"]
+      },
+      {
+        category: "Cool Birds",
+        color: "rgb(59 130 246)",
+        words: ["Eagle", "Hawk", "Owl", "Seagull"]
+      },
+      {
+        category: "Ways to Score in Football",
+        color: "rgb(239 68 68)",
+        words: ["Safety", "Touchdown", "Extra Point", "2PT Conversion"]
+      }
+    ]
+  },
   12: day12Puzzle,
   13: {
     type: "kringle",
