@@ -2,16 +2,16 @@ import { PuzzleContent } from '../puzzle-types';
 
 export const day16Puzzle: PuzzleContent = {
   type: "garland",
-  words: ["MUSICIANS", "WALLEN", "MALONE", "ERNEST", "MTJOY", "SAMFENDER", "SABRINA"],
-  themeWord: "MUSICIANS",
+  words: ["CHAPPELL", "MUMFORD", "MALONE", "LANGLEY", "MEEK", "CARPENTER", "SPOTIFY"],
+  themeWord: "Creative Artists",
   grid: [
-    ['M', 'W', 'A', 'L', 'L', 'E'],
-    ['U', 'A', 'L', 'L', 'E', 'N'],
-    ['S', 'M', 'U', 'S', 'I', 'C'],
-    ['I', 'S', 'A', 'M', 'F', 'E'],
-    ['C', 'A', 'M', 'F', 'E', 'N'],
-    ['I', 'F', 'E', 'N', 'D', 'E'],
-    ['A', 'S', 'A', 'B', 'R', 'I'],
-    ['N', 'S', 'E', 'R', 'N', 'A']
+    ['N', 'T', 'E', 'N', 'E', 'A'],
+    ['E', 'P', 'R', 'O', 'L', 'M'],
+    ['A', 'R', 'T', 'O', 'P', 'M'],
+    ['C', 'I', 'O', 'M', 'U', 'S'],
+    ['F', 'Y', 'R', 'F', 'A', 'L'],
+    ['L', 'A', 'D', 'H', 'P', 'L'],
+    ['G', 'N', 'C', 'E', 'P', 'E'],
+    ['L', 'E', 'Y', 'K', 'E', 'M']
   ]
 };

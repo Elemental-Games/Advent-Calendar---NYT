@@ -50,6 +50,17 @@ export const GridCell = memo(function GridCell({
         );
       }
       
+      // SPOTIFY - Golden fill with green outline
+      if (wordName.toLowerCase() === 'spotify') {
+        return cn(
+          'bg-yellow-500',   // Golden fill
+          'text-white',
+          'border-2',
+          'border-[#22c55e]', // Green outline
+          'cursor-not-allowed'
+        );
+      }
+      
       // Theme word - Golden fill with green outline
       if (isThemeWord) {
         return cn(

@@ -231,8 +231,71 @@ export const puzzleData: { [key: number]: PuzzleContent } = {
     word: "LOVER",
     title: "Kringle #4 🎅"
   },
-  14: day14Puzzle,
-  15: day15Puzzle,
+  14: {
+    type: "frostword",
+    across: {
+      "1": "Wheelchair-accessible path",
+      "5": "One of the Great Lakes",
+      "6": "With 8-Across, 'humerous', part of the body near the humerous",
+      "8": "See 6-Across",
+      "9": "Youngest Stark daughter on 'Game of Thrones'"
+    },
+    down: {
+      "1": "One who might cry 'FOUL!'",
+      "2": "Island nation just 18 miles off the coast of Venezuela",
+      "3": "Like chords that sound sad",
+      "4": "1944 Steel Wheat __ (collector's item worth ~$100,000)",
+      "7": "Vote in favor"
+    },
+    answers: {
+      "a1": "RAMP",
+      "a5": "ERIE",
+      "a6": "FUNNY",
+      "a8": "BONE",
+      "a9": "ARYS",
+      "d1": "REF",
+      "d2": "ARUBA",
+      "d3": "MINOR",
+      "d4": "PENNY",
+      "d7": "YES"
+    },
+    size: {
+      rows: 5,
+      cols: 5
+    },
+    grid: [
+      ["R", "A", "M", "P", " "],
+      ["E", "R", "I", "E", " "],
+      ["F", "U", "N", "N", "Y"],
+      [" ", "B", "O", "N", "E"],
+      [" ", "A", "R", "Y", "S"]
+    ]
+  },
+  15: {
+    type: "northsort",
+    groups: [
+      {
+        category: "Regions in Italy",
+        color: "rgb(234 179 8)",
+        words: ["Tuscany", "Venice", "Piedmont", "Sicily"]
+      },
+      {
+        category: "Hyundai Models",
+        color: "rgb(34 197 94)",
+        words: ["Elantra", "Sonata", "Tucson", "Kona"]
+      },
+      {
+        category: "Chip Dips",
+        color: "rgb(59 130 246)",
+        words: ["Guacamole", "Cheese", "Salsa", "French Onion"]
+      },
+      {
+        category: "Super Smash Characters",
+        color: "rgb(239 68 68)",
+        words: ["Pac-Man", "Link", "Fox", "Samus"]
+      }
+    ]
+  },
   16: day16Puzzle,
   17: {
     type: "kringle",
